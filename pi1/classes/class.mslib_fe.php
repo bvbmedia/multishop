@@ -10461,6 +10461,7 @@ class mslib_fe {
                     $content .= '<li class="sub_categories_sorting category' . (!$item['status'] ? ' disabled' : '') . '" id="categories_id_' . $item['categories_id'] . '">';
                     $content .= '<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" class="movecats" name="movecats[]" value="' . $item['categories_id'] . '" id="cb-cat_' . $parent_id . '_' . $item['categories_id'] . '" rel="' . $parent_id . '_' . $item['categories_id'] . '"><label for="cb-cat_' . $parent_id . '_' . $item['categories_id'] . '"></label></label></div>';
                     if ($this->ADMIN_USER and $admin_mode) {
+                        $iteratorAdminContent = '';
                         // get all cats to generate multilevel fake url
                         $level = 0;
                         $cats = mslib_fe::Crumbar($item['categories_id']);
@@ -10477,12 +10478,23 @@ class mslib_fe {
                         $link = mslib_fe::typolink($this->conf['products_listing_page_pid'], '&' . $where . '&tx_multishop_pi1[page_section]=products_listing');
                         //						$where.='categories_id['.$level.']='.$category['categories_id'];
                         // get all cats to generate multilevel fake url eof
-                        $content .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $item['categories_id']) . '&action=edit_category">' . $item['categories_name'] . ' (ID: ' . $item['categories_id'] . ')</a>';
-                        $content .= '<div class="action_icons">
+                        $iteratorAdminContent .= '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $item['categories_id']) . '&action=edit_category">' . $item['categories_name'] . ' (ID: ' . $item['categories_id'] . ')</a>';
+                        $iteratorAdminContent .= '<div class="action_icons">
 							<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=edit_category&cid=' . $item['categories_id']) . '&action=edit_category" class="text-success msadmin_edit_icon"><i class="fa fa-pencil"></i></a>
 							<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=delete_category&cid=' . $item['categories_id'] . '&action=delete_category') . '" class="text-danger msadmin_delete_icon" alt="Remove"><i class="fa fa-trash-o"></i></a>
 							<a href="' . $link . '" target="_blank" class="text-primary msadmin_view"><i class="fa fa-eye"></i></a>
 						</div>';
+                        // custom hook that can be controlled by third-party plugin
+                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['displayAdminCategoriesRecordHookIteratorPostHook'])) {
+                            $intParams = array(
+                                    'item' => &$item,
+                                    'iteratorAdminContent' => &$iteratorAdminContent,
+                            );
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['displayAdminCategoriesRecordHookIteratorPostHook'] as $funcRef) {
+                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $intParams, $this);
+                            }
+                        }
+                        $content .= $iteratorAdminContent;
                     } else {
                         $content .= $item['categories_name'];
                     }
