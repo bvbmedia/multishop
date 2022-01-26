@@ -1917,6 +1917,24 @@ if ($this->post['action'] == 'category-insert') {
                                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
                                     $this->ms['target-cid'] = $row['categories_id'];
+                                    // Update language overlay?
+                                    foreach ($this->languages as $langKey => $langTitle) {
+                                        if ($langKey > 0) {
+                                            if (isset($languageCats[$langKey][$tel]) && $languageCats[$langKey][$tel] != '') {
+                                                $updateArray2 = array();
+                                                $updateArray2['categories_name'] = $languageCats[$langKey][$tel];
+                                                $updateArray2['language_id'] = $langKey;
+                                                $filter=array();
+                                                $filter[]='language_id='.$langKey;
+                                                $filter[]='categories_id='.$this->ms['target-cid'];
+                                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', implode(' AND ',$filter),$updateArray2);
+                                                if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
+                                                    $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // LANGUAGE OVERLAYS EOL
                                 } else {
                                     $insertArray = array();
                                     $insertArray['parent_id'] = $this->ms['target-cid'];
