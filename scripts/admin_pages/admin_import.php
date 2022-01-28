@@ -2692,8 +2692,11 @@ if ($this->post['action'] == 'category-insert') {
                                         $suffix = '_' . $langKey;
                                         $updateArray2 = $updateArray;
                                         foreach ($updateArray2 as $key => $val) {
-                                            if (isset($item[$key . $suffix]) && $item[$key . $suffix] != '') {
-                                                $updateArray2[$key] = $item[$key . $suffix];
+                                            if (isset($item[$key . $suffix])) {
+                                                $updateArray2[$key]='';
+                                                if ($item[$key . $suffix] != '') {
+                                                    $updateArray2[$key] = $item[$key . $suffix];
+                                                }
                                             }
                                         }
                                         $updateArray2['language_id'] = $langKey;
@@ -3074,8 +3077,11 @@ if ($this->post['action'] == 'category-insert') {
                                     $suffix = '_' . $langKey;
                                     $updateArray2 = $updateArray;
                                     foreach ($updateArray2 as $key => $val) {
-                                        if (isset($item[$key . $suffix]) && $item[$key . $suffix] != '') {
-                                            $updateArray2[$key] = $item[$key . $suffix];
+                                        if (isset($item[$key . $suffix])) {
+                                            $updateArray2[$key]='';
+                                            if ($item[$key . $suffix] != '') {
+                                                $updateArray2[$key] = $item[$key . $suffix];
+                                            }
                                         }
                                     }
                                     $updateArray2['language_id'] = $langKey;
