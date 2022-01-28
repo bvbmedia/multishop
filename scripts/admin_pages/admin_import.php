@@ -1521,6 +1521,17 @@ if ($this->post['action'] == 'category-insert') {
                                                     $internal_count = 0;
                                                 }
                                             }
+                                            // custom hook that can be controlled by third-party plugin
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchAttributeValueLanguagePreProc'])) {
+                                                $conf = array(
+                                                        'key' => &$key,
+                                                        'option_value' => &$option_value,
+                                                        'language_overlay' => &$language_overlay,
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchAttributeValueLanguagePreProc'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                                                }
+                                            }
                                             foreach ($langNames as $langId => $name) {
                                                 $language_overlay[$langId]['name']=$name;
                                                 $language_overlay[$langId]['value']=$langValues[$langId];
