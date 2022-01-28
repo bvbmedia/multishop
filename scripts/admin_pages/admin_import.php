@@ -1442,16 +1442,36 @@ if ($this->post['action'] == 'category-insert') {
                                     $tmp = explode("|", $this->post['input'][$i]);
                                     $key = $tmp[0];
                                     $delimiter = $tmp[1];
-                                    $subdelimiter = $tmp[2];
                                     if (!$delimiter) {
                                         $delimiter = '|';
                                     }
+                                    $subdelimiter = $tmp[2];
+                                    $langDelimiter = '';
+                                    if (strstr($tmpitem[$i], '·')) {
+                                        $langDelimiter = '·';
+                                        // This input contains multilanguage string
+                                        $multiLangLines=explode($langDelimiter, $tmpitem[$i]);
+                                        // Set $tmpitem to default language and save other languages in $multiLangLines to be used as language overlay
+                                        $tmpitem[$i]= array_shift($multiLangLines);
+                                    }
                                     $option_values = explode($delimiter, $tmpitem[$i]);
+                                    // Multilanguage input array
+                                    $optionValuesForeignLanguages=array();
+                                    if ($langDelimiter != '') {
+                                        $langId=1;
+                                        foreach ($multiLangLines as $multiLangLine) {
+                                            $optionValuesForeignLanguages[$langId]=explode($delimiter, $multiLangLine);
+                                            $langId++;
+                                        }
+                                    }
                                     $total = count($option_values);
                                     if ($total > 0) {
                                         $count = 0;
                                         $internal_count = 0;
-                                        foreach ($option_values as $option_value) {
+                                        $langNames=array();
+                                        foreach ($option_values as $optionIndex => $option_value) {
+                                            $language_overlay=array();
+                                            $langValues=array();
                                             if ($subdelimiter) {
                                                 // when working with Multishop productfeed that contains attribute values with prices use AUX:
                                                 // Example data: Yes::1.00||No::0.00
@@ -1461,6 +1481,12 @@ if ($this->post['action'] == 'category-insert') {
                                                 $option_value2 = explode($subdelimiter, $option_value);
                                                 $option_value = $option_value2[0];
                                                 $option_price = str_replace(",", ".", $option_value2[1]);
+                                                if (count($optionValuesForeignLanguages)) {
+                                                    foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                        $option_value_lang = explode($subdelimiter, $optionValuesForeignLanguage[$optionIndex]);
+                                                        $langValues[$langId][] = $option_value_lang[0];
+                                                    }
+                                                }
                                             } else {
                                                 $option_price = 0;
                                                 if ($tmp[$internal_count] == '$key') {
@@ -1470,6 +1496,17 @@ if ($this->post['action'] == 'category-insert') {
                                                     // so we use the first value (Option_name) as key
                                                     $key = $option_value;
                                                     $option_value = '';
+                                                    if (count($optionValuesForeignLanguages)) {
+                                                        foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                            $langNames[$langId]=$optionValuesForeignLanguage[$optionIndex];
+                                                        }
+                                                    }
+                                                } else {
+                                                    if (count($optionValuesForeignLanguages)) {
+                                                        foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                            $langValues[$langId]=$optionValuesForeignLanguage[$optionIndex];
+                                                        }
+                                                    }
                                                 }
                                                 if ($tmp[$internal_count] == '$price') {
                                                     // sometimes the option name is inside the field value
@@ -1484,12 +1521,19 @@ if ($this->post['action'] == 'category-insert') {
                                                     $internal_count = 0;
                                                 }
                                             }
+                                            foreach ($langNames as $langId => $name) {
+                                                $language_overlay[$langId]['name']=$name;
+                                                $language_overlay[$langId]['value']=$langValues[$langId];
+                                            }
+                                            //$langNames['values']
                                             if ($key && $option_value) {
-                                                $item[$this->post['select'][$i]][] = array(
+                                                $newData=array(
                                                         $key,
                                                         $option_value,
-                                                        $option_price
+                                                        $option_price,
+                                                        'language_overlay' => $language_overlay
                                                 );
+                                                $item[$this->post['select'][$i]][] = $newData;
                                             }
                                             $count++;
                                         }
@@ -1917,6 +1961,24 @@ if ($this->post['action'] == 'category-insert') {
                                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
                                     $this->ms['target-cid'] = $row['categories_id'];
+                                    // Update language overlay?
+                                    foreach ($this->languages as $langKey => $langTitle) {
+                                        if ($langKey > 0) {
+                                            if (isset($languageCats[$langKey][$tel]) && $languageCats[$langKey][$tel] != '') {
+                                                $updateArray2 = array();
+                                                $updateArray2['categories_name'] = $languageCats[$langKey][$tel];
+                                                $updateArray2['language_id'] = $langKey;
+                                                $filter=array();
+                                                $filter[]='language_id='.$langKey;
+                                                $filter[]='categories_id='.$this->ms['target-cid'];
+                                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', implode(' AND ',$filter),$updateArray2);
+                                                if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
+                                                    $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // LANGUAGE OVERLAYS EOL
                                 } else {
                                     $insertArray = array();
                                     $insertArray['parent_id'] = $this->ms['target-cid'];
@@ -3120,7 +3182,34 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         if (is_array($item['attribute_option_value'])) {
                             $tx_multishop_products_attributes_sort_order_option_value = time();
-                            foreach ($item['attribute_option_value'] as $option_row) {
+                            $optionValueCounter=0;
+                            /*foreach ($this->languages as $langKey => $langTitle) {
+                                if ($langKey > 0) {
+                                    // Temporary storage of multilanguage option name and value
+                                    $attributeForeignLanguageField = 'attribute_option_value_'.$langKey;
+                                    if ($item[$attributeForeignLanguageField]) {
+                                        $optionValues = explode('|', $item[$attributeForeignLanguageField]);
+                                        $item[$attributeForeignLanguageField]=array();
+                                        foreach ($optionValues as $optionValue) {
+                                            $cols=explode('###', $optionValue);
+                                            $colCounter=0;
+                                            foreach ($cols as $col) {
+                                                if (!$colCounter) {
+                                                    $optionName=$col;
+                                                } else {
+                                                    $newValue=array();
+                                                    $newValue[]=$optionName;
+                                                    $newValue[]=$col;
+                                                    $newValue[]=0;
+                                                    $item[$attributeForeignLanguageField][]=$newValue;
+                                                }
+                                                $colCounter++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }*/
+                            foreach ($item['attribute_option_value'] as $indexOption => $option_row) {
                                 $tx_multishop_products_attributes_sort_order_option_value++;
                                 $option_price = '';
                                 if (isset($option_row[2])) {
@@ -3163,8 +3252,14 @@ if ($this->post['action'] == 'category-insert') {
                                     // LANGUAGE OVERLAYS for products options
                                     foreach ($this->languages as $langKey => $langTitle) {
                                         if ($langKey > 0) {
+                                            // Temporary storage of multilanguage option name and value
                                             $insertArray = array();
-                                            $insertArray['products_options_name'] = $option_name;
+                                            if (isset($option_row['language_overlay'][$langKey]['name'])) {
+                                                $translates_option_name=$option_row['language_overlay'][$langKey]['name'];
+                                            } else {
+                                                $translates_option_name=$option_name;
+                                            }
+                                            $insertArray['products_options_name'] = $translates_option_name;
                                             $insertArray['attributes_values'] = '0';
                                             if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order']++;
@@ -3172,7 +3267,6 @@ if ($this->post['action'] == 'category-insert') {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order'] = time();
                                             }
                                             $insertArray['sort_order'] = $sortOrderArray['tx_multishop_products_options']['sort_order'];
-                                            $insertArray['products_options_id'] = $products_options_id;
                                             $insertArray['language_id'] = $langKey;
                                             // get existing record
                                             $record = mslib_befe::getRecord($products_options_id, 'tx_multishop_products_options', 'products_options_id', array(0 => 'language_id=' . $langKey));
@@ -3184,6 +3278,7 @@ if ($this->post['action'] == 'category-insert') {
                                                 $insertArray['listtype'] = 'pulldownmenu';
                                                 // add new record
                                                 $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+                                                $insertArray['products_options_id'] = $products_options_id;
                                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
                                                 if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                                                     $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
@@ -3221,10 +3316,15 @@ if ($this->post['action'] == 'category-insert') {
                                         // LANGUAGE OVERLAYS for products options
                                         foreach ($this->languages as $langKey => $langTitle) {
                                             if ($langKey > 0) {
+                                                if ($option_row['language_overlay'][$langKey]['value']) {
+                                                    $translates_option_value=$option_row['language_overlay'][$langKey]['value'];
+                                                } else {
+                                                    $translates_option_value=$option_value;
+                                                }
                                                 $insertArray = array();
                                                 $insertArray['products_options_values_id'] = $option_value_id;
                                                 $insertArray['language_id'] = $language_id;
-                                                $insertArray['products_options_values_name'] = $option_value;
+                                                $insertArray['products_options_values_name'] = $translates_option_value;
                                                 $insertArray['language_id'] = $langKey;
                                                 // get existing record
                                                 $record = mslib_befe::getRecord($option_value_id, 'tx_multishop_products_options_values', 'products_options_values_id', array(0 => 'language_id=' . $langKey));
@@ -3286,6 +3386,7 @@ if ($this->post['action'] == 'category-insert') {
                                         }
                                     }
                                 }
+                                $optionValueCounter++;
                             }
                         }
                         // new attribute eof
