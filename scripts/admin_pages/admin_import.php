@@ -3235,10 +3235,11 @@ if ($this->post['action'] == 'category-insert') {
                                 $option_value = trim($option_row[1]);
                                 if ($option_name and $option_value) {
                                     // first chk if the option already exists and if not add it
-                                    $sql_chk = "select products_options_id from tx_multishop_products_options where products_options_name='" . addslashes($option_name) . "' and language_id='" . $language_id . "'";
+                                    $sql_chk = "select sort_order,products_options_id from tx_multishop_products_options where products_options_name='" . addslashes($option_name) . "' and language_id='" . $language_id . "'";
                                     $qry_chk = $GLOBALS['TYPO3_DB']->sql_query($sql_chk);
                                     $rs_chk = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
                                     if ($rs_chk['products_options_id']) {
+                                        $products_options_id_sort_order = $rs_chk['sort_order'];
                                         $products_options_id = $rs_chk['products_options_id'];
                                     } else {
                                         // add the option
@@ -3258,6 +3259,7 @@ if ($this->post['action'] == 'category-insert') {
                                         if (!$GLOBALS['TYPO3_DB']->sql_query($query)) {
                                             $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
                                         }
+                                        $products_options_id_sort_order = $insertArray['sort_order'];
                                         $products_options_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
                                     }
                                     // LANGUAGE OVERLAYS for products options
@@ -3272,12 +3274,12 @@ if ($this->post['action'] == 'category-insert') {
                                             }
                                             $insertArray['products_options_name'] = $translates_option_name;
                                             $insertArray['attributes_values'] = '0';
-                                            if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
+                                            /*if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order']++;
                                             } else {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order'] = time();
-                                            }
-                                            $insertArray['sort_order'] = $sortOrderArray['tx_multishop_products_options']['sort_order'];
+                                            }*/
+                                            $insertArray['sort_order'] = $products_options_id_sort_order;
                                             $insertArray['language_id'] = $langKey;
                                             // get existing record
                                             $record = mslib_befe::getRecord($products_options_id, 'tx_multishop_products_options', 'products_options_id', array(0 => 'language_id=' . $langKey));
