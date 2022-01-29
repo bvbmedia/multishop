@@ -341,18 +341,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                         if (!$value_record) {
                             // Insert new
                             $insertArray = array();
+                            $insertArray['products_options_values_id'] = $products_options_values_id;
                             $insertArray['language_id'] = $language_id;
                             $insertArray['products_options_values_name'] = $value;
                             $insertArray['group_dropdown_label'] = $this->post['option_values_dropdown_title'][$products_options_values_id][$language_id];
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            $new_products_options_values_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-
-                            // insert the pov2po table record
-                            $insertArray = array();
-                            $insertArray['products_options_id'] = $option_id;
-                            $insertArray['products_options_values_id'] = $new_products_options_values_id;
-                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         } else {
                             // UPDATE
@@ -368,14 +361,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                             } else {
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                $new_products_options_values_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-
-                                // insert the pov2po table record
-                                $insertArray = array();
-                                $insertArray['products_options_id'] = $option_id;
-                                $insertArray['products_options_values_id'] = $new_products_options_values_id;
-                                $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
-                                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
                         }
                     } else {
@@ -390,14 +375,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         } else {
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $updateArray);
-                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                            $new_products_options_values_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-
-                            // insert the pov2po table record
-                            $insertArray = array();
-                            $insertArray['products_options_id'] = $option_id;
-                            $insertArray['products_options_values_id'] = $new_products_options_values_id;
-                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         }
                     }
