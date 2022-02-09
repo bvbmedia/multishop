@@ -2636,6 +2636,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (isset($item['products_shortdescription'])) {
                                 $updateArray['products_shortdescription'] = $item['products_shortdescription'];
                             }
+                            if (isset($item['products_title'])) {
+                                $updateArray['products_title'] = $item['products_title'];
+                            }
                             if (isset($item['file_remote_location'])) {
                                 $updateArray['file_remote_location'] = $item['file_remote_location'];
                             }
@@ -3052,6 +3055,9 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                             $updateArray['products_shortdescription'] = $item['products_shortdescription'];
+                            if (isset($item['products_title'])) {
+                                $updateArray['products_title'] = $item['products_title'];
+                            }
                             $updateArray['file_remote_location'] = $item['file_remote_location'];
                             $updateArray['products_url'] = $item['products_deeplink'];
                             $updateArray['delivery_time'] = $item['products_delivery_time'];
