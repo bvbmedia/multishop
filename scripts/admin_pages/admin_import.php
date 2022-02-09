@@ -105,6 +105,7 @@ if (is_array($this->languages) && count($this->languages)) {
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
             $coltypes['attribute_option_name_' . $row['products_options_id'] . $suffix] = 'Attribute option values for option name: ' . $row['products_options_name'] . ' (' . $langTitle['title'] . ')';
         }
+        $coltypes['products_title' . $suffix] = 'Products title (' . $langTitle['title'] . ')';
     }
 }
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
