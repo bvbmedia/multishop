@@ -335,6 +335,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $updateArray['discount'] = $discount_price;
                 }
                 $updateArray['orders_last_modified'] = time();
+                // hook
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['repairOrderUpdateOrderPreProc'])) {
+                    $paramsInt = array(
+                            'updateArray' => &$updateArray,
+                            'orders_id' => $orders_id,
+                            'order_tax_data' => &$order_tax_data
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['repairOrderUpdateOrderPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+                    }
+                }
+                // hook oef
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $row['orders_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 $invoice = mslib_fe::getInvoice($row['orders_id'], 'orders_id');
