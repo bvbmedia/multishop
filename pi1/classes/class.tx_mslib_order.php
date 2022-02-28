@@ -1069,10 +1069,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                 // DAEMMFTL-407
                 if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
-                    $totalPriceExclTax = $product['final_price'] * $product['qty'];
-                    $totalPriceInclTax = $totalPriceExclTax * (1 + ($product['products_tax'] / 100));
                     $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
-                    $final_price = $totalPriceInclTax;
+                    $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
                     // Total price of all qty + tax
                     //$final_price = ($product['qty'] * $product['final_price']);
                     //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;
