@@ -131,6 +131,15 @@ if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms_description', 'id=\'' . $this->get['cms_id'] . '\'');
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+    //hook to let other plugins further manipulate the create table query
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_cms.php']['deleteCMSPostHook'])) {
+        $params = array(
+                'cms_id' => $this->get['cms_id']
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_cms.php']['deleteCMSPostHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
     header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_cms'));
     exit();
 }
