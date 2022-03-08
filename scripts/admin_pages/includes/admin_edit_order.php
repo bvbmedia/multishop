@@ -3752,6 +3752,18 @@ if (is_numeric($this->get['orders_id'])) {
             //die();
             //		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
             $orders_tax_data = unserialize($orders['orders_tax_data']);
+            // hook for adding new fieldsets into edit_order
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersOrderTax'])) {
+                // hook
+                $params = array(
+                        'orders_tax_data' => &$orders_tax_data,
+                        'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersOrderTax'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
             $tmpcontent .= '<tfoot><tr><td colspan="' . $colspan . '" class="order_total_data text-right">';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $iso_customer = mslib_fe::getCountryByName($orders['billing_country']);
