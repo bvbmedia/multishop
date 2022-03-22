@@ -2417,9 +2417,9 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                         }
-                        if (!$item['products_description'] and $item['products_shortdescription']) {
+                        /*if (!isset($item['products_description']) and $item['products_shortdescription']) {
                             $item['products_description'] = nl2br($item['products_shortdescription']);
-                        }
+                        }*/
                         if (is_numeric($item['updated_products_id'])) {
                             /***********************
                              * // UPDATE PRODUCT MODE /
@@ -2630,7 +2630,7 @@ if ($this->post['action'] == 'category-insert') {
 							} */
                             if (isset($item['products_description_encoded']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
                                 $updateArray['products_description'] = $item['products_description_encoded'];
-                            } elseif ($item['products_description'] and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
+                            } elseif (isset($item['products_description']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
                                 $updateArray['products_description'] = $item['products_description'];
                             }
                             if (isset($item['products_shortdescription'])) {
@@ -2893,9 +2893,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (!isset($item['products_quantity'])) {
                                 $item['products_quantity'] = 999;
                             }
-                            if (!$item['products_description']) {
+                            /*if (!isset($item['products_description']) && $item['products_shortdescription']) {
                                 $item['products_description'] = nl2br($item['products_shortdescription']);
-                            }
+                            }*/
                             // lets add the new product to the products table
                             $updateArray = array();
                             if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
@@ -3046,10 +3046,10 @@ if ($this->post['action'] == 'category-insert') {
                             $updateArray['products_description'] = $item['products_description'];
                             if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
                                 for ($x = 1; $x <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $x++) {
-                                    if ($item['products_description_tab_title_' . $x]) {
+                                    if (isset($item['products_description_tab_title_' . $x])) {
                                         $updateArray['products_description_tab_title_' . $x] = $item['products_description_tab_title_' . $x];
                                     }
-                                    if ($item['products_description_tab_content_' . $x]) {
+                                    if (isset($item['products_description_tab_content_' . $x])) {
                                         $updateArray['products_description_tab_content_' . $x] = $item['products_description_tab_content_' . $x];
                                     }
                                 }
