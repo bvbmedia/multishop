@@ -2161,6 +2161,10 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                     }
+                    if (isset($item['manufacturers_name']) && $item['manufacturers_name'] == '') {
+                        // Deselect manufacturer name
+                        $item['manufacturers_id'] = '';
+                    }
                     if ($item['manufacturers_image']) {
                         if (isset($item['manufacturers_name'])) {
                             $manufacturers_name = $item['manufacturers_name'];
