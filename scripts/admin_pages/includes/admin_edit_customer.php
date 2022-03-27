@@ -321,29 +321,62 @@ if ($this->post && $this->post['email']) {
             // custom hook that can be controlled by third-party plugin eof
             // customer shipping/payment method mapping
             if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+                $payment_methods = mslib_fe::loadPaymentMethods();
+                $shipping_methods = mslib_fe::loadShippingMethods();
+
                 // shipping/payment methods
                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\'' . $customer_id . '\'');
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-                    foreach ($this->post['payment_method'] as $payment_method_id => $value) {
-                        $updateArray = array();
-                        $updateArray['customers_id'] = $customer_id;
-                        $updateArray['method_id'] = $payment_method_id;
-                        $updateArray['type'] = 'payment';
-                        $updateArray['negate'] = $value;
-                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (count($payment_methods)) {
+                    foreach ($payment_methods as $code => $item) {
+                        // Only set the negate value when setting is differ from global setting
+                        if (isset($this->post['payment_method'][$item['id']])) {
+                            if (!$item['status']) {
+                                $negateValue = 0;
+                            }
+                        } else {
+                            if ($item['status'] > 0) {
+                                $negateValue = 1;
+                            }
+                        }
+                        // Only insert when $negateValue var is set otherwise the setting value same as the global
+                        if (isset($negateValue)) {
+                            $updateArray = array();
+                            $updateArray['customers_id'] = $customer_id;
+                            $updateArray['method_id'] = $item['id'];
+                            $updateArray['type'] = 'payment';
+                            $updateArray['negate'] = $negateValue;
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                        // Keep clean after use
+                        unset($negateValue);
                     }
                 }
-                if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-                    foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
-                        $updateArray = array();
-                        $updateArray['customers_id'] = $customer_id;
-                        $updateArray['method_id'] = $shipping_method_id;
-                        $updateArray['type'] = 'shipping';
-                        $updateArray['negate'] = $value;
-                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (count($shipping_methods)) {
+                    foreach ($shipping_methods as $code => $item) {
+                        // Only set the negate value when setting is differ from global setting
+                        if (isset($this->post['shipping_method'][$item['id']])) {
+                            if (!$item['status']) {
+                                $negateValue = 0;
+                            }
+                        } else {
+                            if ($item['status'] > 0) {
+                                $negateValue = 1;
+                            }
+                        }
+                        // Only insert when $negateValue var is set otherwise the setting value same as the global
+                        if (isset($negateValue)) {
+                            $updateArray = array();
+                            $updateArray['customers_id'] = $customer_id;
+                            $updateArray['method_id'] = $item['id'];
+                            $updateArray['type'] = 'shipping';
+                            $updateArray['negate'] = $negateValue;
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                        // Keep clean after use
+                        unset($negateValue);
                     }
                 }
                 // shipping/payment methods eof
@@ -967,13 +1000,41 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     $tr_type = 'even';
                 }
                 $count++;
-                $shipping_payment_method .= '<div class="form-group" id="multishop_payment_method_' . $item['id'] . '"><label class="control-label col-md-4">' . $item['name'] . '</label><div class="col-md-8">';
-                if ($price_wrap) {
-                    $tmpcontent .= $price_wrap;
+                $shipping_payment_method .= '<div class="form-group" id="multishop_payment_method_' . $item['id'] . '" style="margin-bottom:20px">
+                    <label class="control-label col-md-4">' . $item['name'] . '</label>
+                    <div class="col-md-8">';
+                $paymentSettingSetFrom = 'Disabled in global setting';
+                $paymentChecked = ' data-setting-from="global-disable"';
+                // Payment global setting
+                if ($item['status'] > 0) {
+                    $paymentChecked = ' checked="checked" data-setting-from="global-enable"';
+                    $paymentSettingSetFrom = 'Enabled in global setting';
                 }
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" class="payment_method_cb" id="enable_payment_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="0"' . ((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '') . ' /><label for="enable_payment_method_' . $item['id'] . '">' . $this->pi_getLL('enable') . '</label></div>';
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" class="payment_method_cb" id="disable_payment_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="1"' . ((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) ? ' checked' : '') . ' /><label for="disable_payment_method_' . $item['id'] . '">' . $this->pi_getLL('disable') . '</label></div>';
-                $shipping_payment_method .= '</div></div>';
+                // Checked for local setting
+                if (is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment'])) {
+                    // Checked
+                    if (!$method_mappings['payment']['method_data'][$item['id']]['negate']) {
+                        $paymentChecked = ' checked="checked" data-setting-from="local-enable"';
+                        $paymentSettingSetFrom = 'Enabled in customer setting';
+                    }
+                    // Unchecked
+                    if ($method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) {
+                        $paymentChecked = ' data-setting-from="local-disable"';
+                        $paymentSettingSetFrom = 'Disabled in customer setting';
+                    }
+                }
+                $shipping_payment_method .= '
+                <div class="toggleButton">
+                    <input type="checkbox" class="payment_method_cb" id="payment_method'.$item['id'].'" name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$paymentChecked.'>
+                    <label for="payment_method'.$item['id'].'" style="width:60px">
+                        <span class="toggleButtonTextEnable"></span>
+                        <span class="toggleButtonTextDisable"></span>
+                        <span class="toggleButtonHandler"></span>
+                    </label>
+                    <span style="vertical-align: middle; font-weight: bold; margin-left:6px">('.$paymentSettingSetFrom.')</span>
+                </div>';
+                $shipping_payment_method .= '</div>
+                </div>';
             }
         }
         $shipping_payment_method .= '
@@ -987,13 +1048,42 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
         if (count($shipping_methods)) {
             foreach ($shipping_methods as $code => $item) {
                 $count++;
-                $shipping_payment_method .= '<div class="form-group" id="multishop_shipping_method"><label class="control-label col-md-4">' . $item['name'] . '</label><div class="col-md-8">';
-                if ($price_wrap) {
-                    $shipping_payment_method .= $price_wrap;
+                $shipping_payment_method .= '<div class="form-group" id="multishop_shipping_method">
+                    <label class="control-label col-md-4">' . $item['name'] . '</label>
+                <div class="col-md-8">';
+
+                $shippingSettingSetFrom = 'Disabled in global setting';
+                $shippingChecked = ' data-setting-from="global-disable"';
+                // Payment global setting
+                if ($item['status'] > 0) {
+                    $shippingChecked = ' checked="checked" data-setting-from="global-enable"';
+                    $shippingSettingSetFrom = 'Enabled in global setting';
                 }
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method[' . htmlspecialchars($item['id']) . ']" class="shipping_method_cb" id="enable_shipping_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="0"' . ((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '') . '  /><label for="enable_shipping_method_' . $item['id'] . '">' . $this->pi_getLL('enable') . '</label></div>';
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method[' . htmlspecialchars($item['id']) . ']" class="shipping_method_cb" id="disable_shipping_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="1"' . ((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) ? ' checked' : '') . '  /><label for="disable_shipping_method_' . $item['id'] . '">' . $this->pi_getLL('disable') . '</label></div>';
-                $shipping_payment_method .= '</div></div>';
+                // Checked for local setting
+                if (is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping'])) {
+                    // Checked
+                    if (!$method_mappings['shipping']['method_data'][$item['id']]['negate']) {
+                        $shippingChecked = ' checked="checked" data-setting-from="local-enable"';
+                        $shippingSettingSetFrom = 'Enabled in customer setting';
+                    }
+                    // Unchecked
+                    if ($method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) {
+                        $shippingChecked = ' data-setting-from="local-disable"';
+                        $shippingSettingSetFrom = 'Disabled in customer setting';
+                    }
+                }
+                $shipping_payment_method .= '
+                <div class="toggleButton">
+                    <input type="checkbox" class="shipping_method_cb" id="shipping_method'.$item['id'].'" name="shipping_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$shippingChecked.'>
+                    <label for="shipping_method'.$item['id'].'" style="width:60px">
+                        <span class="toggleButtonTextEnable"></span>
+                        <span class="toggleButtonTextDisable"></span>
+                        <span class="toggleButtonHandler"></span>
+                    </label>
+                    <span style="vertical-align: middle; font-weight: bold; margin-left:6px">('.$shippingSettingSetFrom.')</span>
+                </div>';
+                $shipping_payment_method .= '</div>
+                </div>';
             }
         }
         $shipping_payment_method .= '
