@@ -1023,6 +1023,9 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                         $paymentSettingSetFrom = 'Disabled in customer setting';
                     }
                 }
+                if (!$item['enable_on_default']) {
+                    $paymentSettingSetFrom .= ' / Hidden in frontend';
+                }
                 $shipping_payment_method .= '
                 <div class="toggleButton">
                     <input type="checkbox" class="payment_method_cb" id="payment_method'.$item['id'].'" name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$paymentChecked.'>
@@ -1031,7 +1034,7 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                         <span class="toggleButtonTextDisable"></span>
                         <span class="toggleButtonHandler"></span>
                     </label>
-                    <span style="vertical-align: middle; font-weight: bold; margin-left:6px">('.$paymentSettingSetFrom.')</span>
+                    <span style="vertical-align: middle; margin-left:6px">('.$paymentSettingSetFrom.')</span>
                 </div>';
                 $shipping_payment_method .= '</div>
                 </div>';
