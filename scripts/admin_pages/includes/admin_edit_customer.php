@@ -984,8 +984,8 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
         // the value is are the negate value
         // negate 1 mean the shipping/payment are excluded
         $shipping_payment_method .= '
-<div class="form-horizontal">
-						<div class="div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
+<div class="form-horizontal" id="payment-shipping-methods-mapping-wrapper">
+						<div class="div_products_mappings toggle_advanced_option" id="msEditCustomerInputPaymentMethod">
 							<label class="control-label col-md-2">' . $this->pi_getLL('admin_mapped_methods') . '</label>
 							<div class="col-md-10">
 							<div class="innerbox_methods">
@@ -1033,6 +1033,9 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                         $paymentSettingSetFrom = 'Disabled in customer setting';
                     }
                 }
+                if ($_GET['action'] == 'add_customer') {
+                    $paymentChecked = ' data-setting-from="add-new-customer-local-disable"';
+                }
                 $shipping_payment_method .= '
                 <div class="toggleButton">
                     <input type="checkbox" class="payment_method_cb" id="payment_method'.$item['id'].'" name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$paymentChecked.'>
@@ -1050,7 +1053,7 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
         $shipping_payment_method .= '
 								</div>
 								</div>
-								<div class="innerbox_shipping_methods" id="msEditProductInputShippingMethod">
+								<div class="innerbox_shipping_methods" id="msEditCustomerInputShippingMethod">
 									<p class="form-control-static"><strong>' . $this->pi_getLL('admin_shipping_methods') . '</strong></p>
 							 		';
         $count = 0;
@@ -1081,6 +1084,9 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                         $shippingChecked = ' data-setting-from="local-disable"';
                         $shippingSettingSetFrom = 'Disabled in customer setting';
                     }
+                }
+                if ($_GET['action'] == 'add_customer') {
+                    $shippingChecked = ' data-setting-from="add-new-customer-local-disable"';
                 }
                 $shipping_payment_method .= '
                 <div class="toggleButton">
