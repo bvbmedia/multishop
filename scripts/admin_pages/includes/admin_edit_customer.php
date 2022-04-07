@@ -331,12 +331,7 @@ if ($this->post && $this->post['email']) {
                     foreach ($payment_methods as $code => $item) {
                         // Only set the negate value when setting is differ from global setting
                         if (isset($this->post['payment_method'][$item['id']])) {
-                            if (!$item['status']) {
-                                $negateValue = 0;
-                            }
-                            if (!$item['enable_on_default']) {
-                                $negateValue = 0;
-                            }
+                            $negateValue = 0;
                         } else {
                             if ($item['status'] > 0) {
                                 $negateValue = 1;
