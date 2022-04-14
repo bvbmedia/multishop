@@ -1004,12 +1004,12 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                 $shipping_payment_method .= '<div class="form-group" id="multishop_payment_method_' . $item['id'] . '" style="margin-bottom:20px">
                     <label class="control-label col-md-4">' . $item['name'] . '</label>
                     <div class="col-md-8">';
-                $paymentSettingSetFrom = 'Disabled in global setting';
+                $paymentSettingSetFrom = 'Disabled';
                 $paymentChecked = ' data-setting-from="global-disable"';
                 // Payment global setting
                 if ($item['status'] > 0) {
                     $paymentChecked = ' checked="checked" data-setting-from="global-enable"';
-                    $paymentSettingSetFrom = 'Enabled in global setting';
+                    $paymentSettingSetFrom = 'Enabled';
                     if (!$item['enable_on_default']) {
                         $paymentChecked = ' data-setting-from="global-enable"';
                         $paymentSettingSetFrom .= ' / Hidden in frontend';
@@ -1020,12 +1020,12 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     // Checked
                     if (!$method_mappings['payment']['method_data'][$item['id']]['negate']) {
                         $paymentChecked = ' checked="checked" data-setting-from="local-enable"';
-                        $paymentSettingSetFrom = 'Enabled in customer setting';
+                        $paymentSettingSetFrom = '';
                     }
                     // Unchecked
                     if ($method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) {
                         $paymentChecked = ' data-setting-from="local-disable"';
-                        $paymentSettingSetFrom = 'Disabled in customer setting';
+                        $paymentSettingSetFrom = '';
                     }
                 }
                 if ($_GET['action'] == 'add_customer') {
