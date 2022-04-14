@@ -1020,12 +1020,12 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     // Checked
                     if (!$method_mappings['payment']['method_data'][$item['id']]['negate']) {
                         $paymentChecked = ' checked="checked" data-setting-from="local-enable"';
-                        $paymentSettingSetFrom = '';
+                        $paymentSettingSetFrom = 'Enabled';
                     }
                     // Unchecked
                     if ($method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) {
                         $paymentChecked = ' data-setting-from="local-disable"';
-                        $paymentSettingSetFrom = '';
+                        $paymentSettingSetFrom = 'Disabled';
                     }
                 }
                 if ($_GET['action'] == 'add_customer') {
@@ -1060,24 +1060,24 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     <label class="control-label col-md-4">' . $item['name'] . '</label>
                 <div class="col-md-8">';
 
-                $shippingSettingSetFrom = 'Disabled in global setting';
+                $shippingSettingSetFrom = 'Disabled';
                 $shippingChecked = ' data-setting-from="global-disable"';
                 // Payment global setting
                 if ($item['status'] > 0) {
                     $shippingChecked = ' checked="checked" data-setting-from="global-enable"';
-                    $shippingSettingSetFrom = 'Enabled in global setting';
+                    $shippingSettingSetFrom = 'Enabled';
                 }
                 // Checked for local setting
                 if (is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping'])) {
                     // Checked
                     if (!$method_mappings['shipping']['method_data'][$item['id']]['negate']) {
                         $shippingChecked = ' checked="checked" data-setting-from="local-enable"';
-                        $shippingSettingSetFrom = 'Enabled in customer setting';
+                        $shippingSettingSetFrom = 'Enabled';
                     }
                     // Unchecked
                     if ($method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) {
                         $shippingChecked = ' data-setting-from="local-disable"';
-                        $shippingSettingSetFrom = 'Disabled in customer setting';
+                        $shippingSettingSetFrom = 'Disabled';
                     }
                 }
                 if ($_GET['action'] == 'add_customer') {
