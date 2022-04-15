@@ -2608,7 +2608,8 @@ class mslib_fe {
                                 'products_id' => $products_id,
                                 'options' => &$options,
                                 'class' => &$class,
-                                'output_html' => &$output_html
+                                'output_html' => &$output_html,
+                                'sessionData' => $sessionData
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'] as $funcRef) {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
