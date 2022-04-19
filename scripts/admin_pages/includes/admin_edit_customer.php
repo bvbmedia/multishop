@@ -1020,12 +1020,12 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     // Checked
                     if (!$method_mappings['payment']['method_data'][$item['id']]['negate']) {
                         $paymentChecked = ' checked="checked" data-setting-from="local-enable"';
-                        $paymentSettingSetFrom = '';
+                        //$paymentSettingSetFrom = '';
                     }
                     // Unchecked
                     if ($method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) {
                         $paymentChecked = ' data-setting-from="local-disable"';
-                        $paymentSettingSetFrom = '';
+                        //$paymentSettingSetFrom = '';
                     }
                 }
                 if ($_GET['action'] == 'add_customer') {
@@ -1070,12 +1070,12 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                 if (is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping'])) {
                     // Checked
                     if (!$method_mappings['shipping']['method_data'][$item['id']]['negate']) {
-                        $shippingSettingSetFrom = '';
+                        //$shippingSettingSetFrom = '';
                         $shippingChecked = ' checked="checked" data-setting-from="local-enable"';
                     }
                     // Unchecked
                     if ($method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) {
-                        $shippingSettingSetFrom = '';
+                        //$shippingSettingSetFrom = '';
                         $shippingChecked = ' data-setting-from="local-disable"';
                     }
                 }
