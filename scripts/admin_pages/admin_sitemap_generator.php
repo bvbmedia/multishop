@@ -176,7 +176,17 @@ if (!$this->get['skip_products']) {
     $qry = $GLOBALS['TYPO3_DB']->sql_query("SELECT products_id from tx_multishop_products where " . implode(" and ", $filterProducts));
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $product = mslib_fe::getProduct($row['products_id']);
-        $product_paths = mslib_befe::getRecords($row['products_id'], 'tx_multishop_products_to_categories p2c, tx_multishop_categories c', 'p2c.products_id', array('p2c.is_deepest=1 and p2c.categories_id=c.categories_id and c.status=1'));
+        $product_paths = mslib_befe::getRecords($row['products_id'], 'tx_multishop_products_to_categories p2c, tx_multishop_categories c', 'p2c.products_id', array('p2c.is_deepest=1 and p2c.default_path=1 and p2c.categories_id=c.categories_id and c.status=1'));
+        // hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorProductPaths'])) {
+            $params = array(
+                'product_paths' => &$product_paths
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sitemap_generator.php']['sitemapGeneratorProductPaths'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // hook eof
         if (is_array($product_paths) && count($product_paths)) {
             foreach ($product_paths as $product_path) {
                 $where = '';
