@@ -150,6 +150,77 @@ jQuery(document).ready(function($) {
 		},
 		escapeMarkup: function (m) { return m; }
 	});
+	$(\'.externalCategoryTreeSelect2\').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'100%\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1&tx_multishop_pi1[includeDisabledCats]=1') . '\', {
+				data: {
+					q: query.term,
+					skip_ids: \'' . implode(',', $skip_ids) . '\'
+				},
+				dataType: "json"
+			}).done(function(data) {
+				//categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm[' . $this->shop_pid . '][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm[' . $this->shop_pid . '][v];
+					}
+				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1') . '\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+				/*$.ajax(\'' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1') . '\', {
+					data: {
+						preselected_id: id,
+						skip_ids: \'' . implode(',', $skip_ids) . '\'
+					},
+					dataType: "json"
+				}).done(function(data) {
+					//categoriesIdTerm[data.id]={id: data.id, text: data.text};
+					callback(data);
+				});*/
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
 	' . ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'] ? '
 	$(\'#link_categories_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
@@ -864,7 +935,7 @@ if ($this->post) {
 			<div class="form-group" id="msEditCategoryInputExternalUrl' . $language['uid'] . '">
 				<label class="control-label col-md-2" for="categories_external_url_' . $language['uid'] . '">' . $this->pi_getLL('admin_external_url') . '</label>
 				<div class="col-md-10">
-				<input type="text" class="form-control text" name="categories_external_url[' . $language['uid'] . ']" id="categories_external_url_' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['categories_external_url']) . '">
+				<input type="hidden" class="externalCategoryTreeSelect2" name="categories_external_url[' . $language['uid'] . ']" id="categories_external_url_' . $language['uid'] . '" value="' . htmlspecialchars($lngcat[$language['uid']]['categories_external_url_id']) . '">
 				</div>
             </div>
 			';
@@ -881,7 +952,7 @@ if ($this->post) {
 		<div class="form-group" id="msEditCategoryInputParent">
 			<label for="parent_id" class="control-label col-md-2">' . $this->pi_getLL('admin_parent') . '</label>
 			<div class="col-md-10">
-			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="' . $category['parent_id'] . '" />
+			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider categoryTreeSelect2" value="' . $category['parent_id'] . '" />
 			</div>
 		</div>';
         //'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'

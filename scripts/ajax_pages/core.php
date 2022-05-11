@@ -744,6 +744,11 @@ switch ($this->ms['page']) {
                             'id' => 0,
                             'text' => $this->pi_getLL('admin_main_category')
                     );
+                } else {
+                    $return_data[] = array(
+                            'id' => '',
+                            'text' => $this->pi_getLL('choose')
+                    );
                 }
                 break;
         }
