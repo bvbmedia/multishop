@@ -987,10 +987,3 @@ if (!isset($settings['GLOBAL_MODULES'][$key])) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
-$str = "select `categories_external_url_id` from tx_multishop_categories_description limit 1";
-$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-if (!$qry) {
-    $str = "ALTER TABLE `tx_multishop_categories_description` ADD `categories_external_url_id` int(11) default '0'";
-    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-    $messages[] = $str;
-}
