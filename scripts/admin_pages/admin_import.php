@@ -2280,10 +2280,6 @@ if ($this->post['action'] == 'category-insert') {
                                 if (!isset($item['products_status'])) {
                                     $item['products_status'] = 1;
                                 }
-                                // if quantity is not defined put it to 999
-                                if (!isset($item['products_quantity'])) {
-                                    $item['products_quantity'] = 999;
-                                }
                             }
                         }
                         if ($item['products_order_unit_id']) {
@@ -2892,10 +2888,6 @@ if ($this->post['action'] == 'category-insert') {
                             // if status is not defined put it to 1
                             if (!isset($item['products_status'])) {
                                 $item['products_status'] = 1;
-                            }
-                            // if quantity is not defined put it to 999
-                            if (!isset($item['products_quantity'])) {
-                                $item['products_quantity'] = 999;
                             }
                             /*if (!isset($item['products_description']) && $item['products_shortdescription']) {
                                 $item['products_description'] = nl2br($item['products_shortdescription']);
