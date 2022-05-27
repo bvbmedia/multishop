@@ -81,6 +81,7 @@ if ($this->post) {
     $updateArray = array();
     $updateArray['manufacturers_name'] = $this->post['manufacturers_name'];
     $updateArray['status'] = $this->post['status'];
+    $updateArray['hide_in_menu'] = $this->post['hide_in_menu'];
     if ($update_manufacturers_image) {
         $updateArray['manufacturers_image'] = $update_manufacturers_image;
     }
@@ -377,6 +378,12 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action'] == 'add_manufacture
     $subpartArray['###ADMIN_LABEL_TABS_DETAILS###'] = $this->pi_getLL('admin_label_tabs_details');
     $subpartArray['###ADMIN_LABEL_TABS_CONTENT###'] = $this->pi_getLL('admin_label_tabs_content');
     $subpartArray['###ADMIN_LABEL_TABS_META###'] = $this->pi_getLL('admin_label_tabs_meta');
+    $subpartArray['###LABEL_HIDE_IN_MENU###'] = $this->pi_getLL('hide_in_menu', 'Hide in menu');
+    if ($manufacturer['hide_in_menu'] == 1) {
+        $subpartArray['###MANUFACTURER_HIDE_IN_MENU_CHECKED###'] = 'checked="checked"';
+    } else {
+        $subpartArray['###MANUFACTURER_HIDE_IN_MENU_CHECKED###'] = '';
+    }
     // plugin marker place holder
     $plugins_extra_tab = array();
     $plugins_extra_tab['tabs_header'] = array();
