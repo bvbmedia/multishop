@@ -186,6 +186,16 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $markerArray['###INVOICE_ORDER_DETAILS###'] = mslib_befe::printInvoiceOrderDetailsTable($order, $invoice['invoice_id'], $prefix);
         $markerArray['###LABEL_YOUR_VAT_ID###'] = '';
         $markerArray['###YOUR_VAT_ID###'] = '';
+        $expectedDeliveryDateValue='';
+        if ($order['expected_delivery_date'] > 0) {
+            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
+                $expectedDeliveryDateValue = strftime("%x %T", $order['expected_delivery_date']);
+            } else {
+                $expectedDeliveryDateValue = strftime("%x", $order['expected_delivery_date']);
+            }
+        }
+        $markerArray['###EXPECTED_DELIVERY_DATE###'] = $expectedDeliveryDateValue;
+
         if ($order['billing_vat_id']) {
             $markerArray['###LABEL_YOUR_VAT_ID###'] = $this->pi_getLL('your_vat_id');
             $markerArray['###YOUR_VAT_ID###'] = htmlspecialchars(strtoupper($order['billing_vat_id']));
@@ -372,15 +382,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         $array1[] = '###PAYMENT_METHOD###';
         $array2[] = $order['payment_method_label'];
         $array1[] = '###EXPECTED_DELIVERY_DATE###';
-        if ($order['expected_delivery_date'] > 0) {
-            if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
-                $array2[] = strftime("%x %T", $order['expected_delivery_date']);
-            } else {
-                $array2[] = strftime("%x", $order['expected_delivery_date']);
-            }
-        } else {
-            $array2[] = '';
-        }
+        $array2[] = $expectedDeliveryDateValue;
         $array1[] = '###CUSTOMER_COMMENTS###';
         $array2[] = $order['customer_comments'];
         $array1[] = '###PAYMENT_CONDITION###';
