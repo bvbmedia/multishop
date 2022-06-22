@@ -795,6 +795,10 @@ if (isset($this->get['product_sort']) && $this->get['product_sort'] != '' && $th
             }
         }
         if ($defaultOrderBy) {
+            $prefix = 'p.';
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $prefix = 'pf.';
+            }
             $orderby[] = $prefix . 'products_id desc';
         }
     }

@@ -35,10 +35,23 @@ if ($this->post) {
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 foreach ($this->post['tx_multishop_pi1']['order_status_name'] as $key => $value) {
-                    $updateArray = array();
-                    $updateArray['name'] = $value;
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status_description', 'orders_status_id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'] . '\' and language_id = ' . $key, $updateArray);
-                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    // if product is originally coming from products importer we have to define that the merchant changed it
+                    $filter = array();
+                    $filter[] = 'orders_status_id=' . $this->post['tx_multishop_pi1']['orders_status_id'];
+                    $filter[] = 'language_id=' . $key;
+                    if (mslib_befe::ifExists('', 'tx_multishop_orders_status_description', '', $filter)) {
+                        $updateArray = array();
+                        $updateArray['name'] = $value;
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status_description', 'orders_status_id=\'' . $this->post['tx_multishop_pi1']['orders_status_id'] . '\' and language_id = ' . $key, $updateArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    } else {
+                        $insertArray = array();
+                        $insertArray['name'] = $value;
+                        $insertArray['language_id'] = $key;
+                        $insertArray['orders_status_id'] = $this->post['tx_multishop_pi1']['orders_status_id'];
+                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_description', $insertArray);
+                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                    }
                 }
             }
             break;

@@ -1169,6 +1169,7 @@ class tx_mslib_catalog {
         $from[]='tx_multishop_categories c';
         $from[]='tx_multishop_categories_description cd';
         $filter = array();
+        $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
         $filter[] = 'c.hide_in_menu=0';
         $filter[] = 'c.status=1';
         $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';

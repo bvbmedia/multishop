@@ -162,6 +162,16 @@ foreach ($categories as $category) {
     $markerArray['CATEGORY_STATUS'] = (!$category['status'] ? '(disabled)' : '');
     $markerArray['CATEGORY_ACTION_ICON'] = $category_action_icon;
     $markerArray['SUB_CATEGORY_LIST'] = $subcat_list;
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_categories.php']['adminCategoriesRecordHookIteratorPostHook'])) {
+        $params = array(
+                'markerArray' => &$markerArray,
+                'category' => &$category,
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_categories.php']['adminCategoriesRecordHookIteratorPostHook'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
     $contentItem .= $this->cObj->substituteMarkerArray($subparts['categories'], $markerArray, '###|###');
 }
 $cat_selectbox = '<select name="move_to_cat" id="move_to_cat" class="form-control">

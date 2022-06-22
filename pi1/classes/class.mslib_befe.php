@@ -1313,6 +1313,16 @@ class mslib_befe {
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers', 'manufacturers_id=' . $id);
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_cms', 'manufacturers_id=' . $id);
             $qry = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id=' . $id);
+
+            //hook to let other plugins further manipulate the create table query
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteManufacturerPostHook'])) {
+                $params = array(
+                        'manufacturers_id' => $id
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteManufacturerPostHook'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
         }
     }
     public function getRecord($value = '', $table, $field = '', $additional_where = array(), $select = '*', $groupBy = '', $orderBy = '', $limit = '') {

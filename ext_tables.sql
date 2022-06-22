@@ -364,6 +364,7 @@ CREATE TABLE `tx_multishop_manufacturers` (
  `manufacturers_extra_cost` decimal(24,14) default '0.00000000000000',
  `status` tinyint(1) default '1',
  `foreign_source_name` varchar(30) default '',
+ `hide_in_menu` tinyint(1) default '0',
  PRIMARY KEY (`manufacturers_id`),
  KEY `IDX_MANUFACTURERS_NAME` (`manufacturers_name`),
  KEY `sort_order` (`sort_order`),

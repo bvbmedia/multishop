@@ -335,6 +335,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $updateArray['discount'] = $discount_price;
                 }
                 $updateArray['orders_last_modified'] = time();
+                // hook
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['repairOrderUpdateOrderPreProc'])) {
+                    $paramsInt = array(
+                            'updateArray' => &$updateArray,
+                            'orders_id' => $orders_id,
+                            'order_tax_data' => &$order_tax_data
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['repairOrderUpdateOrderPreProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+                    }
+                }
+                // hook oef
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $row['orders_id'] . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 $invoice = mslib_fe::getInvoice($row['orders_id'], 'orders_id');
@@ -1057,8 +1069,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
                 // DAEMMFTL-407
                 if ($this->ms['MODULES']['APPLY_ROUNDING_TAX_AMOUNT_ON_PRODUCT_PIECE_PRICE']) {
+                    $totalPriceExclTax = $product['final_price'] * $product['qty'];
+                    $totalPriceInclTax = $totalPriceExclTax * (1 + ($product['products_tax'] / 100));
                     $taxPricePerEach=number_format(($product['final_price'] * ($product['products_tax'] / 100)),2,'.','');
-                    $final_price = ($product['qty'] * ($product['final_price']+$taxPricePerEach));
+                    $final_price = $totalPriceInclTax;
                     // Total price of all qty + tax
                     //$final_price = ($product['qty'] * $product['final_price']);
                     //$final_price = round(($final_price * ($product['products_tax'] / 100)), 4) + $final_price;

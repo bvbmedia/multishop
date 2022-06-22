@@ -4,6 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 if ($this->post) {
     // save the payment to zone mappings
+    $redirectUrl = '';
     if (isset($this->post['payment_to_zone_mappings']) && $this->post['payment_to_zone_mappings'] > 0) {
         if (is_array($this->post['payment_zone']) && count($this->post['payment_zone'])) {
             $payment_methods = mslib_fe::loadPaymentMethods();
@@ -35,14 +36,12 @@ if ($this->post) {
                     }
                 }
             }
-            header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#payment_to_zone_mapping');
-            exit();
+            $redirectUrl = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#payment_to_zone_mapping';
         } else {
             // delete mapping
             $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#payment_to_zone_mapping');
-            exit();
+            $redirectUrl = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#payment_to_zone_mapping';
         }
     }
     if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
@@ -64,9 +63,9 @@ if ($this->post) {
                 }
             }
         }
-        header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#admin_shipping_payment_mappings');
-        exit();
+        $redirectUrl = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']) . '#admin_shipping_payment_mappings';
     }
+    $paymentMethodId = 0;
     if ($this->post['sub'] == 'add_payment_method' && $this->post['payment_method_code']) {
         $erno = array();
         $check = mslib_fe::getPaymentMethod($this->post['custom_code'], 'p.code');
@@ -100,32 +99,32 @@ if ($this->post) {
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($res) {
-                $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                $paymentMethodId = $GLOBALS['TYPO3_DB']->sql_insert_id();
                 foreach ($this->post['name'] as $key => $value) {
                     $updateArray = array();
                     $updateArray['name'] = $this->post['name'][$key];
                     $updateArray['description'] = $this->post['description'][$key];
-                    $str = "select 1 from tx_multishop_payment_methods_description where id='" . $id . "' and language_id='" . $key . "'";
+                    $str = "select 1 from tx_multishop_payment_methods_description where id='" . $paymentMethodId . "' and language_id='" . $key . "'";
                     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\'' . $id . '\' and language_id=\'' . $key . '\'', $updateArray);
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\'' . $paymentMethodId . '\' and language_id=\'' . $key . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
-                        $updateArray['id'] = $id;
+                        $updateArray['id'] = $paymentMethodId;
                         $updateArray['language_id'] = $key;
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_description', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
                 }
                 $this->ms['show_main'] = 1;
-                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']));
-                exit();
+                $redirectUrl = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']);
             }
         }
     } else if ($this->post['sub'] == 'update_payment_method' && $this->post['payment_method_id']) {
         // update payment method
         $row = mslib_fe::getPaymentMethod($this->post['payment_method_id'], 'p.id');
         if ($row['id']) {
+            $paymentMethodId = $row['id'];
             // now update the baby
             $updateArray = array();
             $updateArray['page_uid'] = $this->post['related_shop_pid'];
@@ -140,28 +139,43 @@ if ($this->post) {
             $updateArray['vars'] = serialize($this->post);
             $updateArray['enable_on_default'] = $this->post['enable_on_default'];
             $updateArray['payment_condition'] = $this->post['payment_condition'];
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\'' . $row['id'] . '\'', $updateArray);
+            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\'' . $paymentMethodId . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             foreach ($this->post['name'] as $key => $value) {
                 $updateArray = array();
                 $updateArray['name'] = $this->post['name'][$key];
                 $updateArray['description'] = $this->post['description'][$key];
-                $str = "select 1 from tx_multishop_payment_methods_description where id='" . $row['id'] . "' and language_id='" . $key . "'";
+                $str = "select 1 from tx_multishop_payment_methods_description where id='" . $paymentMethodId . "' and language_id='" . $key . "'";
                 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\'' . $row['id'] . '\' and language_id=\'' . $key . '\'', $updateArray);
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\'' . $paymentMethodId . '\' and language_id=\'' . $key . '\'', $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 } else {
-                    $updateArray['id'] = $row['id'];
+                    $updateArray['id'] = $paymentMethodId;
                     $updateArray['language_id'] = $key;
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_description', $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
             }
             $this->ms['show_main'] = 1;
-            header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']));
-            exit();
+            $redirectUrl = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page']);
         }
+    }
+    if ($paymentMethodId > 0) {
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_payment_modules.php']['savePaymentMethodPostProc'])) {
+            $params = array(
+                    'paymentMethodId' => &$paymentMethodId
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_payment_modules.php']['savePaymentMethodPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        // custom hook that can be controlled by third-party plugin eof
+    }
+    if ($redirectUrl) {
+        header('Location: ' . $redirectUrl);
+        exit();
     }
 }
 $active_shop = mslib_fe::getActiveShop();

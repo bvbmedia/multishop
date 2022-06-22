@@ -40,5 +40,9 @@ printPdf = function (url) {
     }
     iframe.src = url;
 }
+// Disable the autocomplete on all text input in admin section
+setTimeout(function () {
+    jQuery('form').attr('autocomplete', 'off');
+}, 5);
 
 

@@ -105,6 +105,7 @@ if (is_array($this->languages) && count($this->languages)) {
         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
             $coltypes['attribute_option_name_' . $row['products_options_id'] . $suffix] = 'Attribute option values for option name: ' . $row['products_options_name'] . ' (' . $langTitle['title'] . ')';
         }
+        $coltypes['products_title' . $suffix] = 'Products title (' . $langTitle['title'] . ')';
     }
 }
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
@@ -1442,16 +1443,36 @@ if ($this->post['action'] == 'category-insert') {
                                     $tmp = explode("|", $this->post['input'][$i]);
                                     $key = $tmp[0];
                                     $delimiter = $tmp[1];
-                                    $subdelimiter = $tmp[2];
                                     if (!$delimiter) {
                                         $delimiter = '|';
                                     }
+                                    $subdelimiter = $tmp[2];
+                                    $langDelimiter = '';
+                                    if (strstr($tmpitem[$i], '·')) {
+                                        $langDelimiter = '·';
+                                        // This input contains multilanguage string
+                                        $multiLangLines=explode($langDelimiter, $tmpitem[$i]);
+                                        // Set $tmpitem to default language and save other languages in $multiLangLines to be used as language overlay
+                                        $tmpitem[$i]= array_shift($multiLangLines);
+                                    }
                                     $option_values = explode($delimiter, $tmpitem[$i]);
+                                    // Multilanguage input array
+                                    $optionValuesForeignLanguages=array();
+                                    if ($langDelimiter != '') {
+                                        $langId=1;
+                                        foreach ($multiLangLines as $multiLangLine) {
+                                            $optionValuesForeignLanguages[$langId]=explode($delimiter, $multiLangLine);
+                                            $langId++;
+                                        }
+                                    }
                                     $total = count($option_values);
                                     if ($total > 0) {
                                         $count = 0;
                                         $internal_count = 0;
-                                        foreach ($option_values as $option_value) {
+                                        $langNames=array();
+                                        foreach ($option_values as $optionIndex => $option_value) {
+                                            $language_overlay=array();
+                                            $langValues=array();
                                             if ($subdelimiter) {
                                                 // when working with Multishop productfeed that contains attribute values with prices use AUX:
                                                 // Example data: Yes::1.00||No::0.00
@@ -1461,6 +1482,12 @@ if ($this->post['action'] == 'category-insert') {
                                                 $option_value2 = explode($subdelimiter, $option_value);
                                                 $option_value = $option_value2[0];
                                                 $option_price = str_replace(",", ".", $option_value2[1]);
+                                                if (count($optionValuesForeignLanguages)) {
+                                                    foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                        $option_value_lang = explode($subdelimiter, $optionValuesForeignLanguage[$optionIndex]);
+                                                        $langValues[$langId][] = $option_value_lang[0];
+                                                    }
+                                                }
                                             } else {
                                                 $option_price = 0;
                                                 if ($tmp[$internal_count] == '$key') {
@@ -1470,6 +1497,17 @@ if ($this->post['action'] == 'category-insert') {
                                                     // so we use the first value (Option_name) as key
                                                     $key = $option_value;
                                                     $option_value = '';
+                                                    if (count($optionValuesForeignLanguages)) {
+                                                        foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                            $langNames[$langId]=$optionValuesForeignLanguage[$optionIndex];
+                                                        }
+                                                    }
+                                                } else {
+                                                    if (count($optionValuesForeignLanguages)) {
+                                                        foreach ($optionValuesForeignLanguages as $langId => $optionValuesForeignLanguage) {
+                                                            $langValues[$langId]=$optionValuesForeignLanguage[$optionIndex];
+                                                        }
+                                                    }
                                                 }
                                                 if ($tmp[$internal_count] == '$price') {
                                                     // sometimes the option name is inside the field value
@@ -1484,12 +1522,30 @@ if ($this->post['action'] == 'category-insert') {
                                                     $internal_count = 0;
                                                 }
                                             }
+                                            // custom hook that can be controlled by third-party plugin
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchAttributeValueLanguagePreProc'])) {
+                                                $conf = array(
+                                                        'key' => &$key,
+                                                        'option_value' => &$option_value,
+                                                        'language_overlay' => &$language_overlay,
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['adminImporterFetchAttributeValueLanguagePreProc'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+                                                }
+                                            }
+                                            foreach ($langNames as $langId => $name) {
+                                                $language_overlay[$langId]['name']=$name;
+                                                $language_overlay[$langId]['value']=$langValues[$langId];
+                                            }
+                                            //$langNames['values']
                                             if ($key && $option_value) {
-                                                $item[$this->post['select'][$i]][] = array(
+                                                $newData=array(
                                                         $key,
                                                         $option_value,
-                                                        $option_price
+                                                        $option_price,
+                                                        'language_overlay' => $language_overlay
                                                 );
+                                                $item[$this->post['select'][$i]][] = $newData;
                                             }
                                             $count++;
                                         }
@@ -1903,11 +1959,38 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                                 $hashed_id .= $cat;
                                 $strchk = "SELECT categories_id from tx_multishop_categories c where c.hashed_id='" . addslashes(md5($hashed_id)) . "' and c.page_uid='" . $this->showCatalogFromPage . "'";
-                                //$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+                                // custom hook that can be controlled by third-party plugin
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterFetchCategoryCrumNode'])) {
+                                    $params = array(
+                                            'strchk' => &$strchk,
+                                            'cat' => &$cat,
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterFetchCategoryCrumNode'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                    }
+                                }
                                 $qrychk = $GLOBALS['TYPO3_DB']->sql_query($strchk);
                                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
                                     $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
                                     $this->ms['target-cid'] = $row['categories_id'];
+                                    // Update language overlay?
+                                    foreach ($this->languages as $langKey => $langTitle) {
+                                        if ($langKey > 0) {
+                                            if (isset($languageCats[$langKey][$tel]) && $languageCats[$langKey][$tel] != '') {
+                                                $updateArray2 = array();
+                                                $updateArray2['categories_name'] = $languageCats[$langKey][$tel];
+                                                $updateArray2['language_id'] = $langKey;
+                                                $filter=array();
+                                                $filter[]='language_id='.$langKey;
+                                                $filter[]='categories_id='.$this->ms['target-cid'];
+                                                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', implode(' AND ',$filter),$updateArray2);
+                                                if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
+                                                    $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // LANGUAGE OVERLAYS EOL
                                 } else {
                                     $insertArray = array();
                                     $insertArray['parent_id'] = $this->ms['target-cid'];
@@ -1920,6 +2003,15 @@ if ($this->post['action'] == 'category-insert') {
                                         $insertArray['foreign_source_name'] = $this->post['prefix_source_name'];
                                     }
                                     $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+                                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterInsertCategoryCrumNode'])) {
+                                        $params = array(
+                                                'insertArray' => &$insertArray,
+                                                'cat' => &$cat,
+                                        );
+                                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['msImporterInsertCategoryCrumNode'] as $funcRef) {
+                                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                        }
+                                    }
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
                                     if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                                         $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
@@ -2069,6 +2161,10 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                     }
+                    if (isset($item['manufacturers_name']) && $item['manufacturers_name'] == '') {
+                        // Deselect manufacturer name
+                        $item['manufacturers_id'] = '';
+                    }
                     if ($item['manufacturers_image']) {
                         if (isset($item['manufacturers_name'])) {
                             $manufacturers_name = $item['manufacturers_name'];
@@ -2183,10 +2279,6 @@ if ($this->post['action'] == 'category-insert') {
                                 // if status is not defined put it to 1
                                 if (!isset($item['products_status'])) {
                                     $item['products_status'] = 1;
-                                }
-                                // if quantity is not defined put it to 999
-                                if (!isset($item['products_quantity'])) {
-                                    $item['products_quantity'] = 999;
                                 }
                             }
                         }
@@ -2325,9 +2417,9 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                             }
                         }
-                        if (!$item['products_description'] and $item['products_shortdescription']) {
+                        /*if (!isset($item['products_description']) and $item['products_shortdescription']) {
                             $item['products_description'] = nl2br($item['products_shortdescription']);
-                        }
+                        }*/
                         if (is_numeric($item['updated_products_id'])) {
                             /***********************
                              * // UPDATE PRODUCT MODE /
@@ -2538,11 +2630,14 @@ if ($this->post['action'] == 'category-insert') {
 							} */
                             if (isset($item['products_description_encoded']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
                                 $updateArray['products_description'] = $item['products_description_encoded'];
-                            } elseif ($item['products_description'] and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
+                            } elseif (isset($item['products_description']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_description', $importedProductsLockedFields))))) {
                                 $updateArray['products_description'] = $item['products_description'];
                             }
                             if (isset($item['products_shortdescription'])) {
                                 $updateArray['products_shortdescription'] = $item['products_shortdescription'];
+                            }
+                            if (isset($item['products_title'])) {
+                                $updateArray['products_title'] = $item['products_title'];
                             }
                             if (isset($item['file_remote_location'])) {
                                 $updateArray['file_remote_location'] = $item['file_remote_location'];
@@ -2601,8 +2696,11 @@ if ($this->post['action'] == 'category-insert') {
                                         $suffix = '_' . $langKey;
                                         $updateArray2 = $updateArray;
                                         foreach ($updateArray2 as $key => $val) {
-                                            if (isset($item[$key . $suffix]) && $item[$key . $suffix] != '') {
-                                                $updateArray2[$key] = $item[$key . $suffix];
+                                            if (isset($item[$key . $suffix])) {
+                                                $updateArray2[$key]='';
+                                                if ($item[$key . $suffix] != '') {
+                                                    $updateArray2[$key] = $item[$key . $suffix];
+                                                }
                                             }
                                         }
                                         $updateArray2['language_id'] = $langKey;
@@ -2791,13 +2889,9 @@ if ($this->post['action'] == 'category-insert') {
                             if (!isset($item['products_status'])) {
                                 $item['products_status'] = 1;
                             }
-                            // if quantity is not defined put it to 999
-                            if (!isset($item['products_quantity'])) {
-                                $item['products_quantity'] = 999;
-                            }
-                            if (!$item['products_description']) {
+                            /*if (!isset($item['products_description']) && $item['products_shortdescription']) {
                                 $item['products_description'] = nl2br($item['products_shortdescription']);
-                            }
+                            }*/
                             // lets add the new product to the products table
                             $updateArray = array();
                             if (isset($item['tax_id']) and (!$item['imported_product'] or ($item['imported_product'] and (!is_array($importedProductsLockedFields) || is_array($importedProductsLockedFields) && !in_array('products_vat_rate', $importedProductsLockedFields))))) {
@@ -2948,15 +3042,18 @@ if ($this->post['action'] == 'category-insert') {
                             $updateArray['products_description'] = $item['products_description'];
                             if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
                                 for ($x = 1; $x <= $this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $x++) {
-                                    if ($item['products_description_tab_title_' . $x]) {
+                                    if (isset($item['products_description_tab_title_' . $x])) {
                                         $updateArray['products_description_tab_title_' . $x] = $item['products_description_tab_title_' . $x];
                                     }
-                                    if ($item['products_description_tab_content_' . $x]) {
+                                    if (isset($item['products_description_tab_content_' . $x])) {
                                         $updateArray['products_description_tab_content_' . $x] = $item['products_description_tab_content_' . $x];
                                     }
                                 }
                             }
                             $updateArray['products_shortdescription'] = $item['products_shortdescription'];
+                            if (isset($item['products_title'])) {
+                                $updateArray['products_title'] = $item['products_title'];
+                            }
                             $updateArray['file_remote_location'] = $item['file_remote_location'];
                             $updateArray['products_url'] = $item['products_deeplink'];
                             $updateArray['delivery_time'] = $item['products_delivery_time'];
@@ -2983,8 +3080,11 @@ if ($this->post['action'] == 'category-insert') {
                                     $suffix = '_' . $langKey;
                                     $updateArray2 = $updateArray;
                                     foreach ($updateArray2 as $key => $val) {
-                                        if (isset($item[$key . $suffix]) && $item[$key . $suffix] != '') {
-                                            $updateArray2[$key] = $item[$key . $suffix];
+                                        if (isset($item[$key . $suffix])) {
+                                            $updateArray2[$key]='';
+                                            if ($item[$key . $suffix] != '') {
+                                                $updateArray2[$key] = $item[$key . $suffix];
+                                            }
                                         }
                                     }
                                     $updateArray2['language_id'] = $langKey;
@@ -3102,7 +3202,34 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         if (is_array($item['attribute_option_value'])) {
                             $tx_multishop_products_attributes_sort_order_option_value = time();
-                            foreach ($item['attribute_option_value'] as $option_row) {
+                            $optionValueCounter=0;
+                            /*foreach ($this->languages as $langKey => $langTitle) {
+                                if ($langKey > 0) {
+                                    // Temporary storage of multilanguage option name and value
+                                    $attributeForeignLanguageField = 'attribute_option_value_'.$langKey;
+                                    if ($item[$attributeForeignLanguageField]) {
+                                        $optionValues = explode('|', $item[$attributeForeignLanguageField]);
+                                        $item[$attributeForeignLanguageField]=array();
+                                        foreach ($optionValues as $optionValue) {
+                                            $cols=explode('###', $optionValue);
+                                            $colCounter=0;
+                                            foreach ($cols as $col) {
+                                                if (!$colCounter) {
+                                                    $optionName=$col;
+                                                } else {
+                                                    $newValue=array();
+                                                    $newValue[]=$optionName;
+                                                    $newValue[]=$col;
+                                                    $newValue[]=0;
+                                                    $item[$attributeForeignLanguageField][]=$newValue;
+                                                }
+                                                $colCounter++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }*/
+                            foreach ($item['attribute_option_value'] as $indexOption => $option_row) {
                                 $tx_multishop_products_attributes_sort_order_option_value++;
                                 $option_price = '';
                                 if (isset($option_row[2])) {
@@ -3117,10 +3244,11 @@ if ($this->post['action'] == 'category-insert') {
                                 $option_value = trim($option_row[1]);
                                 if ($option_name and $option_value) {
                                     // first chk if the option already exists and if not add it
-                                    $sql_chk = "select products_options_id from tx_multishop_products_options where products_options_name='" . addslashes($option_name) . "' and language_id='" . $language_id . "'";
+                                    $sql_chk = "select sort_order,products_options_id from tx_multishop_products_options where products_options_name='" . addslashes($option_name) . "' and language_id='" . $language_id . "'";
                                     $qry_chk = $GLOBALS['TYPO3_DB']->sql_query($sql_chk);
                                     $rs_chk = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
                                     if ($rs_chk['products_options_id']) {
+                                        $products_options_id_sort_order = $rs_chk['sort_order'];
                                         $products_options_id = $rs_chk['products_options_id'];
                                     } else {
                                         // add the option
@@ -3140,21 +3268,27 @@ if ($this->post['action'] == 'category-insert') {
                                         if (!$GLOBALS['TYPO3_DB']->sql_query($query)) {
                                             $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
                                         }
+                                        $products_options_id_sort_order = $insertArray['sort_order'];
                                         $products_options_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
                                     }
                                     // LANGUAGE OVERLAYS for products options
                                     foreach ($this->languages as $langKey => $langTitle) {
                                         if ($langKey > 0) {
+                                            // Temporary storage of multilanguage option name and value
                                             $insertArray = array();
-                                            $insertArray['products_options_name'] = $option_name;
+                                            if (isset($option_row['language_overlay'][$langKey]['name'])) {
+                                                $translates_option_name=$option_row['language_overlay'][$langKey]['name'];
+                                            } else {
+                                                $translates_option_name=$option_name;
+                                            }
+                                            $insertArray['products_options_name'] = $translates_option_name;
                                             $insertArray['attributes_values'] = '0';
-                                            if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
+                                            /*if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order']++;
                                             } else {
                                                 $sortOrderArray['tx_multishop_products_options']['sort_order'] = time();
-                                            }
-                                            $insertArray['sort_order'] = $sortOrderArray['tx_multishop_products_options']['sort_order'];
-                                            $insertArray['products_options_id'] = $products_options_id;
+                                            }*/
+                                            $insertArray['sort_order'] = $products_options_id_sort_order;
                                             $insertArray['language_id'] = $langKey;
                                             // get existing record
                                             $record = mslib_befe::getRecord($products_options_id, 'tx_multishop_products_options', 'products_options_id', array(0 => 'language_id=' . $langKey));
@@ -3166,6 +3300,7 @@ if ($this->post['action'] == 'category-insert') {
                                                 $insertArray['listtype'] = 'pulldownmenu';
                                                 // add new record
                                                 $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
+                                                $insertArray['products_options_id'] = $products_options_id;
                                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
                                                 if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                                                     $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
@@ -3203,10 +3338,15 @@ if ($this->post['action'] == 'category-insert') {
                                         // LANGUAGE OVERLAYS for products options
                                         foreach ($this->languages as $langKey => $langTitle) {
                                             if ($langKey > 0) {
+                                                if ($option_row['language_overlay'][$langKey]['value']) {
+                                                    $translates_option_value=$option_row['language_overlay'][$langKey]['value'];
+                                                } else {
+                                                    $translates_option_value=$option_value;
+                                                }
                                                 $insertArray = array();
                                                 $insertArray['products_options_values_id'] = $option_value_id;
                                                 $insertArray['language_id'] = $language_id;
-                                                $insertArray['products_options_values_name'] = $option_value;
+                                                $insertArray['products_options_values_name'] = $translates_option_value;
                                                 $insertArray['language_id'] = $langKey;
                                                 // get existing record
                                                 $record = mslib_befe::getRecord($option_value_id, 'tx_multishop_products_options_values', 'products_options_values_id', array(0 => 'language_id=' . $langKey));
@@ -3268,6 +3408,7 @@ if ($this->post['action'] == 'category-insert') {
                                         }
                                     }
                                 }
+                                $optionValueCounter++;
                             }
                         }
                         // new attribute eof

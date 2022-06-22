@@ -987,3 +987,10 @@ if (!isset($settings['GLOBAL_MODULES'][$key])) {
     $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
     $messages[]=$str;
 }
+$str = "select hide_in_menu from tx_multishop_manufacturers limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+    $str = "ALTER TABLE `tx_multishop_manufacturers` ADD `hide_in_menu` tinyint(1) default '0', ADD KEY `hide_in_menu` (hide_in_menu)";
+    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+    $messages[] = $str;
+}

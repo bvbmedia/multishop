@@ -1437,30 +1437,30 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $billing_details_info = '<div class="address_details_container" id="billing_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['billing_company']) {
-                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_company']) . '</strong><br />';
+                $billing_details_info .= '<strong>' . mslib_fe::RemoveXSS($orders['billing_company']) . '</strong><br />';
             }
             if ($orders['billing_department']) {
-                $billing_details_info .= '<strong>' . htmlspecialchars($orders['billing_department']) . '</strong><br />';
+                $billing_details_info .= '<strong>' . mslib_fe::RemoveXSS($orders['billing_department']) . '</strong><br />';
             }
-            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . htmlspecialchars($orders['billing_name']) . '</a><br />
+            $billing_details_info .= '<a href="' . $settings['customer_edit_link'] . '">' . mslib_fe::RemoveXSS($orders['billing_name']) . '</a><br />
             ' . $settings['billing_address_value'] . '<br /><br />';
             if ($orders['billing_email']) {
-                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . htmlspecialchars($orders['billing_email']) . '">' . htmlspecialchars($orders['billing_email']) . '</a><br />';
+                $billing_details_info .= $this->pi_getLL('email') . ': <a href="mailto:' . mslib_fe::RemoveXSS($orders['billing_email']) . '">' . mslib_fe::RemoveXSS($orders['billing_email']) . '</a><br />';
             }
             if ($orders['billing_telephone']) {
-                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['billing_telephone']) . '<br />';
+                $billing_details_info .= $this->pi_getLL('telephone') . ': ' . mslib_fe::RemoveXSS($orders['billing_telephone']) . '<br />';
             }
             if ($orders['billing_mobile']) {
-                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['billing_mobile']) . '<br />';
+                $billing_details_info .= $this->pi_getLL('mobile') . ': ' . mslib_fe::RemoveXSS($orders['billing_mobile']) . '<br />';
             }
             if ($orders['billing_fax']) {
-                $billing_details_info .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['billing_fax']) . '<br />';
+                $billing_details_info .= $this->pi_getLL('fax') . ': ' . mslib_fe::RemoveXSS($orders['billing_fax']) . '<br />';
             }
             if ($orders['billing_vat_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['billing_vat_id']) . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . mslib_fe::RemoveXSS($orders['billing_vat_id']) . '</strong><br />';
             }
             if ($orders['billing_coc_id']) {
-                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['billing_coc_id']) . '</strong><br />';
+                $billing_details_info .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . mslib_fe::RemoveXSS($orders['billing_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $billing_details_info .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -1676,41 +1676,41 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $tmpcontent .= '<div class="address_details_container" id="delivery_details_container"' . ($count_validate_erno && $this->ms['MODULES']['ORDER_EDIT'] && $settings['enable_edit_customer_details'] ? ' style="display:none"' : '') . '>';
             if ($orders['delivery_company']) {
-                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_company']) . '</strong><br />';
+                $tmpcontent .= '<strong>' . mslib_fe::RemoveXSS($orders['delivery_company']) . '</strong><br />';
             }
             if ($orders['delivery_department']) {
-                $tmpcontent .= '<strong>' . htmlspecialchars($orders['delivery_department']) . '</strong><br />';
+                $tmpcontent .= '<strong>' . mslib_fe::RemoveXSS($orders['delivery_department']) . '</strong><br />';
             }
             $address_data = array();
             $address_data = $orders;
-            $address_data['building'] = htmlspecialchars($orders['delivery_building']);
-            $address_data['address'] = htmlspecialchars($orders['delivery_address']);
-            $address_data['zip'] = htmlspecialchars($orders['delivery_zip']);
-            $address_data['city'] = htmlspecialchars($orders['delivery_city']);
+            $address_data['building'] = mslib_fe::RemoveXSS($orders['delivery_building']);
+            $address_data['address'] = mslib_fe::RemoveXSS($orders['delivery_address']);
+            $address_data['zip'] = mslib_fe::RemoveXSS($orders['delivery_zip']);
+            $address_data['city'] = mslib_fe::RemoveXSS($orders['delivery_city']);
             $address_data['country'] = $orders['delivery_country'];
             $delivery_address_value = mslib_befe::customerAddressFormat($address_data, 'delivery');
-            $tmpcontent .= htmlspecialchars($orders['delivery_name']) . '<br />
+            $tmpcontent .= mslib_fe::RemoveXSS($orders['delivery_name']) . '<br />
               ' . $delivery_address_value . '<br /><br />';
             if ($orders['delivery_email']) {
-                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . htmlspecialchars($orders['delivery_email']) . '</a><br />';
+                $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . mslib_fe::RemoveXSS($orders['delivery_email']) . '</a><br />';
             }
             if ($orders['delivery_telephone']) {
-                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . htmlspecialchars($orders['delivery_telephone']) . '<br />';
+                $tmpcontent .= $this->pi_getLL('telephone') . ': ' . mslib_fe::RemoveXSS($orders['delivery_telephone']) . '<br />';
             }
             if ($orders['delivery_mobile']) {
-                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . htmlspecialchars($orders['delivery_mobile']) . '<br />';
+                $tmpcontent .= $this->pi_getLL('mobile') . ': ' . mslib_fe::RemoveXSS($orders['delivery_mobile']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . mslib_fe::RemoveXSS($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_fax']) {
-                $tmpcontent .= $this->pi_getLL('fax') . ': ' . htmlspecialchars($orders['delivery_fax']) . '<br />';
+                $tmpcontent .= $this->pi_getLL('fax') . ': ' . mslib_fe::RemoveXSS($orders['delivery_fax']) . '<br />';
             }
             if ($orders['delivery_vat_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . htmlspecialchars($orders['delivery_vat_id']) . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . mslib_fe::RemoveXSS($orders['delivery_vat_id']) . '</strong><br />';
             }
             if ($orders['delivery_coc_id']) {
-                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . htmlspecialchars($orders['delivery_coc_id']) . '</strong><br />';
+                $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . mslib_fe::RemoveXSS($orders['delivery_coc_id']) . '</strong><br />';
             }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_customer_details']) {
                 $tmpcontent .= '<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> ' . $this->pi_getLL('edit') . '</a></div></div>';
@@ -2241,9 +2241,9 @@ if (is_numeric($this->get['orders_id'])) {
                     $orderDetailsItem = '<div class="form-group msAdminEditOrderPaymentConditions" id="msAdminEditOrderPaymentConditions">';
                     $orderDetailsItem .= '<label class="control-label col-md-3">' . $this->pi_getLL('payment_condition') . '</label>';
                     if (!$orders['is_locked']) {
-                        $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . htmlspecialchars($orders['payment_condition']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
+                        $orderDetailsItem .= '<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" id="order_payment_condition" value="' . mslib_fe::RemoveXSS($orders['payment_condition']) . '" /><span class="input-group-addon">' . $this->pi_getLL('days') . '</span></div></div>';
                     } else {
-                        $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . htmlspecialchars($orders['payment_condition'] . ' ' . $this->pi_getLL('days')) . '</p></div>';
+                        $orderDetailsItem .= '<div class="col-md-9"><p class="form-control-static">' . mslib_fe::RemoveXSS($orders['payment_condition'] . ' ' . $this->pi_getLL('days')) . '</p></div>';
                     }
                     $orderDetailsItem .= '</div>';
                     $orderDetails[] = $orderDetailsItem;
@@ -3752,6 +3752,18 @@ if (is_numeric($this->get['orders_id'])) {
             //die();
             //		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
             $orders_tax_data = unserialize($orders['orders_tax_data']);
+            // hook for adding new fieldsets into edit_order
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersOrderTax'])) {
+                // hook
+                $params = array(
+                        'orders_tax_data' => &$orders_tax_data,
+                        'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersOrderTax'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
             $tmpcontent .= '<tfoot><tr><td colspan="' . $colspan . '" class="order_total_data text-right">';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
                 $iso_customer = mslib_fe::getCountryByName($orders['billing_country']);
@@ -4699,7 +4711,7 @@ if (is_numeric($this->get['orders_id'])) {
         $order_status_tab_content['track_and_trace_code'] = '<div class="form-group">
             <label for="track_and_trace_code" class="control-label col-md-2">' . $this->pi_getLL('track_and_trace_code') . '</label>
             <div class="col-md-10">
-            	<input class="form-control" name="track_and_trace_code" type="text" value="' . htmlspecialchars($orders['track_and_trace_code']) . '" />
+            	<input class="form-control" name="track_and_trace_code" type="text" value="' . mslib_fe::RemoveXSS($orders['track_and_trace_code']) . '" />
             </div>
         </div>';
         if (!empty($orders['track_and_trace_link'])) {
@@ -4713,7 +4725,7 @@ if (is_numeric($this->get['orders_id'])) {
         $order_status_tab_content['order_memo'] = '<div class="form-group">
             <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
             <div class="col-md-10">
-            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . htmlspecialchars($orders['order_memo']) . '</textarea>
+            <textarea name="order_memo" id="order_memo" class="mceEditor" rows="4">' . mslib_fe::RemoveXSS($orders['order_memo']) . '</textarea>
             ' . ($orders['memo_crdate'] > 0 ? '<span class="memo_last_modified">' . $this->pi_getLL('order_memo_last_modified') . ': ' . strftime("%a. %x %X", $orders['memo_crdate']) . '</span>' : '') . '
             </div>
         </div>';

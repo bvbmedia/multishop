@@ -398,8 +398,6 @@ if ($this->post) {
                                 $insertArray['page_uid'] = $this->showCatalogFromPage;
                                 $insertArray['foreign_page_uid'] = $page_uid;
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
-                                var_dump($query);
-                                die('1');
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 // link existing product from source to foreign cat id
                                 $has_products = mslib_fe::getProducts('', $reflector_cattree[$foreign_cat_id]);
@@ -1573,7 +1571,9 @@ $(document).on("change", "#remove_aspectratio", function(){
                     'category' => &$category,
                     'lngcat' => $lngcat,
                     'plugins_extra_tab' => &$plugins_extra_tab,
-                    'js_extra' => &$js_extra
+                    'js_extra' => &$js_extra,
+                    'jsSelect2InitialValue' => $jsSelect2InitialValue,
+                    'skip_ids' => $skip_ids
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

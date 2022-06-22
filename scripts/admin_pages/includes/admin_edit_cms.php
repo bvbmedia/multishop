@@ -407,21 +407,34 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
         </div>';
     }
     $tabs['cms_details'] = array(
-            $this->pi_getLL('admin_cms'),
+            $this->pi_getLL('cms_templates', 'Templates'),
             $tmpcontent
     );
     $tmpcontent = '';
+    // hook for adding new tabs into edit_order
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCMSTabs'])) {
+        // hook
+        $params = array(
+                'tabs' => &$tabs,
+                'cms' => &$cms,
+                'page_title' => &$page_title
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_cms.php']['adminEditCMSTabs'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+        // hook oef
+    }
     // tabs
     $content .= '<script type="text/javascript">
 	jQuery(document).ready(function($) {
 	 	var url_relatives = "' . mslib_fe::typolink($this->shop_pid . ',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives') . '";
 		jQuery(".tab_content").hide();
-		jQuery("ul.tabs li:first").addClass("active").show();
-		jQuery(".tab_content:first").show();
-		jQuery("ul.tabs li").click(function() {
-			jQuery("ul.tabs li").removeClass("active");
+		jQuery("ul.nav-tabs li:first").addClass("active").show();
+		jQuery(".tab-pane:first").show();
+		jQuery("ul.nav-tabs li").click(function() {
+			jQuery("ul.nav-tabs li").removeClass("active");
 			jQuery(this).addClass("active");
-			jQuery(".tab_content").hide();
+			jQuery(".tab-pane").hide();
 			var activeTab = jQuery(this).find("a").attr("href");
 			jQuery(activeTab).show();
 			return false;
@@ -479,22 +492,35 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	});
 	</script>
 	<div class="panel panel-default">
-	    <div class="panel-heading"><h3>' . $this->pi_getLL('admin_cms') . '</div>
-	    <div class="panel-body">
-	<form class="form-horizontal admin_cms_edit" name="admin_categories_edit_' . $cms['id'] . '" id="admin_categories_edit_' . $cms['id'] . '" method="post" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $_REQUEST['action']) . '" enctype="multipart/form-data">
-	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="' . $subpartArray['###VALUE_REFERRER###'] . '" >
+	    <div class="panel-heading"><h3>' . $this->pi_getLL('CMS', 'CMS') . '</div>
+            <div class="panel-body">
+                <div id="tab-container" class="msAdminEditCMS">
+                    <ul class="nav nav-tabs" role="tablist">';
+    $count = 0;
+    foreach ($tabs as $key => $value) {
+        $count++;
+        $content .= '<li' . (($count == 1) ? '' : '') . ' role="presentation"><a href="#' . $key . '" aria-controls="profile" role="tab" data-toggle="tab">' . $value[0] . '</a></li>';
+    }
+    $content .= '</ul>
+                    <div class="tab-content">
+                        <form class="form-horizontal admin_cms_edit" name="admin_categories_edit_' . $cms['id'] . '" id="admin_categories_edit_' . $cms['id'] . '" method="post" action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $_REQUEST['action']) . '" enctype="multipart/form-data">
+                            <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="' . $subpartArray['###VALUE_REFERRER###'] . '" >
 	';
     $count = 0;
     foreach ($tabs as $key => $value) {
         $count++;
-        $content .= '<div style="display: block;" id="' . $key . '" class="tab_content">
+        $content .= '<div role="tabpanel" id="' . $key . '" class="tab-pane">
 				' . $value[1] . '
 	        </div>';
     }
-    $content .= $save_block . '<input name="action" type="hidden" value="' . $_REQUEST['action'] . '" />
-		<input name="cms_id" type="hidden" value="' . $_REQUEST['cms_id'] . '" />
-	</form>
-	</div>
+    $content .= $save_block;
+    $content .= '<input name="action" type="hidden" value="' . $_REQUEST['action'] . '" />
+		                    <input name="cms_id" type="hidden" value="' . $_REQUEST['cms_id'] . '" />
+	                    </form>
+	                </div>
+	            </div>
+	        </div>    
+	    </div>        
 	</div>';
     // tabs eof
 }

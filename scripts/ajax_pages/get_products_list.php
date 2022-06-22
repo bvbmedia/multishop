@@ -47,7 +47,7 @@ if ($this->ADMIN_USER) {
             }
             $filter[] = $prefix . 'products_id NOT IN (' . addslashes($this->get['exclude_pids']) . ')';
         }
-        if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+        if (isset($this->get['preselected_id']) && $this->get['preselected_id'] > 0) {
             if (!$this->ms['MODULES']['FLAT_DATABASE']) {
                 $prefix = 'p.';
             } else {
@@ -112,6 +112,11 @@ if ($this->ADMIN_USER) {
     }
     if (is_array($records)) {
         $counter = 0;
+        if (!$this->get['preselected_id']) {
+            $return_data[0]['text'] = htmlentities($this->pi_getLL('choose'));
+            $return_data[0]['id'] = '';
+            $counter = 1;
+        }
         foreach ($records as $row) {
             $labelArray = array();
             if (isset($row['products_status']) && !$row['products_status']) {

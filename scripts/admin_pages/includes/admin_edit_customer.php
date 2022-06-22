@@ -321,29 +321,63 @@ if ($this->post && $this->post['email']) {
             // custom hook that can be controlled by third-party plugin eof
             // customer shipping/payment method mapping
             if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+                $payment_methods = mslib_fe::loadPaymentMethods();
+                $shipping_methods = mslib_fe::loadShippingMethods();
+
                 // shipping/payment methods
                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\'' . $customer_id . '\'');
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-                    foreach ($this->post['payment_method'] as $payment_method_id => $value) {
-                        $updateArray = array();
-                        $updateArray['customers_id'] = $customer_id;
-                        $updateArray['method_id'] = $payment_method_id;
-                        $updateArray['type'] = 'payment';
-                        $updateArray['negate'] = $value;
-                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (count($payment_methods)) {
+                    foreach ($payment_methods as $code => $item) {
+                        // Only set the negate value when setting is differ from global setting
+                        if (isset($this->post['payment_method'][$item['id']])) {
+                            $negateValue = 0;
+                        } else {
+                            if ($item['status'] > 0) {
+                                $negateValue = 1;
+                            }
+                            if ($item['enable_on_default']) {
+                                $negateValue = 1;
+                            }
+                        }
+                        // Only insert when $negateValue var is set otherwise the setting value same as the global
+                        if (isset($negateValue)) {
+                            $updateArray = array();
+                            $updateArray['customers_id'] = $customer_id;
+                            $updateArray['method_id'] = $item['id'];
+                            $updateArray['type'] = 'payment';
+                            $updateArray['negate'] = $negateValue;
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                        // Keep clean after use
+                        unset($negateValue);
                     }
                 }
-                if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-                    foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
-                        $updateArray = array();
-                        $updateArray['customers_id'] = $customer_id;
-                        $updateArray['method_id'] = $shipping_method_id;
-                        $updateArray['type'] = 'shipping';
-                        $updateArray['negate'] = $value;
-                        $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-                        $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (count($shipping_methods)) {
+                    foreach ($shipping_methods as $code => $item) {
+                        // Only set the negate value when setting is differ from global setting
+                        if (isset($this->post['shipping_method'][$item['id']])) {
+                            if (!$item['status']) {
+                                $negateValue = 0;
+                            }
+                        } else {
+                            if ($item['status'] > 0) {
+                                $negateValue = 1;
+                            }
+                        }
+                        // Only insert when $negateValue var is set otherwise the setting value same as the global
+                        if (isset($negateValue)) {
+                            $updateArray = array();
+                            $updateArray['customers_id'] = $customer_id;
+                            $updateArray['method_id'] = $item['id'];
+                            $updateArray['type'] = 'shipping';
+                            $updateArray['negate'] = $negateValue;
+                            $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+                            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        }
+                        // Keep clean after use
+                        unset($negateValue);
                     }
                 }
                 // shipping/payment methods eof
@@ -540,14 +574,6 @@ if ($this->post && $this->post['email']) {
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
-                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
-                        $params = array(
-                                'uid' => $customer_id
-                        );
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
-                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                        }
-                    }
                     // customer shipping/payment method mapping
                     if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                         // shipping/payment methods
@@ -576,6 +602,14 @@ if ($this->post && $this->post['email']) {
                             }
                         }
                         // shipping/payment methods eof
+                    }
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
+                        $params = array(
+                                'uid' => $customer_id
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                        }
                     }
                 }
             }
@@ -899,21 +933,21 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 if ($this->ms['MODULES']['ADMIN_VAT_ID_FIELD_REQUIRED']) {
     $subpartArray['###LABEL_INPUT_VAT_ID###'] = ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '<span class="text-danger">*</span>';
     $vat_input_block = '<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '<span class="text-danger">*</span></label>
-	<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" required="required" value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/>';
+	<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" required="required" value="' . mslib_fe::RemoveXSS($this->post['tx_multishop_vat_id']) . '"/>';
 } else {
     $subpartArray['###LABEL_INPUT_VAT_ID###'] = ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
     $vat_input_block = '<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">' . ucfirst($this->pi_getLL('vat_id', 'VAT ID')) . '</label>
-<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . htmlspecialchars($this->post['tx_multishop_vat_id']) . '"/>';
+<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="' . mslib_fe::RemoveXSS($this->post['tx_multishop_vat_id']) . '"/>';
 }
 //COC ID
 if ($this->ms['MODULES']['ADMIN_COC_ID_FIELD_REQUIRED']) {
     $coc_input_block = '<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id', 'KvK ID')) . '<span class="text-danger">*</span></label>';
-    $coc_input_block .= '<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" required="required" value="' . htmlspecialchars($this->post['tx_multishop_coc_id']) . '"/>';
+    $coc_input_block .= '<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" required="required" value="' . mslib_fe::RemoveXSS($this->post['tx_multishop_coc_id']) . '"/>';
 } else {
     $coc_input_block = '<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">' . ucfirst($this->pi_getLL('coc_id', 'KvK ID')) . '</label>';
-    $coc_input_block .= '<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="' . htmlspecialchars($this->post['tx_multishop_coc_id']) . '"/>';
+    $coc_input_block .= '<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="' . mslib_fe::RemoveXSS($this->post['tx_multishop_coc_id']) . '"/>';
 }
-$subpartArray['###VALUE_INPUT_VAT_ID###'] = htmlspecialchars($this->post['tx_multishop_vat_id']);
+$subpartArray['###VALUE_INPUT_VAT_ID###'] = mslib_fe::RemoveXSS($this->post['tx_multishop_vat_id']);
 $subpartArray['###INPUT_VAT_ID###'] = $vat_input_block;
 $subpartArray['###INPUT_COC_ID###'] = $coc_input_block;
 $subpartArray['###LABEL_IMAGE###'] = ucfirst($this->pi_getLL('image'));
@@ -945,8 +979,8 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
         // the value is are the negate value
         // negate 1 mean the shipping/payment are excluded
         $shipping_payment_method .= '
-<div class="form-horizontal">
-						<div class="div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
+<div class="form-horizontal" id="payment-shipping-methods-mapping-wrapper">
+						<div class="div_products_mappings toggle_advanced_option" id="msEditCustomerInputPaymentMethod">
 							<label class="control-label col-md-2">' . $this->pi_getLL('admin_mapped_methods') . '</label>
 							<div class="col-md-10">
 							<div class="innerbox_methods">
@@ -967,19 +1001,54 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
                     $tr_type = 'even';
                 }
                 $count++;
-                $shipping_payment_method .= '<div class="form-group" id="multishop_payment_method_' . $item['id'] . '"><label class="control-label col-md-4">' . $item['name'] . '</label><div class="col-md-8">';
-                if ($price_wrap) {
-                    $tmpcontent .= $price_wrap;
+                $shipping_payment_method .= '<div class="form-group" id="multishop_payment_method_' . $item['id'] . '" style="margin-bottom:20px">
+                    <label class="control-label col-md-4">' . $item['name'] . '</label>
+                    <div class="col-md-8">';
+                $paymentSettingSetFrom = 'Disabled in global settings';
+                $paymentChecked = ' data-setting-from="global-disable"';
+                // Payment global setting
+                if ($item['status'] > 0) {
+                    $paymentSettingSetFrom = 'Enabled in global settings';
+                    $paymentChecked = ' checked="checked" data-setting-from="global-enable"';
+                    if (!$item['enable_on_default']) {
+                        $paymentChecked = ' data-setting-from="global-enable"';
+                        $paymentSettingSetFrom .= ' / Hidden in frontend';
+                    }
                 }
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method[' . htmlspecialchars($item['id']) . ']" class="payment_method_cb" id="enable_payment_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="0"' . ((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '') . ' /><label for="enable_payment_method_' . $item['id'] . '">' . $this->pi_getLL('enable') . '</label></div>';
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method[' . htmlspecialchars($item['id']) . ']" class="payment_method_cb" id="disable_payment_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="1"' . ((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) ? ' checked' : '') . ' /><label for="disable_payment_method_' . $item['id'] . '">' . $this->pi_getLL('disable') . '</label></div>';
-                $shipping_payment_method .= '</div></div>';
+                // Checked for local setting
+                if (is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment'])) {
+                    // Checked
+                    if (!$method_mappings['payment']['method_data'][$item['id']]['negate']) {
+                        $paymentChecked = ' checked="checked" data-setting-from="local-enable"';
+                        //$paymentSettingSetFrom = '';
+                    }
+                    // Unchecked
+                    if ($method_mappings['payment']['method_data'][$item['id']]['negate'] > 0) {
+                        $paymentChecked = ' data-setting-from="local-disable"';
+                        //$paymentSettingSetFrom = '';
+                    }
+                }
+                if ($_GET['action'] == 'add_customer') {
+                    $paymentChecked = ' data-setting-from="add-new-customer-local-disable"';
+                }
+                $shipping_payment_method .= '
+                <div class="toggleButton">
+                    <input type="checkbox" class="payment_method_cb" id="payment_method'.$item['id'].'" name="payment_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$paymentChecked.'>
+                    <label for="payment_method'.$item['id'].'" style="width:60px">
+                        <span class="toggleButtonTextEnable"></span>
+                        <span class="toggleButtonTextDisable"></span>
+                        <span class="toggleButtonHandler"></span>
+                    </label>
+                    <span style="vertical-align: middle; margin-left:6px">'.(!empty($paymentSettingSetFrom) ? '('.$paymentSettingSetFrom.')' : '').'</span>
+                </div>';
+                $shipping_payment_method .= '</div>
+                </div>';
             }
         }
         $shipping_payment_method .= '
 								</div>
 								</div>
-								<div class="innerbox_shipping_methods" id="msEditProductInputShippingMethod">
+								<div class="innerbox_shipping_methods" id="msEditCustomerInputShippingMethod">
 									<p class="form-control-static"><strong>' . $this->pi_getLL('admin_shipping_methods') . '</strong></p>
 							 		';
         $count = 0;
@@ -987,13 +1056,44 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
         if (count($shipping_methods)) {
             foreach ($shipping_methods as $code => $item) {
                 $count++;
-                $shipping_payment_method .= '<div class="form-group" id="multishop_shipping_method"><label class="control-label col-md-4">' . $item['name'] . '</label><div class="col-md-8">';
-                if ($price_wrap) {
-                    $shipping_payment_method .= $price_wrap;
+                $shipping_payment_method .= '<div class="form-group" id="multishop_shipping_method">
+                    <label class="control-label col-md-4">' . $item['name'] . '</label>
+                <div class="col-md-8">';
+                $shippingSettingSetFrom = 'Disabled in global settings';
+                $shippingChecked = ' data-setting-from="global-disable"';
+                // Payment global setting
+                if ($item['status'] > 0) {
+                    $shippingSettingSetFrom = 'Enabled in global settings';
+                    $shippingChecked = ' checked="checked" data-setting-from="global-enable"';
                 }
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method[' . htmlspecialchars($item['id']) . ']" class="shipping_method_cb" id="enable_shipping_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="0"' . ((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '') . '  /><label for="enable_shipping_method_' . $item['id'] . '">' . $this->pi_getLL('enable') . '</label></div>';
-                $shipping_payment_method .= '<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method[' . htmlspecialchars($item['id']) . ']" class="shipping_method_cb" id="disable_shipping_method_' . $item['id'] . '" type="checkbox" rel="' . $item['id'] . '" value="1"' . ((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) ? ' checked' : '') . '  /><label for="disable_shipping_method_' . $item['id'] . '">' . $this->pi_getLL('disable') . '</label></div>';
-                $shipping_payment_method .= '</div></div>';
+                // Checked for local setting
+                if (is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping'])) {
+                    // Checked
+                    if (!$method_mappings['shipping']['method_data'][$item['id']]['negate']) {
+                        //$shippingSettingSetFrom = '';
+                        $shippingChecked = ' checked="checked" data-setting-from="local-enable"';
+                    }
+                    // Unchecked
+                    if ($method_mappings['shipping']['method_data'][$item['id']]['negate'] > 0) {
+                        //$shippingSettingSetFrom = '';
+                        $shippingChecked = ' data-setting-from="local-disable"';
+                    }
+                }
+                if ($_GET['action'] == 'add_customer') {
+                    $shippingChecked = ' data-setting-from="add-new-customer-local-disable"';
+                }
+                $shipping_payment_method .= '
+                <div class="toggleButton">
+                    <input type="checkbox" class="shipping_method_cb" id="shipping_method'.$item['id'].'" name="shipping_method[' . mslib_fe::RemoveXSS($item['id']) . ']" value="1"'.$shippingChecked.'>
+                    <label for="shipping_method'.$item['id'].'" style="width:60px">
+                        <span class="toggleButtonTextEnable"></span>
+                        <span class="toggleButtonTextDisable"></span>
+                        <span class="toggleButtonHandler"></span>
+                    </label>
+                    <span style="vertical-align: middle; font-weight: bold; margin-left:6px">'.(!empty($shippingSettingSetFrom) ? '('.$shippingSettingSetFrom.')' : '').'</span>
+                </div>';
+                $shipping_payment_method .= '</div>
+                </div>';
             }
         }
         $shipping_payment_method .= '
@@ -1047,6 +1147,9 @@ $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = '';
 switch ($_REQUEST['action']) {
     case 'edit_customer':
         if (is_numeric($user['uid']) && $user['uid'] > 0) {
+            foreach ($user as $userIdxKey => $userValue) {
+                $user[$userIdxKey] = mslib_fe::RemoveXSS($userValue);
+            }
             $subpartArray['###LABEL_USERNAME###'] = ucfirst($this->pi_getLL('username')) . '<span class="text-danger">*</span>';
             if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'] > 0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
                 $subpartArray['###USERNAME_READONLY###'] = (($this->get['action'] == 'edit_customer' && $this->get['tx_multishop_pi1']['cid'] > 0) ? 'readonly="readonly"' : '');
@@ -1054,7 +1157,7 @@ switch ($_REQUEST['action']) {
                 $subpartArray['###USERNAME_READONLY###'] = '';
             }
             $subpartArray['###EDIT_CUSTOMER_HEADER###'] = htmlspecialchars($this->pi_getLL('admin_label_tabs_edit_customer'));
-            $subpartArray['###VALUE_USERNAME###'] = htmlspecialchars($this->post['username']);
+            $subpartArray['###VALUE_USERNAME###'] = mslib_fe::RemoveXSS($this->post['username']);
             $subpartArray['###LABEL_PASSWORD###'] = ucfirst($this->pi_getLL('password'));
             if ($this->masterShop) {
                 $multishop_content_objects = mslib_fe::getActiveShop();
@@ -1063,7 +1166,7 @@ switch ($_REQUEST['action']) {
                     $total = count($multishop_content_objects);
                     $selectContent .= '<select name="page_uid"><option value="">' . ucfirst($this->pi_getLL('choose')) . '</option>' . "\n";
                     foreach ($multishop_content_objects as $pageinfo) {
-                        $selectContent .= '<option value="' . $pageinfo['uid'] . '"' . ($pageinfo['uid'] == $this->post['page_uid'] ? ' selected' : '') . '>' . htmlspecialchars($pageinfo['title']) . '</option>';
+                        $selectContent .= '<option value="' . $pageinfo['uid'] . '"' . ($pageinfo['uid'] == $this->post['page_uid'] ? ' selected' : '') . '>' . mslib_fe::RemoveXSS($pageinfo['title']) . '</option>';
                         $counter++;
                     }
                     $selectContent .= '</select>' . "\n";
@@ -1090,11 +1193,11 @@ switch ($_REQUEST['action']) {
             $subpartArray['###NEWSLETTER_CHECKED###'] = (($this->post['tx_multishop_newsletter'] == '1') ? 'checked="checked"' : '');
             $subpartArray['###LABEL_GENDER_MRS###'] = ucfirst($this->pi_getLL('mrs'));
             $subpartArray['###LABEL_FIRSTNAME###'] = ucfirst($this->pi_getLL('first_name'));
-            $subpartArray['###VALUE_FIRSTNAME###'] = htmlspecialchars($this->post['first_name']);
+            $subpartArray['###VALUE_FIRSTNAME###'] = mslib_fe::RemoveXSS($this->post['first_name']);
             $subpartArray['###LABEL_MIDDLENAME###'] = ucfirst($this->pi_getLL('middle_name'));
-            $subpartArray['###VALUE_MIDDLENAME###'] = htmlspecialchars($this->post['middle_name']);
+            $subpartArray['###VALUE_MIDDLENAME###'] = mslib_fe::RemoveXSS($this->post['middle_name']);
             $subpartArray['###LABEL_LASTNAME###'] = ucfirst($this->pi_getLL('last_name'));
-            $subpartArray['###VALUE_LASTNAME###'] = htmlspecialchars($this->post['last_name']);
+            $subpartArray['###VALUE_LASTNAME###'] = mslib_fe::RemoveXSS($this->post['last_name']);
             //
             $company_validation = '';
             $subpartArray['###LABEL_COMPANY###'] = ucfirst($this->pi_getLL('company'));
@@ -1105,7 +1208,7 @@ switch ($_REQUEST['action']) {
             $subpartArray['###COMPANY_VALIDATION###'] = $company_validation;
             $subpartArray['###COMPANY_COL_SIZE###'] = 12;
             $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 12;
-            $subpartArray['###VALUE_COMPANY###'] = htmlspecialchars($this->post['company']);
+            $subpartArray['###VALUE_COMPANY###'] = mslib_fe::RemoveXSS($this->post['company']);
             // department input
             $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '';
             $subpartArray['###COMPANY_COL_SIZE###'] = 12;
@@ -1113,7 +1216,7 @@ switch ($_REQUEST['action']) {
                 $subpartArray['###COMPANY_COL_SIZE###'] = 6;
                 $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
                     <label for="department" id="account-department">' . $this->pi_getLL('department') . '</label>
-                    <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
+                    <input type="text" name="department" class="form-control department" id="department" value="' . mslib_fe::RemoveXSS($this->post['department']) . '" />
                 </div>';
             }
             $md5_list = array();
@@ -1132,26 +1235,26 @@ switch ($_REQUEST['action']) {
             $billing_address_md5 = md5(implode("", $md5_list));
             //
             $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
-            $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
+            $subpartArray['###VALUE_BUILDING###'] = mslib_fe::RemoveXSS($this->post['building']);
             $subpartArray['###LABEL_STREET_ADDRESS###'] = ucfirst($this->pi_getLL('street_address'));
-            $subpartArray['###VALUE_STREET_ADDRESS###'] = htmlspecialchars($this->post['street_name']);
+            $subpartArray['###VALUE_STREET_ADDRESS###'] = mslib_fe::RemoveXSS($this->post['street_name']);
             $subpartArray['###LABEL_STREET_ADDRESS_NUMBER###'] = ucfirst($this->pi_getLL('street_address_number'));
-            $subpartArray['###VALUE_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($this->post['address_number']);
+            $subpartArray['###VALUE_STREET_ADDRESS_NUMBER###'] = mslib_fe::RemoveXSS($this->post['address_number']);
             $subpartArray['###LABEL_ADDRESS_EXTENTION###'] = ucfirst($this->pi_getLL('address_extension'));
-            $subpartArray['###VALUE_ADDRESS_EXTENTION###'] = htmlspecialchars($this->post['address_ext']);
+            $subpartArray['###VALUE_ADDRESS_EXTENTION###'] = mslib_fe::RemoveXSS($this->post['address_ext']);
             $subpartArray['###LABEL_POSTCODE###'] = ucfirst($this->pi_getLL('zip'));
-            $subpartArray['###VALUE_POSTCODE###'] = htmlspecialchars($this->post['zip']);
+            $subpartArray['###VALUE_POSTCODE###'] = mslib_fe::RemoveXSS($this->post['zip']);
             $subpartArray['###LABEL_CITY###'] = ucfirst($this->pi_getLL('city'));
-            $subpartArray['###VALUE_CITY###'] = htmlspecialchars($this->post['city']);
+            $subpartArray['###VALUE_CITY###'] = mslib_fe::RemoveXSS($this->post['city']);
             $subpartArray['###COUNTRIES_INPUT###'] = $countries_input;
             $subpartArray['###LABEL_EMAIL###'] = ucfirst($this->pi_getLL('e-mail_address'));
-            $subpartArray['###VALUE_EMAIL###'] = htmlspecialchars($this->post['email']);
+            $subpartArray['###VALUE_EMAIL###'] = mslib_fe::RemoveXSS($this->post['email']);
             $subpartArray['###LABEL_WEBSITE###'] = ucfirst($this->pi_getLL('website'));
-            $subpartArray['###VALUE_WEBSITE###'] = htmlspecialchars($this->post['www']);
+            $subpartArray['###VALUE_WEBSITE###'] = mslib_fe::RemoveXSS($this->post['www']);
             $subpartArray['###LABEL_TELEPHONE###'] = ucfirst($this->pi_getLL('telephone'));//.($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
-            $subpartArray['###VALUE_TELEPHONE###'] = htmlspecialchars($this->post['telephone']);
+            $subpartArray['###VALUE_TELEPHONE###'] = mslib_fe::RemoveXSS($this->post['telephone']);
             $subpartArray['###LABEL_MOBILE###'] = ucfirst($this->pi_getLL('mobile'));
-            $subpartArray['###VALUE_MOBILE###'] = htmlspecialchars($this->post['mobile']);
+            $subpartArray['###VALUE_MOBILE###'] = mslib_fe::RemoveXSS($this->post['mobile']);
             $subpartArray['###LABEL_BIRTHDATE###'] = ucfirst($this->pi_getLL('birthday'));
             $subpartArray['###VALUE_VISIBLE_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
             $subpartArray['###VALUE_HIDDEN_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
@@ -1186,37 +1289,37 @@ switch ($_REQUEST['action']) {
                 }
                 $subpartArray['###DELIVERY_GENDER_MR_CHECKED###'] = (($delivery_address['gender'] == 'm') ? 'checked="checked"' : '');
                 $subpartArray['###DELIVERY_GENDER_MRS_CHECKED###'] = (($delivery_address['gender'] == 'f') ? 'checked="checked"' : '');
-                $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = htmlspecialchars($delivery_address['first_name']);
-                $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = htmlspecialchars($delivery_address['middle_name']);
-                $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = htmlspecialchars($delivery_address['last_name']);
+                $subpartArray['###VALUE_DELIVERY_FIRSTNAME###'] = mslib_fe::RemoveXSS($delivery_address['first_name']);
+                $subpartArray['###VALUE_DELIVERY_MIDDLENAME###'] = mslib_fe::RemoveXSS($delivery_address['middle_name']);
+                $subpartArray['###VALUE_DELIVERY_LASTNAME###'] = mslib_fe::RemoveXSS($delivery_address['last_name']);
                 //
-                $subpartArray['###VALUE_DELIVERY_COMPANY###'] = htmlspecialchars($delivery_address['company']);
+                $subpartArray['###VALUE_DELIVERY_COMPANY###'] = mslib_fe::RemoveXSS($delivery_address['company']);
                 // department input
                 if ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER']) {
                     $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
                         <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
-                        <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($delivery_address['department']) . '" />
+                        <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . mslib_fe::RemoveXSS($delivery_address['department']) . '" />
                     </div>';
                 }
                 //
-                $subpartArray['###VALUE_DELIVERY_BUILDING###'] = htmlspecialchars($delivery_address['building']);
-                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = htmlspecialchars($delivery_address['street_name']);
-                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($delivery_address['address_number']);
-                $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = htmlspecialchars($delivery_address['address_ext']);
-                $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = htmlspecialchars($delivery_address['zip']);
-                $subpartArray['###VALUE_DELIVERY_CITY###'] = htmlspecialchars($delivery_address['city']);
-                $subpartArray['###VALUE_DELIVERY_EMAIL###'] = htmlspecialchars($delivery_address['email']);
-                $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = htmlspecialchars($delivery_address['phone']);
-                $subpartArray['###VALUE_DELIVERY_MOBILE###'] = htmlspecialchars($delivery_address['mobile']);
+                $subpartArray['###VALUE_DELIVERY_BUILDING###'] = mslib_fe::RemoveXSS($delivery_address['building']);
+                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS###'] = mslib_fe::RemoveXSS($delivery_address['street_name']);
+                $subpartArray['###VALUE_DELIVERY_STREET_ADDRESS_NUMBER###'] = mslib_fe::RemoveXSS($delivery_address['address_number']);
+                $subpartArray['###VALUE_DELIVERY_ADDRESS_EXTENTION###'] = mslib_fe::RemoveXSS($delivery_address['address_ext']);
+                $subpartArray['###VALUE_DELIVERY_POSTCODE###'] = mslib_fe::RemoveXSS($delivery_address['zip']);
+                $subpartArray['###VALUE_DELIVERY_CITY###'] = mslib_fe::RemoveXSS($delivery_address['city']);
+                $subpartArray['###VALUE_DELIVERY_EMAIL###'] = mslib_fe::RemoveXSS($delivery_address['email']);
+                $subpartArray['###VALUE_DELIVERY_TELEPHONE###'] = mslib_fe::RemoveXSS($delivery_address['phone']);
+                $subpartArray['###VALUE_DELIVERY_MOBILE###'] = mslib_fe::RemoveXSS($delivery_address['mobile']);
                 $subpartArray['###VALUE_DELIVERY_VISIBLE_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%x", $delivery_address['date_of_birth'])) : '');
                 $subpartArray['###VALUE_DELIVERY_HIDDEN_BIRTHDATE###'] = ($delivery_address['date_of_birth'] ? htmlspecialchars(strftime("%F", $delivery_address['date_of_birth'])) : '');
             }
             $subpartArray['###LABEL_DISCOUNT###'] = ucfirst($this->pi_getLL('discount'));
-            $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
+            $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? mslib_fe::RemoveXSS($this->post['tx_multishop_discount']) : '');
             $subpartArray['###LABEL_PAYMENT_CONDITION###'] = ucfirst($this->pi_getLL('payment_condition'));
-            $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
+            $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? mslib_fe::RemoveXSS($this->post['tx_multishop_payment_condition']) : '');
             $subpartArray['###LABEL_FOREIGN_CUSTOMER_ID###'] = ucfirst($this->pi_getLL('foreign_customer_id'));
-            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = ($this->post['foreign_customer_id'] > 0 ? htmlspecialchars($this->post['foreign_customer_id']) : '');
+            $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = ($this->post['foreign_customer_id'] > 0 ? mslib_fe::RemoveXSS($this->post['foreign_customer_id']) : '');
             $subpartArray['###CUSTOMER_GROUPS_INPUT###'] = $customer_groups_input;
             $subpartArray['###VALUE_CUSTOMER_ID###'] = $this->get['tx_multishop_pi1']['cid'];
             if ($_GET['action'] == 'edit_customer') {
@@ -1234,6 +1337,13 @@ switch ($_REQUEST['action']) {
             }
             $customer_billing_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid']);
             $customer_delivery_address = mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid'], 'delivery');
+            // Sanitize it
+            foreach ($customer_billing_address as $billingIdxKey => $billingValue) {
+                $customer_billing_address[$billingIdxKey] = mslib_fe::RemoveXSS($billingValue);
+            }
+            foreach ($customer_delivery_address as $deliveryIdxKey => $deliveryValue) {
+                $customer_delivery_address[$deliveryIdxKey] = mslib_fe::RemoveXSS($deliveryValue);
+            }
             if (!$customer_billing_address['address']) {
                 $customer_billing_address['address'] = preg_replace('/\s+/', ' ', $customer_billing_address['street_name'] . ' ' . $customer_billing_address['address_number'] . ' ' . $customer_billing_address['address_ext']);
             }
@@ -1570,11 +1680,11 @@ switch ($_REQUEST['action']) {
         } else {
             $subpartArray['###USERNAME_READONLY###'] = '';
         }
-        $subpartArray['###VALUE_USERNAME###'] = htmlspecialchars($this->post['username']);
+        $subpartArray['###VALUE_USERNAME###'] = mslib_fe::RemoveXSS($this->post['username']);
         //if (empty($this->post['password']) || !isset($this->post['password'])) {
         //	$this->post['password']=substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890123456789-=~!@#$%^&*()_+,./<>?;:[]{}\|') , 0 , 10 );
         //}
-        $subpartArray['###VALUE_PASSWORD###'] = htmlspecialchars($this->post['password']);
+        $subpartArray['###VALUE_PASSWORD###'] = mslib_fe::RemoveXSS($this->post['password']);
         $subpartArray['###HIDE_PASSWORD###'] = '';
         if ($this->ms['MODULES']['HIDE_PASSWORD_FIELD_IN_EDIT_CUSTOMER'] == '1') {
             $subpartArray['###HIDE_PASSWORD###'] = ' style="display:none"';
@@ -1588,11 +1698,11 @@ switch ($_REQUEST['action']) {
         $subpartArray['###NEWSLETTER_CHECKED###'] = (($this->post['tx_multishop_newsletter'] == '1') ? 'checked="checked"' : '');
         $subpartArray['###LABEL_GENDER_MRS###'] = ucfirst($this->pi_getLL('mrs'));
         $subpartArray['###LABEL_FIRSTNAME###'] = ucfirst($this->pi_getLL('first_name'));
-        $subpartArray['###VALUE_FIRSTNAME###'] = htmlspecialchars($this->post['first_name']);
+        $subpartArray['###VALUE_FIRSTNAME###'] = mslib_fe::RemoveXSS($this->post['first_name']);
         $subpartArray['###LABEL_MIDDLENAME###'] = ucfirst($this->pi_getLL('middle_name'));
-        $subpartArray['###VALUE_MIDDLENAME###'] = htmlspecialchars($this->post['middle_name']);
+        $subpartArray['###VALUE_MIDDLENAME###'] = mslib_fe::RemoveXSS($this->post['middle_name']);
         $subpartArray['###LABEL_LASTNAME###'] = ucfirst($this->pi_getLL('last_name'));
-        $subpartArray['###VALUE_LASTNAME###'] = htmlspecialchars($this->post['last_name']);
+        $subpartArray['###VALUE_LASTNAME###'] = mslib_fe::RemoveXSS($this->post['last_name']);
         //
         $company_validation = '';
         $subpartArray['###LABEL_COMPANY###'] = ucfirst($this->pi_getLL('company'));
@@ -1601,7 +1711,7 @@ switch ($_REQUEST['action']) {
             $company_validation = ' required="required" data-h5-errorid="invalid-company" title="' . $this->pi_getLL('company_is_required') . '"';
         }
         $subpartArray['###COMPANY_VALIDATION###'] = $company_validation;
-        $subpartArray['###VALUE_COMPANY###'] = htmlspecialchars($this->post['company']);
+        $subpartArray['###VALUE_COMPANY###'] = mslib_fe::RemoveXSS($this->post['company']);
         // department input
         $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '';
         $subpartArray['###COMPANY_COL_SIZE###'] = 12;
@@ -1609,7 +1719,7 @@ switch ($_REQUEST['action']) {
             $subpartArray['###COMPANY_COL_SIZE###'] = 6;
             $subpartArray['###DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
                 <label for="department" id="account-department">' . $this->pi_getLL('department') . '</label>
-                <input type="text" name="department" class="form-control department" id="department" value="' . htmlspecialchars($this->post['department']) . '" />
+                <input type="text" name="department" class="form-control department" id="department" value="' . mslib_fe::RemoveXSS($this->post['department']) . '" />
             </div>';
         }
         // department input
@@ -1619,36 +1729,36 @@ switch ($_REQUEST['action']) {
             $subpartArray['###DELIVERY_COMPANY_COL_SIZE###'] = 6;
             $subpartArray['###DELIVERY_DEPARTMENT_INPUT_FIELD###'] = '<div class="col-md-6">
                 <label for="delivery_department" id="account-delivery_department">' . $this->pi_getLL('department') . '</label>
-                <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . htmlspecialchars($this->post['delivery_department']) . '" />
+                <input type="text" name="delivery_department" class="form-control delivery_department" id="delivery_department" value="' . mslib_fe::RemoveXSS($this->post['delivery_department']) . '" />
             </div>';
         }
         //
         $subpartArray['###LABEL_BUILDING###'] = ucfirst($this->pi_getLL('building'));
-        $subpartArray['###VALUE_BUILDING###'] = htmlspecialchars($this->post['building']);
+        $subpartArray['###VALUE_BUILDING###'] = mslib_fe::RemoveXSS($this->post['building']);
         $subpartArray['###LABEL_STREET_ADDRESS###'] = ucfirst($this->pi_getLL('street_address'));
-        $subpartArray['###VALUE_STREET_ADDRESS###'] = htmlspecialchars($this->post['street_name']);
+        $subpartArray['###VALUE_STREET_ADDRESS###'] = mslib_fe::RemoveXSS($this->post['street_name']);
         $subpartArray['###LABEL_STREET_ADDRESS_NUMBER###'] = ucfirst($this->pi_getLL('street_address_number'));
-        $subpartArray['###VALUE_STREET_ADDRESS_NUMBER###'] = htmlspecialchars($this->post['address_number']);
+        $subpartArray['###VALUE_STREET_ADDRESS_NUMBER###'] = mslib_fe::RemoveXSS($this->post['address_number']);
         $subpartArray['###LABEL_ADDRESS_EXTENTION###'] = ucfirst($this->pi_getLL('address_extension'));
-        $subpartArray['###VALUE_ADDRESS_EXTENTION###'] = htmlspecialchars($this->post['address_ext']);
+        $subpartArray['###VALUE_ADDRESS_EXTENTION###'] = mslib_fe::RemoveXSS($this->post['address_ext']);
         $subpartArray['###LABEL_POSTCODE###'] = ucfirst($this->pi_getLL('zip'));
-        $subpartArray['###VALUE_POSTCODE###'] = htmlspecialchars($this->post['zip']);
+        $subpartArray['###VALUE_POSTCODE###'] = mslib_fe::RemoveXSS($this->post['zip']);
         $subpartArray['###LABEL_CITY###'] = ucfirst($this->pi_getLL('city'));
-        $subpartArray['###VALUE_CITY###'] = htmlspecialchars($this->post['city']);
+        $subpartArray['###VALUE_CITY###'] = mslib_fe::RemoveXSS($this->post['city']);
         $subpartArray['###COUNTRIES_INPUT###'] = $countries_input;
         $subpartArray['###LABEL_EMAIL###'] = ucfirst($this->pi_getLL('e-mail_address'));
-        $subpartArray['###VALUE_EMAIL###'] = htmlspecialchars($this->post['email']);
+        $subpartArray['###VALUE_EMAIL###'] = mslib_fe::RemoveXSS($this->post['email']);
         $subpartArray['###LABEL_WEBSITE###'] = ucfirst($this->pi_getLL('website'));
-        $subpartArray['###VALUE_WEBSITE###'] = htmlspecialchars($this->post['www']);
+        $subpartArray['###VALUE_WEBSITE###'] = mslib_fe::RemoveXSS($this->post['www']);
         $subpartArray['###LABEL_TELEPHONE###'] = ucfirst($this->pi_getLL('telephone'));//.($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
-        $subpartArray['###VALUE_TELEPHONE###'] = htmlspecialchars($this->post['telephone']);
+        $subpartArray['###VALUE_TELEPHONE###'] = mslib_fe::RemoveXSS($this->post['telephone']);
         $subpartArray['###LABEL_MOBILE###'] = ucfirst($this->pi_getLL('mobile'));
-        $subpartArray['###VALUE_MOBILE###'] = htmlspecialchars($this->post['mobile']);
+        $subpartArray['###VALUE_MOBILE###'] = mslib_fe::RemoveXSS($this->post['mobile']);
         $subpartArray['###LABEL_BIRTHDATE###'] = ucfirst($this->pi_getLL('birthday'));
         $subpartArray['###VALUE_VISIBLE_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : $this->post['birthday_visitor']);
         $subpartArray['###VALUE_HIDDEN_BIRTHDATE###'] = ($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : $this->post['birthday']);
         $subpartArray['###LABEL_DISCOUNT###'] = ucfirst($this->pi_getLL('discount'));
-        $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
+        $subpartArray['###VALUE_DISCOUNT###'] = ($this->post['tx_multishop_discount'] > 0 ? mslib_fe::RemoveXSS($this->post['tx_multishop_discount']) : '');
         $subpartArray['###LABEL_PAYMENT_CONDITION###'] = ucfirst($this->pi_getLL('payment_condition'));
         $subpartArray['###VALUE_PAYMENT_CONDITION###'] = $this->ms['MODULES']['DEFAULT_PAYMENT_CONDITION_VALUE'];
         $subpartArray['###CUSTOMER_GROUPS_INPUT###'] = $customer_groups_input;
@@ -1663,9 +1773,9 @@ switch ($_REQUEST['action']) {
         $subpartArray['###DETAILS###'] = '';
         $subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###'] = $shipping_payment_method;
         $subpartArray['###LABEL_PAYMENT_CONDITION###'] = ucfirst($this->pi_getLL('payment_condition'));
-        $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : 14);
+        $subpartArray['###VALUE_PAYMENT_CONDITION###'] = (isset($this->post['tx_multishop_payment_condition']) ? mslib_fe::RemoveXSS($this->post['tx_multishop_payment_condition']) : 14);
         $subpartArray['###LABEL_FOREIGN_CUSTOMER_ID###'] = ucfirst($this->pi_getLL('foreign_customer_id'));
-        $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = htmlspecialchars($this->post['foreign_customer_id']);
+        $subpartArray['###VALUE_FOREIGN_CUSTOMER_ID###'] = mslib_fe::RemoveXSS($this->post['foreign_customer_id']);
         break;
 }
 // language input
@@ -1753,9 +1863,9 @@ if (!count($js_extra['triggers'])) {
 }
 if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1']['cid'] > 0) {
     if (!empty($this->post['company'])) {
-        $subpartArray['###HEADING_TITLE###'] = htmlspecialchars($this->post['company']) . ' (ID: ' . $this->get['tx_multishop_pi1']['cid'] . ')';
+        $subpartArray['###HEADING_TITLE###'] = mslib_fe::RemoveXSS($this->post['company']) . ' (ID: ' . $this->get['tx_multishop_pi1']['cid'] . ')';
     } else if (!empty($this->post['name'])) {
-        $subpartArray['###HEADING_TITLE###'] = htmlspecialchars($this->post['name']) . ' (ID: ' . $this->get['tx_multishop_pi1']['cid'] . ')';
+        $subpartArray['###HEADING_TITLE###'] = mslib_fe::RemoveXSS($this->post['name']) . ' (ID: ' . $this->get['tx_multishop_pi1']['cid'] . ')';
     } else {
         $subpartArray['###HEADING_TITLE###'] = $this->pi_getLL('admin_label_tabs_edit_customer') . ' (ID: ' . $this->get['tx_multishop_pi1']['cid'] . ')';
     }
