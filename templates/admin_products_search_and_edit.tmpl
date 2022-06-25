@@ -201,12 +201,12 @@
 		<form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" id="admin_products_search_and_edit_form" class="blockSubmitForm">
 
 			<div class="product-overview-listing">
-
+				###HEADER_CHECK_ALL_ITEMS_CHECKBOX###
 				<!-- ###PRODUCTS_ITEM### begin -->
 				<div class="product-overview-listing-item">
 					<div class="cellCheckbox">
 						<div class="checkbox checkbox-success checkbox-inline">
-							<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+							<input type="checkbox" class="checkboxItem" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
 							<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
 						</div>
 					</div>
@@ -253,6 +253,7 @@
 					</div>
 				</div>
 				<!-- ###PRODUCTS_ITEM### end -->
+				###FOOTER_CHECK_ALL_ITEMS_CHECKBOX###
 			</div>
 			<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
 			<hr>

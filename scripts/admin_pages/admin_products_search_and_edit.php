@@ -196,6 +196,20 @@ if ($this->post['submit']) {
                     }
                 }
                 break;
+            case 'enable':
+                foreach ($this->post['selectedProducts'] as $old_categories_id => $array) {
+                    foreach ($array as $pid) {
+                        mslib_befe::enableProduct($pid);
+                    }
+                }
+                break;
+            case 'disable':
+                foreach ($this->post['selectedProducts'] as $old_categories_id => $array) {
+                    foreach ($array as $pid) {
+                        mslib_befe::disableProduct($pid);
+                    }
+                }
+                break;
             default:
                 // custom page hook that can be controlled by third-party plugin
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionProductIteratorProc'])) {
@@ -891,6 +905,21 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 $pageset = mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, $extra_from, array(), 'admin_products_search');
 $products = $pageset['products'];
 $product_tax_rate_js = array();
+// Check all checkbox
+$checkAllCheckbox = '';
+if ($this->conf['show_checkall_in_admin_products_overview'] == '1') {
+    $checkAllCheckbox = '<div>
+        <div class="cellCheckbox">
+            <div class="checkbox checkbox-success checkbox-inline">
+                <input type="checkbox" class="checkAllProduct" id="checkboxAllProduct">
+                <label for="checkboxAllProduct"></label>
+            </div>
+        </div>
+        <div class="cellImage"></div>
+        <div class="cellName"></div>
+        <div class="cellStatus"></div>
+    </div>';
+}
 if ($pageset['total_rows'] > 0) {
     $subpartArray = array();
     $subpartArray['###FORM_ACTION_PRICE_UPDATE_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_products_search_and_edit&' . mslib_fe::tep_get_all_get_params(array(
@@ -1189,6 +1218,8 @@ if ($pageset['total_rows'] > 0) {
     $actions['move'] = $this->pi_getLL('move_selected_products_to') . ':';
     $actions['duplicate'] = $this->pi_getLL('duplicate_selected_products_to') . ':';
     $actions['delete'] = $this->pi_getLL('delete_selected_products');
+    $actions['enable'] = $this->pi_getLL('enable_selected_products');
+    $actions['disable'] = $this->pi_getLL('disable_selected_products');
     // custom page hook that can be controlled by third-party plugin
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditActionItemsPreProc'])) {
         $params = array(
@@ -1241,6 +1272,10 @@ if ($pageset['total_rows'] > 0) {
     $subpartArray['###ADMIN_LABEL_DISABLE0###'] = $this->pi_getLL('admin_label_disable');
     $subpartArray['###ADMIN_LABEL_ENABLE1###'] = $this->pi_getLL('admin_label_enable');
     $subpartArray['###ADMIN_LABEL_DISABLE1###'] = $this->pi_getLL('admin_label_disable');
+
+    $subpartArray['###HEADER_CHECK_ALL_ITEMS_CHECKBOX###'] = $checkAllCheckbox;
+    $subpartArray['###FOOTER_CHECK_ALL_ITEMS_CHECKBOX###'] = $checkAllCheckbox;
+
     $subpartArray['###PRODUCTS_ITEM###'] = $productsItem;
     $tmp_content_results = $this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 } else {
@@ -1734,6 +1769,14 @@ jQuery(document).ready(function(){
         var pid = jQuery(this).attr(\'data-pid\');
         var new_value = (jQuery(this).prop(\'checked\') ? 1 : 0);
         updateData(new_value, pid, \'products_status\');
+    });
+    jQuery(document).on(\'click\', \'#checkboxAllProduct\', function(){
+        console.log(jQuery(this).prop(\'checked\'));
+        if (jQuery(this).prop(\'checked\')) {
+            jQuery(\'.checkboxItem\').prop(\'checked\', true);
+        } else {
+            jQuery(\'.checkboxItem\').prop(\'checked\', false);
+        }
     });
 });
 function updateData(value, pid, data_type) {

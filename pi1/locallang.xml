@@ -618,6 +618,8 @@
             <label index="delete_selected_customers">Delete selected customers</label>
             <label index="delete_selected_orders">Delete selected orders</label>
             <label index="delete_selected_products">Delete selected products</label>
+            <label index="enable_selected_products">Enable selected products</label>
+            <label index="disable_selected_products">Disable selected products</label>
             <label index="delete_zone">Delete zone</label>
             <label index="deleted">deleted</label>
             <label index="delimited_by">Delimited by</label>
@@ -2086,6 +2088,8 @@
             <label index="delete_selected_customers">Verwijder geselecteerde klanten</label>
             <label index="delete_selected_orders">Verwijder geselecteerde bestellingen</label>
             <label index="delete_selected_products">Verwijder geselecteerde producten</label>
+            <label index="enable_selected_products">Enable selected products</label>
+            <label index="disable_selected_products">Disable selected products</label>
             <label index="delete_zone">Zone verwijderen</label>
             <label index="deleted">verwijderd</label>
             <label index="delimited_by">Gescheiden door</label>

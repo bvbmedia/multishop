@@ -318,4 +318,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional/language; type=string; label= sysLanguageIdZeroLgIso2: What is the language code of sys_language_uid=0. I.e. nl
 	sysLanguageIdZeroLgIso2 = nl
+
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Show "check all" checkbox in admin products overview
+	show_checkall_in_admin_products_overview = 0
 }

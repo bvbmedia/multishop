@@ -140,6 +140,7 @@ plugin.tx_multishop_pi1 {
 	strictProductEAN = {$plugin.multishop.strictProductEAN}
 	strictProductSKU = {$plugin.multishop.strictProductSKU}
 	sysLanguageIdZeroLgIso2 = {$plugin.multishop.sysLanguageIdZeroLgIso2}
+	show_checkall_in_admin_products_overview = {$plugin.multishop.show_checkall_in_admin_products_overview}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
