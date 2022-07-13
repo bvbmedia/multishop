@@ -105,6 +105,10 @@ if (!$this->get['skip_categories']) {
             // Skip external URLs
             continue;
         }
+        if (trim($categories['categories_canonical_url']) != '') {
+            // Skip canonical URLs
+            continue;
+        }
         $level = 0;
         $cats = mslib_fe::Crumbar($categories['categories_id']);
         $cats = array_reverse($cats);
