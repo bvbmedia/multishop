@@ -1448,8 +1448,8 @@ if ($this->post['action'] == 'category-insert') {
                                     }
                                     $subdelimiter = $tmp[2];
                                     $langDelimiter = '';
-                                    if (strstr($tmpitem[$i], '·')) {
-                                        $langDelimiter = '·';
+                                    if (strstr($tmpitem[$i], '»')) {
+                                        $langDelimiter = '»';
                                         // This input contains multilanguage string
                                         $multiLangLines=explode($langDelimiter, $tmpitem[$i]);
                                         // Set $tmpitem to default language and save other languages in $multiLangLines to be used as language overlay
