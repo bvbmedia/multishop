@@ -7785,8 +7785,9 @@ class mslib_fe {
                     }
                     $counter++;
                     if (is_numeric($pageinfo['uid']) and $pageinfo['uid'] == $this->shop_pid) {
-                        $ms_menu['footer']['ms_admin_stores']['label'] = $pageTitle . ' (' . $pageinfo["uid"] . ')';
-                        $ms_menu['footer']['ms_admin_stores']['class'] = 'fa fa-shopping-cart';
+                        $count=mslib_befe::getCount($pageinfo["uid"],'tx_multishop_products','page_uid');
+                        $ms_menu['footer']['ms_admin_stores']['label'] = $pageTitle . ' (' . number_format($count,'0','','.') . ')';
+                        $ms_menu['footer']['ms_admin_stores']['class'] = '';
                     } elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid'] != $this->shop_pid) {
                         $ms_menu['footer']['ms_admin_stores']['subs']['shop_' . $counter]['label'] = $pageTitle . ' (' . $pageinfo["uid"] . ')';
                         $ms_menu['footer']['ms_admin_stores']['subs']['shop_' . $counter]['description'] = $this->pi_getLL('switch_to') . ' ' . $pageTitle . ' ' . $this->pi_getLL('web_shop');
@@ -7840,7 +7841,7 @@ class mslib_fe {
 			</div>
 		';
         // footer
-        if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
+        /*if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
             $filter = array();
             $filter[] = 'crdate > ' . (time() - 350);
             if (!$this->masterShop) {
@@ -7908,7 +7909,7 @@ class mslib_fe {
             }
             $ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label'] = $this->pi_getLL('total') . ': ' . $guests_online;
             $ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['class'] = 'fa fa-list-ul';
-        }
+        }*/
         if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
             $ms_menu['footer']['ms_admin_statistics']['label'] = $this->pi_getLL('reports');
             $ms_menu['footer']['ms_admin_statistics']['description'] = $this->pi_getLL('admin_statistics_description') . '.';
