@@ -410,176 +410,181 @@ if ($this->get['feed_hash']) {
                     }
                 }
                 //$this->msDebug=1;
-                $pageset = mslib_fe::getProductsPageSet($filter, $offset, 99999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
+                $limit = 99999;
+                $pageset = mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
                 //echo $this->msDebugInfo;
                 //die();
                 $products = $pageset['products'];
                 if ($pageset['total_rows'] > 0) {
                     foreach ($pageset['products'] as $row) {
+                        $continue = true;
                         $fetchExtraDataFromProducts = 1;
                         //hook to let other plugins further manipulate the settings
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPreProc'])) {
                             $params = array(
-                                    'fields' => &$fields,
-                                    'row' => &$row,
-                                    'fetchExtraDataFromProducts' => &$fetchExtraDataFromProducts
+                                'fields' => &$fields,
+                                'row' => &$row,
+                                'fetchExtraDataFromProducts' => &$fetchExtraDataFromProducts,
+                                'continue' => &$continue,
                             );
                             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPreProc'] as $funcRef) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                             }
                         }
-                        if (!$fetchExtraDataFromProducts) {
-                            $records[] = $row;
-                        } else {
-                            $product = mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
-                            //hook to let other plugins further manipulate the settings
-                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'])) {
-                                $params = array(
-                                        'fields' => &$fields,
-                                        'row' => &$row,
-                                        'fetchExtraDataFromProducts' => &$fetchExtraDataFromProducts,
-                                        'product' => &$product
-                                );
-                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'] as $funcRef) {
-                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                                }
-                            }
-                            if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
-                                $product_path = mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
-                                if (is_array($product_path) && count($product_path)) {
-                                    $product['categories_id'] = $product_path['node_id'];
-                                    $product['products_to_categories_id'] = $product_path['products_to_categories_id'];
-                                }
-                            }
-                            if ($product['products_id']) {
-                                // TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
-                                //if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-                                // fetch the attributes manually
-                                $loadAttributeValues = 0;
-                                foreach ($fields as $field) {
-                                    if (strstr($field, 'attribute_option_name')) {
-                                        $loadAttributeValues = 1;
+                        if ($continue) {
+                            if (!$fetchExtraDataFromProducts) {
+                                $records[] = $row;
+                            } else {
+                                $product = mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
+                                //hook to let other plugins further manipulate the settings
+                                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'])) {
+                                    $params = array(
+                                            'fields' => &$fields,
+                                            'row' => &$row,
+                                            'fetchExtraDataFromProducts' => &$fetchExtraDataFromProducts,
+                                            'product' => &$product
+                                    );
+                                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorProductLoadedPostProc'] as $funcRef) {
+                                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                     }
                                 }
-                                if ($loadAttributeValues) {
-                                    $attributes_data = array();
-                                    //$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
-                                    //$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.page_uid=".$this->showCatalogFromPage." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
-                                    // 2015-11-16: removed page_uid filter otherwise attributes missing when working in multiple shops that share the same attributes
-                                    $sql_attributes = "select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '" . $this->sys_language_uid . "' and pov.language_id = '" . $this->sys_language_uid . "' and pa.products_id = " . $product['products_id'] . " and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
-                                    $qry_attributes = $GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
-                                    while ($row_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
-                                        $attributes_data['attribute_option_name_' . $row_attributes['options_id']]['values'][] = $row_attributes['products_options_values_name'];
-                                        $attributes_data['attribute_option_name_' . $row_attributes['options_id']]['array'][] = $row_attributes;
+                                if ($this->ms['MODULES']['ENABLE_DEFAULT_CRUMPATH']) {
+                                    $product_path = mslib_befe::getRecord($row['products_id'], 'tx_multishop_products_to_categories', 'products_id', array('is_deepest=1 and default_path=1'));
+                                    if (is_array($product_path) && count($product_path)) {
+                                        $product['categories_id'] = $product_path['node_id'];
+                                        $product['products_to_categories_id'] = $product_path['products_to_categories_id'];
                                     }
-                                    foreach ($attributes_data as $attribute_key => $attribute_val) {
-                                        $row[$attribute_key] = implode(',', $attributes_data[$attribute_key]['values']);
-                                        // now with prices
-                                        $itemsWithPrice = array();
-                                        $itemsWithPriceIncludingVat = array();
-                                        foreach ($attributes_data[$attribute_key]['array'] as $valueArray) {
-                                            // excluding vat
-                                            $final_price = number_format($valueArray['options_values_price'], 2);
-                                            // store value with corresponding price, divided with double ;
-                                            $itemsWithPrice[] = $valueArray['products_options_values_name'] . '::' . $final_price;
-                                            // including vat
-                                            if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
-                                                $final_price = $valueArray['options_values_price'];
-                                                // in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
-                                                if ($row['country_tax_rate'] && $row['region_tax_rate']) {
-                                                    $country_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['country_tax_rate']));
-                                                    $region_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['region_tax_rate']));
-                                                    $final_price = $final_price + ($country_tax_rate + $region_tax_rate);
-                                                } else {
-                                                    $tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['tax_rate']));
-                                                    $final_price = $final_price + $tax_rate;
+                                }
+                                if ($product['products_id']) {
+                                    // TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
+                                    //if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+                                    // fetch the attributes manually
+                                    $loadAttributeValues = 0;
+                                    foreach ($fields as $field) {
+                                        if (strstr($field, 'attribute_option_name')) {
+                                            $loadAttributeValues = 1;
+                                        }
+                                    }
+                                    if ($loadAttributeValues) {
+                                        $attributes_data = array();
+                                        //$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
+                                        //$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.page_uid=".$this->showCatalogFromPage." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
+                                        // 2015-11-16: removed page_uid filter otherwise attributes missing when working in multiple shops that share the same attributes
+                                        $sql_attributes = "select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '" . $this->sys_language_uid . "' and pov.language_id = '" . $this->sys_language_uid . "' and pa.products_id = " . $product['products_id'] . " and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
+                                        $qry_attributes = $GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
+                                        while ($row_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
+                                            $attributes_data['attribute_option_name_' . $row_attributes['options_id']]['values'][] = $row_attributes['products_options_values_name'];
+                                            $attributes_data['attribute_option_name_' . $row_attributes['options_id']]['array'][] = $row_attributes;
+                                        }
+                                        foreach ($attributes_data as $attribute_key => $attribute_val) {
+                                            $row[$attribute_key] = implode(',', $attributes_data[$attribute_key]['values']);
+                                            // now with prices
+                                            $itemsWithPrice = array();
+                                            $itemsWithPriceIncludingVat = array();
+                                            foreach ($attributes_data[$attribute_key]['array'] as $valueArray) {
+                                                // excluding vat
+                                                $final_price = number_format($valueArray['options_values_price'], 2);
+                                                // store value with corresponding price, divided with double ;
+                                                $itemsWithPrice[] = $valueArray['products_options_values_name'] . '::' . $final_price;
+                                                // including vat
+                                                if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
+                                                    $final_price = $valueArray['options_values_price'];
+                                                    // in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
+                                                    if ($row['country_tax_rate'] && $row['region_tax_rate']) {
+                                                        $country_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['country_tax_rate']));
+                                                        $region_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['region_tax_rate']));
+                                                        $final_price = $final_price + ($country_tax_rate + $region_tax_rate);
+                                                    } else {
+                                                        $tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['tax_rate']));
+                                                        $final_price = $final_price + $tax_rate;
+                                                    }
                                                 }
+                                                $final_price = number_format($final_price, 2);
+                                                // store value with corresponding price, divided with double ;
+                                                $itemsWithPriceIncludingVat[] = $valueArray['products_options_values_name'] . '::' . $final_price;
                                             }
-                                            $final_price = number_format($final_price, 2);
-                                            // store value with corresponding price, divided with double ;
-                                            $itemsWithPriceIncludingVat[] = $valueArray['products_options_values_name'] . '::' . $final_price;
-                                        }
-                                        if (count($itemsWithPrice)) {
-                                            // add all values with prices excluding VAT as one big string, divided with double pipe
-                                            $row[$attribute_key . '_including_prices'] = implode('||', $itemsWithPrice);
-                                        }
-                                        if (count($itemsWithPriceIncludingVat)) {
-                                            // add all values with prices including VAT as one big string, divided with double pipe
-                                            $row[$attribute_key . '_including_prices_including_vat'] = implode('||', $itemsWithPriceIncludingVat);
+                                            if (count($itemsWithPrice)) {
+                                                // add all values with prices excluding VAT as one big string, divided with double pipe
+                                                $row[$attribute_key . '_including_prices'] = implode('||', $itemsWithPrice);
+                                            }
+                                            if (count($itemsWithPriceIncludingVat)) {
+                                                // add all values with prices including VAT as one big string, divided with double pipe
+                                                $row[$attribute_key . '_including_prices_including_vat'] = implode('||', $itemsWithPriceIncludingVat);
+                                            }
                                         }
                                     }
-                                }
-                                //}
-                                $cats = mslib_fe::Crumbar($product['categories_id']);
-                                $cats = array_reverse($cats);
-                                $product['categories_crum'] = $cats;
-                                // some parts are not available in flat table and vice versa so lets merge them
-                                /*
-                                 * exclude products from feeds
-                                 */
-                                $feed_id = $feed['id'];
-                                $in_feed_exclude_list = false;
-                                $in_feed_stock_exclude_list = false;
-                                if (!$in_feed_exclude_list) {
-                                    if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['categories_id'], 'categories')) {
-                                        $in_feed_exclude_list = true;
-                                    }
-                                }
-                                if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
-                                    $in_feed_exclude_list = true;
-                                }
-                                if ($post_data['include_only_related_product']) {
+                                    //}
+                                    $cats = mslib_fe::Crumbar($product['categories_id']);
+                                    $cats = array_reverse($cats);
+                                    $product['categories_crum'] = $cats;
+                                    // some parts are not available in flat table and vice versa so lets merge them
+                                    /*
+                                     * exclude products from feeds
+                                     */
+                                    $feed_id = $feed['id'];
+                                    $in_feed_exclude_list = false;
+                                    $in_feed_stock_exclude_list = false;
                                     if (!$in_feed_exclude_list) {
-                                        $record_in_category = true;
-                                        $record_in_product = true;
-                                        $sql_check = "select id, negate from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['categories_id']) . "' and exclude_type='categories'";
-                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
-                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                                            $record_in_category = false;
-                                        }
-                                        $sql_check = "select id from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['products_id']) . "' and exclude_type='products'";
-                                        $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
-                                        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-                                            $record_in_product = false;
-                                        }
-                                        if (!$record_in_category && !$record_in_product) {
+                                        if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['categories_id'], 'categories')) {
                                             $in_feed_exclude_list = true;
                                         }
                                     }
-                                }
-                                if (!$in_feed_exclude_list) {
-                                    if (!$in_feed_stock_exclude_list) {
-                                        if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {
+                                    if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
+                                        $in_feed_exclude_list = true;
+                                    }
+                                    if ($post_data['include_only_related_product']) {
+                                        if (!$in_feed_exclude_list) {
+                                            $record_in_category = true;
+                                            $record_in_product = true;
+                                            $sql_check = "select id, negate from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['categories_id']) . "' and exclude_type='categories'";
+                                            $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                            if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                                $record_in_category = false;
+                                            }
+                                            $sql_check = "select id from tx_multishop_catalog_to_feeds where feed_id='" . addslashes($feed_id) . "' and exclude_id='" . addslashes($product['products_id']) . "' and exclude_type='products'";
+                                            $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+                                            if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+                                                $record_in_product = false;
+                                            }
+                                            if (!$record_in_category && !$record_in_product) {
+                                                $in_feed_exclude_list = true;
+                                            }
+                                        }
+                                    }
+                                    if (!$in_feed_exclude_list) {
+                                        if (!$in_feed_stock_exclude_list) {
+                                            if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {
+                                                $in_feed_stock_exclude_list = true;
+                                            }
+                                        }
+                                        if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['products_id'])) {
                                             $in_feed_stock_exclude_list = true;
                                         }
-                                    }
-                                    if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['products_id'])) {
-                                        $in_feed_stock_exclude_list = true;
-                                    }
-                                    if ($in_feed_stock_exclude_list) {
-                                        if (isset($product['products_quantity'])) {
-                                            $product['products_quantity'] = '';
+                                        if ($in_feed_stock_exclude_list) {
+                                            if (isset($product['products_quantity'])) {
+                                                $product['products_quantity'] = '';
+                                            }
+                                            if (isset($row['products_quantity'])) {
+                                                $row['products_quantity'] = '';
+                                            }
                                         }
-                                        if (isset($row['products_quantity'])) {
-                                            $row['products_quantity'] = '';
-                                        }
+                                        $records[] = array_merge($product, $row);
                                     }
-                                    $records[] = array_merge($product, $row);
                                 }
                             }
-                        }
-                        //hook to let other plugins further manipulate the settings
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'])) {
-                            $params = array(
-                                    'post_data' => &$post_data,
-                                    'records' => &$records,
-                                    'loadAttributeValues' => $loadAttributeValues,
-                                    'feed' => $feed,
-                                    'row' => &$row,
-                                    'fields' => $fields
-                            );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'] as $funcRef) {
-                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                            //hook to let other plugins further manipulate the settings
+                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'])) {
+                                $params = array(
+                                        'post_data' => &$post_data,
+                                        'records' => &$records,
+                                        'loadAttributeValues' => $loadAttributeValues,
+                                        'feed' => $feed,
+                                        'row' => &$row,
+                                        'fields' => $fields
+                                );
+                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedIteratorPostProc'] as $funcRef) {
+                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                }
                             }
                         }
                     }
