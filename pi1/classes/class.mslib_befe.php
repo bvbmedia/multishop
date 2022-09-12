@@ -4514,7 +4514,7 @@ class mslib_befe {
                 $subpartsTemplateWrapperRemove['###TOTAL_VAT_ROW_EXCLUDE_VAT_HAVE_SHIPPING_PAYMENT_TAX###'] = '';
             }
         }
-        if ($order['discount'] > -1 && $order['discount'] < 0.01) {
+        if (!$order['discount'] || ($order['discount'] > -1 && $order['discount'] < 0.01)) {
             $subpartsTemplateWrapperRemove['###DISCOUNT_WRAPPER###'] = '';
             $subpartsTemplateWrapperRemove['###NEWSUBTOTAL_WRAPPER###'] = '';
         }
