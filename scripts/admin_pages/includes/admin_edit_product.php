@@ -5035,6 +5035,7 @@ if ($this->post) {
         $subpartArray['###AJAX_PID1###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $subpartArray['###AJAX_PID2###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $subpartArray['###AJAX_PID3###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
+        $subpartArray['###AJAX_PID4###'] = (isset($this->get['pid']) ? $this->get['pid'] : 0);
         $content .= $this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
         if ($this->conf['setReadOnlyForEditProductPriceIncludeTaxInput'] == '1') {
             $GLOBALS['TSFE']->additionalHeaderData['disableIncludeTaxPriceField'] = '

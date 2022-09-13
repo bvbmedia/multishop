@@ -809,7 +809,7 @@
                                     <div class="col-md-12">
                                         <div class="input-group ml-10">
                                             <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###" data-ean-valid="###VALUE_EAN_CODE_VALIDITY###">
-                                            <span class="input-group-btn"><a href="#" id="checkEAN" class="btn btn-success">Validate</a></span>
+                                            <span class="input-group-addon" id="checkEANLabel" style="display: none; width: 20px"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -817,9 +817,8 @@
                                     <div class="col-md-12">
                                         <div class="input-group ml-10">
                                             <span class="input-group-addon"><strong>###LABEL_SKU_CODE###</strong></span>
-
                                             <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="25" value="###VALUE_SKU_CODE###" data-sku-valid="###VALUE_SKU_CODE_VALIDITY###">
-                                            <span class="input-group-btn"><a href="#" id="checkSKU" class="btn btn-success">Validate</a></span>
+                                            <span class="input-group-addon" id="checkSKULabel" style="display: none; width: 20px"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -940,46 +939,11 @@
         }
     }
     jQuery(document).ready(function ($) {
-        $(document).on("click", "#checkEAN", function(e){
-            e.preventDefault();
-            if ($("#ean_code").val() != "") {
-                $(this).empty();
-                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
-                $.ajax({
-                   type: "POST",
-                   url: "###AJAX_URL_CHECK_EAN###",
-                   dataType: "json",
-                   data: {product_sku_code: $("#ean_code").val(), pid: "###AJAX_PID3###"},
-                   success: function (data) {
-                       if (data.status == "NOTOK") {
-                           $("#ean_code").css("border", "1px solid red");
-                           $("#ean_code").attr("data-sku-valid", "0");
-
-                           $("#checkEAN").empty();
-                           $("#checkEAN").html('Validate');
-                       } else {
-                           $("#ean_code").css("border", "1px solid green");
-                           $("#ean_code").attr("data-sku-valid", "1");
-
-                           $("#checkEAN").empty();
-                           $("#checkEAN").html('Valid');
-                       }
-                   },
-                   failed: function() {
-                       $("#checkEAN").empty();
-                       $("#checkEAN").html('Validate');
-                   },
-                   error: function() {
-                       $("#checkEAN").empty();
-                       $("#checkEAN").html('Validate');
-                   }
-                });
-            }
-        });
         $(document).on("keydown", "#ean_code", delay(function(e){
             if ($("#ean_code").val() != "") {
-                $("#checkEAN").empty();
-                $("#checkEAN").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $("#checkEANLabel").show();
+                $("#checkEANLabel").empty();
+                $("#checkEANLabel").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
                 $.ajax({
                    type: "POST",
                    url: "###AJAX_URL_CHECK_EAN1###",
@@ -990,63 +954,40 @@
                            $("#ean_code").css("border", "1px solid red");
                            $("#ean_code").attr("data-ean-valid", "0");
 
-                           $("#checkEAN").empty();
-                           $("#checkEAN").html('Validate');
+                           $("#checkEANLabel").show();
+                           $("#checkEANLabel").empty();
+                           $("#checkEANLabel").html('<strong>&#10005;</strong>');
                        } else {
                            $("#ean_code").css("border", "1px solid green");
                            $("#ean_code").attr("data-ean-valid", "1");
 
-                           $("#checkEAN").empty();
-                           $("#checkEAN").html('Valid');
+                           $("#checkEANLabel").show();
+                           $("#checkEANLabel").empty();
+                           $("#checkEANLabel").html('<strong>&#x2705;</strong>');
                        }
                    },
                    failed: function() {
-                       $("#checkEAN").empty();
-                       $("#checkEAN").html('Failed');
+                       $("#ean_code").css("border", "1px solid red");
+                       $("#ean_code").attr("data-ean-valid", "0");
+                       $("#checkEANLabel").show();
+                       $("#checkEANLabel").empty();
+                       $("#checkEANLabel").html('<strong>&#10005;</strong>');
                    },
                    error: function() {
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Error');
+                       $("#ean_code").css("border", "1px solid red");
+                       $("#ean_code").attr("data-ean-valid", "0");
+                       $("#checkEANLabel").show();
+                       $("#checkEANLabel").empty();
+                       $("#checkEANLabel").html('<strong>&#10005;</strong>');
                    }
                 });
             }
         }, 500));
-        $(document).on("click", "#checkSKU", function(e){
-            e.preventDefault();
-            if ($("#sku_code").val() != "") {
-                $(this).empty();
-                $(this).html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
-                $.ajax({
-                   type: "POST",
-                   url: "###AJAX_URL_CHECK_SKU###",
-                   dataType: "json",
-                   data: {product_sku_code: $("#sku_code").val(), pid: "###AJAX_PID1###"},
-                   success: function (data) {
-                       if (data.status == "NOTOK") {
-                           $("#sku_code").css("border", "1px solid red");
-                           $("#sku_code").attr("data-sku-valid", "0");
-                       } else {
-                           $("#sku_code").css("border", "1px solid green");
-                           $("#sku_code").attr("data-sku-valid", "1");
-                       }
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
-                   },
-                   failed: function() {
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
-                   },
-                   error: function() {
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
-                   }
-                });
-            }
-        });
         $(document).on("keydown", "#sku_code", delay(function(e){
             if ($("#sku_code").val() != "") {
-                $("#checkSKU").empty();
-                $("#checkSKU").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
+                $("#checkSKULabel").show();
+                $("#checkSKULabel").empty();
+                $("#checkSKULabel").html('<img src="typo3conf/ext/multishop/templates/images/ellipsis.svg" style="width:50px; height:18px" />');
                 $.ajax({
                    type: "POST",
                    url: "###AJAX_URL_CHECK_SKU1###",
@@ -1056,20 +997,30 @@
                        if (data.status == "NOTOK") {
                            $("#sku_code").css("border", "1px solid red");
                            $("#sku_code").attr("data-sku-valid", "0");
+                           $("#checkSKULabel").show();
+                           $("#checkSKULabel").empty();
+                           $("#checkSKULabel").html('<strong>&#10005;</strong>');
                        } else {
                            $("#sku_code").css("border", "1px solid green");
                            $("#sku_code").attr("data-sku-valid", "1");
+                           $("#checkSKULabel").show();
+                           $("#checkSKULabel").empty();
+                           $("#checkSKULabel").html('<strong>&#x2705;</strong>');
                        }
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
                    },
                    failed: function() {
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
+                       $("#sku_code").css("border", "1px solid red");
+                       $("#sku_code").attr("data-sku-valid", "0");
+                       $("#checkSKULabel").show();
+                       $("#checkSKULabel").empty();
+                       $("#checkSKULabel").html('<strong>&#10005;</strong>');
                    },
                    error: function() {
-                       $("#checkSKU").empty();
-                       $("#checkSKU").html('Validate');
+                       $("#sku_code").css("border", "1px solid red");
+                       $("#sku_code").attr("data-sku-valid", "0");
+                       $("#checkSKULabel").show();
+                       $("#checkSKULabel").empty();
+                       $("#checkSKULabel").html('<strong>&#10005;</strong>');
                    }
                });
             }
@@ -1087,16 +1038,30 @@
                 return false;
             }
             if ($("#sku_code").val() != "") {
+                $("#sku_code").change();
                 if ($("#sku_code").attr("data-sku-valid") == "0") {
                     enableBlockUi = '0';
-                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###");
+                    $("#sku_code").focus();
+                    $.alert({
+                        title: 'Error',
+                        icon: '',
+                        type: 'orange',
+                        content: '###ADMIN_LABEL_PRODUCT_SKU_ALREADY_IN_USED1###',
+                    });
                     return false;
                 }
             }
             if ($("#ean_code").val() != "") {
+                $("#ean_code").change();
                 if ($("#ean_code").attr("data-ean-valid") == "0") {
                     enableBlockUi = '0';
-                    msDialog("ERROR", "###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###");
+                    $("#ean_code").focus();
+                    $.alert({
+                        title: 'Error',
+                        icon: '',
+                        type: 'orange',
+                        content: '###ADMIN_LABEL_PRODUCT_EAN_ALREADY_IN_USED1###',
+                    });
                     return false;
                 }
             }
