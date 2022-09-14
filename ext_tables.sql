@@ -274,7 +274,7 @@ CREATE TABLE `tx_multishop_countries_to_zones` (
 CREATE TABLE `tx_multishop_coupons` (
  `id` int(11) NOT NULL auto_increment,
  `code` varchar(250) default '',
- `discount` decimal(5,2) default '0.00',
+ `discount` decimal(6,2) default '0.00',
  `status` tinyint(1) default '0',
  `startdate` int(11) default '0',
  `enddate` int(11) default '0',
