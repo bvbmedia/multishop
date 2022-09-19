@@ -29,7 +29,7 @@
             "pi1/classes/class.tx_mslib_order.php",
             "pi1/classes/class.tx_mslib_user.php",
             "pi1/classes/class.tx_multishop_cms_layout.php",
-            "pi1/classes/class.tx_multishop_configuration.php",
+            "pi1/classes/class.tx_multishop_configuration.php"
         ]
     }
 }
