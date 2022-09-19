@@ -1277,12 +1277,32 @@ if ($pageset['total_rows'] > 0) {
     $subpartArray['###FOOTER_CHECK_ALL_ITEMS_CHECKBOX###'] = $checkAllCheckbox;
 
     $subpartArray['###PRODUCTS_ITEM###'] = $productsItem;
+    // custom page hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditResultsMarkerPostProc'])) {
+        $params = array(
+                'subpartArray' => &$subpartArray,
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditResultsMarkerPostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // custom page hook that can be controlled by third-party plugin eof
     $tmp_content_results = $this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 } else {
     $subpartArray = array();
     $subpartArray['###LABEL_BACK_TO_CATALOG###'] = $this->pi_getLL('admin_close_and_go_back_to_catalog');
     $subpartArray['###BACK_TO_CATALOG_LINK###'] = mslib_fe::typolink();
     $subpartArray['###LABEL_NO_RESULT###'] = $this->pi_getLL('no_products_available');
+    // custom page hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditNoResultsMarkerPostProc'])) {
+        $params = array(
+                'subpartArray' => &$subpartArray,
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditNoResultsMarkerPostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // custom page hook that can be controlled by third-party plugin eof
     $tmp_content_noresults = $this->cObj->substituteMarkerArrayCached($subparts['noresults'], array(), $subpartArray);
 }
 $subpartArray = array();
