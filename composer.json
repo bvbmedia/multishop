@@ -11,5 +11,25 @@
             "typo3/cms-composer-installers": true
         },
         "sort-packages": true
+    },
+    "autoload": {
+        "classmap": [
+            "class.tx_multishop_addMiscFieldsToFlexForm.php",
+            "class.tx_multishop_realurl.php",
+            "class.user_msMenuFunc.php",
+            "pi1/class.tx_multishop_pi1.php",
+            "pi1/classes/class.mslib_befe.php",
+            "pi1/classes/class.mslib_fe.php",
+            "pi1/classes/class.mslib_payment.php",
+            "pi1/classes/class.tx_mslib_admin_import.php",
+            "pi1/classes/class.tx_mslib_admin_interface.php",
+            "pi1/classes/class.tx_mslib_cart.php",
+            "pi1/classes/class.tx_mslib_catalog.php",
+            "pi1/classes/class.tx_mslib_dashboard.php",
+            "pi1/classes/class.tx_mslib_order.php",
+            "pi1/classes/class.tx_mslib_user.php",
+            "pi1/classes/class.tx_multishop_cms_layout.php",
+            "pi1/classes/class.tx_multishop_configuration.php",
+        ]
     }
 }
