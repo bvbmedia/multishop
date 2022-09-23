@@ -1660,12 +1660,12 @@ if ($this->post['action'] == 'category-insert') {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['products_id']);
                     } elseif ($item['products_unique_identifier']) {
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['products_unique_identifier']);
-                    } elseif ($item['products_ean']) {
-                        $item['products_ean'] = trim($item['products_ean']);
-                        $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['products_ean']);
                     } elseif ($item['products_sku']) {
                         $item['products_sku'] = trim($item['products_sku']);
                         $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['products_sku']);
+                    } elseif ($item['products_ean']) {
+                        $item['products_ean'] = trim($item['products_ean']);
+                        $item['extid'] = md5($this->post['prefix_source_name'] . '_' . $item['products_ean']);
                     }
                 }
                 if (!$item['extid']) {
