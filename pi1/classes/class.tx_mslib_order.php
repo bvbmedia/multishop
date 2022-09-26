@@ -999,15 +999,19 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             }
             if ($product['products_description']) {
                 $tmp_item_name['products_description'] = '<br/>' . nl2br(htmlspecialchars($product['products_description']));
+                $subprices .= '<BR>';
             }
             if ($this->ms['MODULES']['DISPLAY_EAN_IN_ORDER_DETAILS'] == '1' && !empty($product['ean_code'])) {
                 $tmp_item_name['products_ean'] = '<br/>EAN: ' . htmlspecialchars($product['ean_code']);
+                $subprices .= '<BR>';
             }
             if ($this->ms['MODULES']['DISPLAY_SKU_IN_ORDER_DETAILS'] == '1' && !empty($product['sku_code'])) {
                 $tmp_item_name['products_sku'] = '<br/>' . $this->pi_getLL('sku_number', 'SKU') . ': ' . htmlspecialchars($product['sku_code']);
+                $subprices .= '<BR>';
             }
             if ($this->ms['MODULES']['DISPLAY_VENDOR_IN_ORDER_DETAILS'] == '1' && !empty($product['vendor_code'])) {
                 $tmp_item_name['products_vendor_code'] = '<br/>' . htmlspecialchars($this->pi_getLL('label_order_details_vendor_code', 'Vendor code')) . ': ' . htmlspecialchars($product['vendor_code']);
+                $subprices .= '<BR>';
             }
             if (count($product['attributes'])) {
                 foreach ($product['attributes'] as $tmpkey => $options) {
