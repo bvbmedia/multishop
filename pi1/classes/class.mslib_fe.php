@@ -5522,13 +5522,11 @@ class mslib_fe {
                 case 'shipping':
                     // first we load all options
                     $allmethods = mslib_fe::loadShippingMethods(0, $user_country, true, true);
-                    $count_a = count($allmethods);
-                    $count_b = 0;
-                    $count_c = 0;
+                    // Retrieve enabled shipping method per product
                     foreach ($pids as $pid) {
                         $str = $GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
                                 'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
-                                's.status=1 and pmm.type=\'' . $type . '\' and pmm.products_id = \'' . $pid . '\' and pmm.method_id=s.id and d.language_id=\'' . $this->sys_language_uid . '\' and s.id=d.id', // WHERE...
+                                's.status=1 and pmm.type=\'' . $type . '\' and pmm.products_id = \'' . $pid . '\' and pmm.negate=0 and pmm.method_id=s.id and d.language_id=\'' . $this->sys_language_uid . '\' and s.id=d.id', // WHERE...
                                 '', // GROUP BY...
                                 's.sort_order', // ORDER BY...
                                 '' // LIMIT ...
@@ -5536,28 +5534,33 @@ class mslib_fe {
                         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             if (!isset($allmethods[$row['code']])) {
-                                if (!$row['negate']) {
-                                    $allmethods[$row['code']] = mslib_fe::loadShippingMethod($row['code']);
-                                    if ($collecting_active_method) {
-                                        $active_methods_data[$type][$row['code']] = $allmethods[$row['code']];
-                                    }
-                                    $count_c++;
-                                }
-                            } else {
-                                if ($row['negate'] > 0) {
-                                    unset($allmethods[$row['code']]);
-                                    $count_b++;
-                                } else {
-                                    if ($collecting_active_method) {
-                                        $active_methods_data[$type][$row['code']] = $allmethods[$row['code']];
-                                    }
+                                $allmethods[$row['code']] = mslib_fe::loadShippingMethod($row['code']);
+                                // Result for further processing through hook
+                                if ($collecting_active_method) {
+                                    $active_methods_data[$type][$row['code']] = $allmethods[$row['code']];
                                 }
                             }
                         }
                     }
-                    //$count_b=count($allmethods);
-                    if ($count_a == $count_b || (!$count_b && !$count_c)) {
-                        $allmethods = array();
+                    // Retrieve disabled shipping method per product
+                    foreach ($pids as $pid) {
+                        $str = $GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
+                                'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
+                                's.status=1 and pmm.type=\'' . $type . '\' and pmm.products_id = \'' . $pid . '\' and pmm.negate=1 and pmm.method_id=s.id and d.language_id=\'' . $this->sys_language_uid . '\' and s.id=d.id', // WHERE...
+                                '', // GROUP BY...
+                                's.sort_order', // ORDER BY...
+                                '' // LIMIT ...
+                        );
+                        $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+                            if (isset($allmethods[$row['code']])) {
+                                unset($allmethods[$row['code']]);
+                                // Result for further processing through hook
+                                if ($collecting_active_method) {
+                                    unset($active_methods_data[$type][$row['code']]);
+                                }
+                            }
+                        }
                     }
                     break;
             }
