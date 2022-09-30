@@ -6302,6 +6302,18 @@ class mslib_fe {
                     }
                 }
             }
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCostsPostProc'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['productFeedGeneratorGetShippingCostsPostProc'] as $funcRef) {
+                    $params['products'] =& $products;
+                    $params['row3'] =& $row3;
+                    $params['countries_id'] =& $countries_id;
+                    $params['shipping_method'] =& $shipping_method;
+                    $params['shipping_method_id'] = &$shipping_method_id;
+                    $params['shipping_cost'] = &$shipping_cost;
+                    $params['shipping_cost_method_box'] =& $shipping_cost_method_box;
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+            }
             if ($shipping_cost) {
                 if ($shipping_method['tax_id'] && $shipping_cost) {
                     $shipping_total_tax_rate = $shipping_method['tax_rate'];
