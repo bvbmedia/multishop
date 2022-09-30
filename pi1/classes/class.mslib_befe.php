@@ -3943,7 +3943,13 @@ class mslib_befe {
         }
         $mailTo = array();
         if (is_array($overrideUsers) && count($overrideUsers)) {
-            $mailTo = $overrideUsers;
+            if (isset($overrideUsers['email'])) {
+                // Send only to one user
+                $mailTo[] = $overrideUsers;
+            } else {
+                // Send to multiple users
+                $mailTo = $overrideUsers;
+            }
         } elseif ($this->conf['developer_email']) {
             $user = array();
             $user['name'] = $this->conf['developer_email'];
@@ -3958,7 +3964,6 @@ class mslib_befe {
             }
         }
         if ($sendEmail && count($mailTo)) {
-            $subject = $subject;
             foreach ($mailTo as $mailuser) {
                 mslib_fe::mailUser($mailuser, $subject, $body, $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
             }
