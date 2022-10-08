@@ -1579,7 +1579,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray['billing_gender'] = 'f';
                     break;
             }
-            $insertArray['billing_birthday'] = $address['birthday'];
+            if (is_numeric($address['birthday'])) {
+                $insertArray['billing_birthday'] = $address['birthday'];
+            }
             if (!$address['street_name']) {
                 $address['street_name'] = $address['address'];
             }
@@ -1682,9 +1684,18 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['shipping_method_label'] = $address['shipping_method_label'];
             $insertArray['payment_method'] = $address['payment_method'];
             $insertArray['payment_method_label'] = $address['payment_method_label'];
-            $insertArray['shipping_method_costs'] = $address['shipping_method_costs'];
-            $insertArray['payment_method_costs'] = $address['payment_method_costs'];
-            $insertArray['payment_condition'] = $address['payment_condition'];
+            $insertArray['shipping_method_costs'] = 0;
+            if ($address['shipping_method_costs']) {
+                $insertArray['shipping_method_costs'] = $address['shipping_method_costs'];
+            }
+            $insertArray['payment_method_costs'] = 0;
+            if ($address['payment_method_costs']) {
+                $insertArray['payment_method_costs'] = $address['payment_method_costs'];
+            }
+            $insertArray['payment_condition'] = 0;
+            if ($address['payment_condition']) {
+                $insertArray['payment_condition'] = $address['payment_condition'];
+            }
             $insertArray['debit_order'] = 0;
             if (isset($address['debit_order'])) {
                 $insertArray['debit_order'] = $address['debit_order'];
