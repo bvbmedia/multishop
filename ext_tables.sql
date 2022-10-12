@@ -184,6 +184,7 @@ CREATE TABLE `tx_multishop_cms` (
  `page_uid` int(11) default '0',
  `crdate` int(11) default '0',
  `hash` varchar(50) default '',
+ `last_modified` int(11) default '0',
  PRIMARY KEY (`id`),
  KEY `domain_id` (`domain_id`),
  KEY `topmenu` (`topmenu`),

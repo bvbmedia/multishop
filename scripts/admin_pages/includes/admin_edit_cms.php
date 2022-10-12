@@ -26,6 +26,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
             $array['type'] = $this->post['tx_multishop_pi1']['type'];
         }
         $array['page_uid'] = $this->post['related_shop_pid'];
+        $array['last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms', 'id=\'' . addslashes($this->post['cms_id']) . '\'', $array);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $cms_id = $this->post['cms_id'];

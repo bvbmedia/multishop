@@ -221,6 +221,9 @@ switch ($this->get['tx_multishop_pi1']['order_by']) {
     case 'crdate':
         $order_by = 'c.crdate';
         break;
+    case 'last_modified':
+        $order_by = 'c.last_modified';
+        break;
     case 'id':
         $order_by = 'c.id';
         break;
@@ -294,6 +297,7 @@ if (!count($pageset['dataset'])) {
         $markerArray['CMS_TITLE'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $row['id'] . '&action=edit_cms', 1) . '">' . htmlspecialchars($row['name']) . '</a>';
         $markerArray['CMS_TYPE'] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id=' . $row['id'] . '&action=edit_cms', 1) . '">' . htmlspecialchars($row['type']) . '</a>';
         $markerArray['CMS_DATE_CREATED'] = strftime("%x %X", $row['crdate']);
+        $markerArray['CMS_DATE_MODIFIED'] = strftime("%x %X", $row['last_modified']);
         $markerArray['CMS_VALUE_SHOP'] = '';
         if (count($active_shop) > 1) {
             if ($row['page_uid'] > 0) {
@@ -355,6 +359,17 @@ if (!count($pageset['dataset'])) {
     $subpartArray['###LABEL_HEADER_CMS_DATE_ADDED###'] = htmlspecialchars($this->pi_getLL('date_added'));
     $subpartArray['###FOOTER_SORTBY_LINK_DATE_ADDED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
     $subpartArray['###LABEL_FOOTER_CMS_DATE_ADDED###'] = htmlspecialchars($this->pi_getLL('date_added'));
+    $key = 'last_modified';
+    if ($this->get['tx_multishop_pi1']['order_by'] == $key) {
+        $final_order_link = $order_link;
+    } else {
+        $final_order_link = 'a';
+    }
+    $subpartArray['###HEADER_SORTBY_LINK_DATE_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+    $subpartArray['###LABEL_HEADER_CMS_DATE_MODIFIED###'] = htmlspecialchars($this->pi_getLL('modified_on'));
+    $subpartArray['###FOOTER_SORTBY_LINK_DATE_MODIFIED###'] = mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]=' . $key . '&tx_multishop_pi1[order]=' . $final_order_link . '&' . $query_string);
+    $subpartArray['###LABEL_FOOTER_CMS_DATE_MODIFIED###'] = htmlspecialchars($this->pi_getLL('modified_on'));
+
     $subpartArray['###LABEL_HEADER_STATUS###'] = $this->pi_getLL('status');
     $subpartArray['###LABEL_HEADER_SHOP###'] = '';
     $subpartArray['###LABEL_FOOTER_SHOP###'] = '';
