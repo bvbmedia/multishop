@@ -42,6 +42,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
         }
         $cms_hash = md5(uniqid('', true));
         $array['crdate'] = time();
+        $array['last_modified'] = time();
         $array['hash'] = $cms_hash;
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $array);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
