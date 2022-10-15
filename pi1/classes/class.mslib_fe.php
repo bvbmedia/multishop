@@ -4358,8 +4358,16 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getAllOrderStatus($language_id = 0) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', 'o.sort_order asc', '');
+    public function getAllOrderStatus($language_id = 0, $sort_order_on = 'o.sort_order desc') {
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAllOrderStatusSortOrder'])) {
+            $params = array(
+                    'sort_order_on' => &$sort_order_on
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAllOrderStatusSortOrder'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery('o.*, od.name', 'tx_multishop_orders_status o, tx_multishop_orders_status_description od', 'od.language_id=\'' . $language_id . '\' and (o.page_uid=0 or o.page_uid=\'' . $this->showCatalogFromPage . '\') and o.deleted=0 and o.id=od.orders_status_id', '', $sort_order_on, '');
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $status = array();
         if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
