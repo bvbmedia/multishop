@@ -572,21 +572,21 @@
     });
 </script>
 <!-- ###JS_HEADER### end -->
-<div class="panel panel-default">
-    <div class="panel-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
-    <div class="panel-body">
-        <div id="tab-container" class="msadminVerticalTabs">
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" id="product_detailsWrapper"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
-                <li role="presentation" id="product_optionsWrapper"><a href="#product_options" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
-                <li role="presentation" id="product_imagesWrapper"><a href="#product_images" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
-                <li role="presentation" id="meta_tagsWrapper"><a href="#meta_tags" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_META_TAGS###</a></li>
-                <li role="presentation" id="product_attributesWrapper"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
-                <li role="presentation" id="product_relativesWrapper"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
-                ###LABEL_EXTRA_PLUGIN_TABS###
-            </ul>
-            <div class="tab-content">
-                <form class="form-horizontal admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
+<form class="form-horizontal admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
+    <div class="panel panel-default">
+        <div class="panel-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
+        <div class="panel-body">
+            <div id="tab-container" class="msadminVerticalTabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" id="product_detailsWrapper"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
+                    <li role="presentation" id="product_optionsWrapper"><a href="#product_options" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
+                    <li role="presentation" id="product_imagesWrapper"><a href="#product_images" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
+                    <li role="presentation" id="meta_tagsWrapper"><a href="#meta_tags" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_META_TAGS###</a></li>
+                    <li role="presentation" id="product_attributesWrapper"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
+                    <li role="presentation" id="product_relativesWrapper"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
+                    ###LABEL_EXTRA_PLUGIN_TABS###
+                </ul>
+                <div class="tab-content">
                     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
                     ###INPUT_OLD_LAYERED_CATEGORY_INPUT###
                     <div role="tabpanel" id="product_details" class="tab-pane">
@@ -916,20 +916,22 @@
                         ###INPUT_PRODUCT_RELATIVES_BLOCK###
                     </div>
                     ###CONTENT_EXTRA_PLUGIN_TABS###
-                    <div class="clearfix">
-                        <div class="pull-right">
-                            <button name="advanced" type="button" value="" class="toggle_advanced_options btn btn-warning"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-minus fa-stack-1x"></i></span> ###FOOTER_VALUE_ADVANCED_OPTION###</button>
-                            <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_CANCEL###</a>
-                            ###FOOTER_BUTTON_SAVE_AS_NEW###
-                            <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE###</button>
-                            <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE_CLOSE###</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="clearfix">
+                <div class="pull-right">
+                    <button name="advanced" type="button" value="" class="toggle_advanced_options btn btn-warning"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-minus fa-stack-1x"></i></span> ###FOOTER_VALUE_ADVANCED_OPTION###</button>
+                    <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_CANCEL###</a>
+                    ###FOOTER_BUTTON_SAVE_AS_NEW###
+                    <button name="Submit" type="submit" value="" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE###</button>
+                    <button name="SaveClose" type="submit" value="" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE_CLOSE###</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 <script type="text/javascript">
     function delay(fn, ms) {
         let timer = 0
