@@ -1296,7 +1296,7 @@ class mslib_fe {
     // wrapper to in_array() for PHP3 compatibility
     // Checks if the lookup value exists in the lookup array
     public function typolink($page_id = '', $vars = '', $manual_link = 0, $forceAbsoluteUrl = 0) {
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'])) {
+        if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc']) && is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['msTypolinkPreProc'])) {
             $params = array(
                     'page_id' => &$page_id,
                     'vars' => &$vars,
@@ -1331,7 +1331,7 @@ class mslib_fe {
         $conf['returnLast'] = 'url'; // get it as URL
         if ($manual_link) {
             // dont use cObj typolink method (which makes realurl/cooluri version of the link), but instead make manual link
-            if (is_numeric($this->get['L'])) {
+            if (isset($this->get['L']) && is_numeric($this->get['L'])) {
                 parse_str($conf['additionalParams'], $output);
                 if (!isset($output['L'])) {
                     $lastChar = substr($conf['additionalParams'], strlen($conf['additionalParams']) - 1, 1);
