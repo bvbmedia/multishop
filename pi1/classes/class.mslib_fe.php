@@ -348,7 +348,7 @@ class mslib_fe {
         return $content;
     }
     public function getProductsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $redirect_if_one_product = 0, $extra_from = array(), $groupby = array(), $search_section = 'products_search', $select_total_count = '', $returnTotalCountOnly = 0, $enableFetchTaxRate = 1, $extra_join = array(), $includeDisabled = 0, $skipIsDeepest = 0) {
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+        if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
             // Force flat mode
             $this->ms['MODULES']['FLAT_DATABASE'] = 1;
         }
@@ -923,7 +923,7 @@ class mslib_fe {
                 }
             }
         }
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog') && $this->ms['MODULES']['FLAT_DATABASE']) {
+        if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
             // Force revert enable flat mode
             $this->ms['MODULES']['FLAT_DATABASE'] = 0;
         }
