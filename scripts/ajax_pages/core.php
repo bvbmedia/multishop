@@ -2027,6 +2027,7 @@ switch ($this->ms['page']) {
                                         $result['error'] = false;
                                         $result['filename'] = $filename;
                                         $result['fileLocation'] = $fileLocation;
+                                        $result['fileId'] = 'fileID_' . str_replace(array('_', '-', '.', '^', ' '), '', $filename);
                                         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
                                         exit();
                                     }
