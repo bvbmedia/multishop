@@ -1162,6 +1162,8 @@ if ($pageset['total_rows'] > 0) {
             $markerArray['VALUE_PRICE'] = htmlspecialchars($product_price_display);
             $markerArray['INPUT_PRICE'] = '<div class="input-group"><span class="input-group-addon">' . mslib_fe::currency() . '</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat priceInputDisplay productPriceInput' . $rs['products_id'] . '" value="' . $product_price_display . '" rel="' . $rs['products_id'] . '"><span class="input-group-addon">' . $this->pi_getLL('excluding_vat') . '</span></div>';
         }
+        $markerArray['VALUE_PRICE_EXCL_VAT'] = htmlspecialchars($product_price_display);
+        $markerArray['VALUE_PRICE_INCL_VAT'] = htmlspecialchars($product_price_display_incl);
         $markerArray['VALUE_ORIGINAL_PRICE'] = $rs['products_price'];
         $markerArray['VALUE_SPECIAL_PRICE_EXCL_VAT'] = htmlspecialchars($special_price_display);
         $markerArray['VALUE_SPECIAL_PRICE_INCL_VAT'] = htmlspecialchars($special_price_display_incl);
