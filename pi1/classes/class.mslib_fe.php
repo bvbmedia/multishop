@@ -739,6 +739,8 @@ class mslib_fe {
         } else {
             $prefix = 'pf.';
             $prefix_p2c = 'pf.';
+            // Prevent flat database from returning the same products ID multiple times
+            $groupby[]=$prefix.'products_id';
         }
         $str_nolimit = $GLOBALS['TYPO3_DB']->SELECTquery($prefix . 'products_id, ' . $prefix_p2c . 'categories_id', // SELECT ...
                 $from_clause, // FROM ...
