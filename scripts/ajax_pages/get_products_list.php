@@ -3,6 +3,9 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 if ($this->ADMIN_USER) {
+    if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+        $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+    }
     $return_data = array();
     $catid = 0;
     if (strpos($this->get['q'], '||catid') !== false) {
@@ -72,9 +75,16 @@ if ($this->ADMIN_USER) {
             }
         }
     }
-    $filter[] = 'p.products_id=pd.products_id';
-    $filter[] = 'p.products_id=p2c.products_id';
-    $filter[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
+    if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+        $prefix_p = 'p.';
+        $prefix_pd = 'pd.';
+    } else {
+        $prefix_p = 'pf.';
+        $prefix_pd = 'pf.';
+    }
+    $filter[] = $prefix_p.'products_id='.$prefix_pd.'products_id';
+    $filter[] = $prefix_p.'products_id=p2c.products_id';
+    $filter[] = $prefix_pd.'language_id=\'' . $this->sys_language_uid . '\'';
     // hook
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_products_list.php']['getProductListFilterPreProc'])) {
         $params = array(
