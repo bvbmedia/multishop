@@ -349,8 +349,10 @@ class mslib_fe {
     }
     public function getProductsPageSet($filter = array(), $offset = 0, $limit = 0, $orderby = array(), $having = array(), $select = array(), $where = array(), $redirect_if_one_product = 0, $extra_from = array(), $groupby = array(), $search_section = 'products_search', $select_total_count = '', $returnTotalCountOnly = 0, $enableFetchTaxRate = 1, $extra_join = array(), $includeDisabled = 0, $skipIsDeepest = 0) {
         if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
-            // Force flat mode
-            $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+            if ($search_section != 'products_feeds') {
+                // Force flat mode
+                $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+            }
         }
         if (!is_array($filter) and $filter) {
             $filter = array($filter);
@@ -739,6 +741,8 @@ class mslib_fe {
         } else {
             $prefix = 'pf.';
             $prefix_p2c = 'pf.';
+            // Prevent flat database from returning the same products ID multiple times
+            $groupby[]=$prefix.'products_id';
         }
         $str_nolimit = $GLOBALS['TYPO3_DB']->SELECTquery($prefix . 'products_id, ' . $prefix_p2c . 'categories_id', // SELECT ...
                 $from_clause, // FROM ...
