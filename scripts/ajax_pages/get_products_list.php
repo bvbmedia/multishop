@@ -82,8 +82,10 @@ if ($this->ADMIN_USER) {
         $prefix_p = 'pf.';
         $prefix_pd = 'pf.';
     }
-    $filter[] = $prefix_p.'products_id='.$prefix_pd.'products_id';
-    $filter[] = $prefix_p.'products_id=p2c.products_id';
+    if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+        $filter[] = 'p.products_id=pd.products_id';
+        $filter[] = 'p.products_id=p2c.products_id';
+    }
     $filter[] = $prefix_pd.'language_id=\'' . $this->sys_language_uid . '\'';
     // hook
     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_products_list.php']['getProductListFilterPreProc'])) {
@@ -114,7 +116,10 @@ if ($this->ADMIN_USER) {
         if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
             $limit = 15;
         }
+        //$this->msDebug=1;
         $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array('products_status desc, ' . $prefix . 'products_name asc'));
+        //echo $this->msDebugInfo;
+        //die();
         $counter = 0;
         foreach ($products['products'] as $row) {
             $records[] = $row;
