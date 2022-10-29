@@ -305,13 +305,25 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         exit();
         breaks;
     case 'get_products':
+        if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+            $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+        }
         $from = array();
-        $from[] = 'tx_multishop_products p';
-        $from[] = 'tx_multishop_products_description pd';
-        //
         $where = array();
-        $where[] = 'p.products_id=pd.products_id';
-        $where[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $tbl_p = 'pf.';
+            $tbl_pd = 'pf.';
+            $from[] = 'tx_multishop_products_flat pf';
+            $where[] = 'pf.language_id=\'' . $this->sys_language_uid . '\'';
+        } else {
+            $tbl_p = 'p.';
+            $tbl_pd = 'pd.';
+            $from = array();
+            $from[] = 'tx_multishop_products p';
+            $from[] = 'tx_multishop_products_description pd';
+            $where[] = 'p.products_id=pd.products_id';
+            $where[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
+        }
         //
         $skip_db = false;
         $limit = 50;
@@ -326,14 +338,14 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             }
             if (!empty($this->get['q']) && strlen($this->get['q']) > 0) {
                 if (!is_numeric($this->get['q'])) {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_model like \'%' . addslashes($this->get['q']) . '%\')';
+                    $where[] = '('.$tbl_pd.'products_name like \'%' . addslashes($this->get['q']) . '%\' or '.$tbl_p.'sku_code like \'%' . addslashes($this->get['q']) . '%\' or '.$tbl_p.'products_model like \'%' . addslashes($this->get['q']) . '%\')';
                 } else {
-                    $where[] = '(pd.products_name like \'%' . addslashes($this->get['q']) . '%\' or p.sku_code like \'%' . addslashes($this->get['q']) . '%\' or p.products_id = \'' . addslashes($this->get['q']) . '\' or p.products_model like \'%' . addslashes($this->get['q']) . '%\')';
+                    $where[] = '('.$tbl_pd.'products_name like \'%' . addslashes($this->get['q']) . '%\' or '.$tbl_p.'sku_code like \'%' . addslashes($this->get['q']) . '%\' or '.$tbl_p.'products_id = \'' . addslashes($this->get['q']) . '\' or '.$tbl_p.'products_model like \'%' . addslashes($this->get['q']) . '%\')';
                 }
                 $limit = '';
             }
         } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            $where[] = 'p.products_id in (' . addslashes($this->get['preselected_id']) . ')';
+            $where[] = $tbl_p.'products_id in (' . addslashes($this->get['preselected_id']) . ')';
         }
         if (is_numeric($categories_id) && $categories_id > 0) {
             $from[] = 'tx_multishop_products_to_categories p2c';
@@ -353,11 +365,11 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         if ($this->ms['MODULES']['LIMIT_CATALOG_SELECT2_INIT_RESULTS'] == '1') {
             $limit = 15;
         }
-        $str = $GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
+        $str = $GLOBALS ['TYPO3_DB']->SELECTquery($tbl_p.'*, '.$tbl_pd.'products_name', // SELECT ...
                 implode(', ', $from), // FROM ...
                 implode(' and ', $where), // WHERE.
-                'p.products_id', // GROUP BY...
-                'pd.products_name asc, p.products_status asc', // ORDER BY...
+                $tbl_p.'products_id', // GROUP BY...
+                $tbl_pd.'products_name asc', // ORDER BY...
                 $limit // LIMIT ...
         );
         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
