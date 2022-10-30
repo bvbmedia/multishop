@@ -349,7 +349,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         }
         if (is_numeric($categories_id) && $categories_id > 0) {
             $from[] = 'tx_multishop_products_to_categories p2c';
-            $where[] = 'p2c.categories_id=\'' . $categories_id . '\' and p2c.is_deepest=1 and p2c.products_id=p.products_id';
+            $where[] = 'p2c.categories_id=\'' . $categories_id . '\' and p2c.is_deepest=1 and p2c.products_id='.$tbl_p.'products_id';
         }
         //hook to let other plugins further manipulate the replacers
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsFilterPostProc'])) {
