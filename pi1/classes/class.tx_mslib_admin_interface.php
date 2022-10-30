@@ -748,6 +748,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = '<pre>' . htmlspecialchars($row[$col]) . '</pre>';
                             }
                             break;
+                        case 'page_uid':
+                            if ($row[$col] > 0) {
+                                $row[$col] = mslib_fe::getShopNameByPageUid($row[$col]);
+                            } else {
+                                $row[$col] = 'All';
+                            }
+                            break;
                     }
                     $adjustedValue = $row[$col];
                     if ($valArray['prefixValue']) {
