@@ -813,6 +813,9 @@ if ($this->post['skeyword']) {
             $items[] = "o.foreign_orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             $filter['orders_id'] = '(' . implode(" or ", $items) . ')';
             break;
+        case 'foreign_orders_id':
+            $filter[] = "o.foreign_orders_id LIKE '%" . addslashes($this->post['skeyword']) . "%'";
+            break;
         case 'billing_email':
             $filter[] = " billing_email LIKE '%" . addslashes($this->post['skeyword']) . "%'";
             break;
