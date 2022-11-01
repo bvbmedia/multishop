@@ -4377,7 +4377,7 @@ class mslib_fe {
         }
         return $content;
     }
-    public function getAllOrderStatus($language_id = 0, $sort_order_on = 'o.sort_order desc') {
+    public function getAllOrderStatus($language_id = 0, $sort_order_on = 'o.sort_order asc') {
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getAllOrderStatusSortOrder'])) {
             $params = array(
                     'sort_order_on' => &$sort_order_on
