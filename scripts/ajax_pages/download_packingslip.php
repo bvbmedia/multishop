@@ -128,6 +128,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // CMS HEADER
         $markerArray['###PACKINGSLIP_CONTENT_HEADER_MESSAGE###'] = '';
+        $markerArray['###DELIVERY_EMAIL###'] = $order['delivery_email'];
+        $markerArray['###BILLING_EMAIL###'] = $order['billing_email'];
         $cmsKeys = array();
         if ($order['payment_method']) {
             $cmsKeys[] = 'pdf_packingslip_header_message_' . $order['payment_method'];
