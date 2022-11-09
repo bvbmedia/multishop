@@ -609,6 +609,9 @@ if ($this->get['orders_export_hash']) {
                     case 'order_track_and_trace_code':
                         $excelCols[] = $row['track_and_trace_code'];
                         break;
+                    case 'http_host':
+                        $excelCols[] = $row['http_host'];
+                        break;
                     case 'order_orders_paid_timestamp':
                         $excelCols[] = strftime('%x', $row['orders_paid_timestamp']);
                         break;

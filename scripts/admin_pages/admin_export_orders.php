@@ -125,6 +125,7 @@ $array['ordered_by'] = $this->pi_getLL('ordered_by');
 $array['discount'] = $this->pi_getLL('discount');
 $array['customer_comments'] = $this->pi_getLL('customer_comments');
 $array['order_memo'] = $this->pi_getLL('order_memo');
+$array['http_host'] = $this->pi_getLL('http_host','HTTP host');
 // get orders vat rate
 $str = "SELECT trg.*, t.rate FROM `tx_multishop_tax_rule_groups` trg, `tx_multishop_tax_rules` tr, `tx_multishop_taxes` t where trg.rules_group_id=tr.rules_group_id and tr.tax_id=t.tax_id group by trg.rules_group_id order by trg.rules_group_id asc";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
