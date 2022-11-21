@@ -38,8 +38,15 @@ if ($this->ADMIN_USER) {
                 $filter[] = 'p2c.is_deepest=\'1\'';
             }
         }
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix_p = 'p.';
+            $prefix_pd = 'pd.';
+        } else {
+            $prefix_p = 'pf.';
+            $prefix_pd = 'pf.';
+        }
         if (!empty($this->get['q'])) {
-            $filter[] = '(p.products_model like \'%' . addslashes($this->get['q']) . '%\' OR pd.products_name like \'%' . addslashes($this->get['q']) . '%\')';
+            $filter[] = '('.$prefix_p.'products_model like \'%' . addslashes($this->get['q']) . '%\' OR '.$prefix_pd.'products_name like \'%' . addslashes($this->get['q']) . '%\')';
         }
     } else {
         if (isset($this->get['exclude_pids']) && !empty($this->get['exclude_pids'])) {
@@ -98,11 +105,38 @@ if ($this->ADMIN_USER) {
     }
     $records = array();
     if (!empty($this->get['q'])) {
-        $query = $GLOBALS['TYPO3_DB']->SELECTquery('p.products_status, pd.products_name, pd.products_id, p2c.categories_id', // SELECT ...
-                'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $prefix_p = 'p.';
+            $prefix_pd = 'pd.';
+        } else {
+            $prefix_p = 'pf.';
+            $prefix_pd = 'pf.';
+        }
+        $fromTables = array();
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $fromTables[] = 'tx_multishop_products p';
+            $fromTables[] = 'tx_multishop_products_description pd';
+            $fromTables[] = 'tx_multishop_products_to_categories p2c';
+        } else {
+            $fromTables[] = 'tx_multishop_products_flat pf';
+        }
+        $selectFields = array();
+        $selectFields[] = $prefix_pd . 'products_name';
+        $selectFields[] = $prefix_p . 'products_id';
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $selectFields[] = 'p.products_status';
+            $selectFields[] = 'p2c.categories_id';
+        }
+        $groupByFields = array();
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $groupByFields[] = 'p.products_status desc';
+        }
+        $groupByFields[] = $prefix_p . 'products_id';
+        $query = $GLOBALS['TYPO3_DB']->SELECTquery(implode(', ', $selectFields), // SELECT ...
+                implode(', ', $fromTables), // FROM ...
                 implode(' and ', $filter), // WHERE...
-                'p.products_status desc, p.products_id', // GROUP BY...
-                'pd.products_name asc', // ORDER BY...
+                implode(', ', $groupByFields), // GROUP BY...
+                $prefix_pd . 'products_name asc', // ORDER BY...
                 '' // LIMIT ...
         );
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
