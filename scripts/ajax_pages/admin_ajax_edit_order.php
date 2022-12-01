@@ -305,9 +305,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
         exit();
         breaks;
     case 'get_products':
-        if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
-            $this->ms['MODULES']['FLAT_DATABASE'] = 1;
-        }
         $from = array();
         $where = array();
         if ($this->ms['MODULES']['FLAT_DATABASE']) {
