@@ -186,7 +186,7 @@ if (count($shipping_methods) > 0) {
         $content .= '<div class="panel panel-info">';
         $content .= '<div class="panel-heading panel-heading-toggle' . ($row_index > 0 ? ' collapsed' : '') . '" data-toggle="collapse" data-target="#msAdminShippingCost' . $row['id'] . '">';
         $content .= '<h3 class="panel-title">';
-        $content .= '<a role="button" data-toggle="collapse" href="#msAdminShippingCost' . $row['id'] . '">' . $this->pi_getLL('shipping_method') . ': ' . $row['name'] . '</a>';
+        $content .= '<a role="button" data-toggle="collapse" href="#msAdminShippingCost' . $row['id'] . '">' . $this->pi_getLL('shipping_method') . ': ' . $row['name'] . ' (' . $row['code'] . ')</a>';
         $content .= '</h3>';
         $content .= '</div>';
         $content .= '<div id="msAdminShippingCost' . $row['id'] . '" class="panel-collapse collapse' . ($row_index === 0 ? ' in' : '') . '">';
