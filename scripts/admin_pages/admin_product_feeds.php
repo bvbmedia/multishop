@@ -584,11 +584,23 @@ if ($this->ms['show_main']) {
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
         $feeds[] = $row;
     }
+    $headerButtons = array();
+    $headerButtons[] = '<a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&section=add') . '" class="btn btn-primary"><i class="fa fa-plus-circle"></i> ' . htmlspecialchars($this->pi_getLL('add')) . '</a>';
+    // custom page hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedHeaderButtons'])) {
+        $params = array(
+            'headerButtons' => &$headerButtons
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedHeaderButtons'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    // custom page hook that can be controlled by third-party plugin eof
     $content .= '<div class="panel panel-default">
     <div class="panel-heading">
         <h3>' . htmlspecialchars($this->pi_getLL('product_feeds')) . '</h3>
         <div class="form-inline pull-right">
-            <a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $this->ms['page'] . '&section=add') . '" class="btn btn-primary"><i class="fa fa-plus-circle"></i> ' . htmlspecialchars($this->pi_getLL('add')) . '</a>
+            ' . implode('', $headerButtons) . '
         </div>
     </div>
     <div class="panel-body">
