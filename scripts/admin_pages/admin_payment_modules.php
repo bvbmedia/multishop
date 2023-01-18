@@ -282,7 +282,7 @@ if ($this->get['edit']) {
 				</div>
 				<div id="msEditPaymentModulesInputName_' . $language['uid'] . '" class="panel-collapse collapse' . ((($language['uid'] === 0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '') . '">
 					<div class="panel-body">
-						<div class="form-group">
+						<div class="form-group" id="paymentMethodName' . $language['uid'] . '">
 							<label for="name" class="control-label col-md-2">' . $this->pi_getLL('admin_name') . '</label>
 							<div class="col-md-10">
 							<input type="text" class="form-control text" name="name[' . $language['uid'] . ']" id="name_' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['name']) . '" required="required">
@@ -530,7 +530,7 @@ if ($this->get['edit']) {
 				</div>
 				<div id="msEditPaymentModulesInputName_' . $language['uid'] . '" class="panel-collapse collapse' . ((($language['uid'] === 0 || !$this->ms['MODULES']['FOLD_FOREIGN_LANGUAGE_INPUT_FIELDS']) || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '') . '">
 					<div class="panel-body">
-						<div class="form-group">
+						<div class="form-group" id="paymentMethodName' . $language['uid'] . '">
 							<label for="name" class="control-label col-md-2">' . $this->pi_getLL('admin_name') . '</label>
 							<div class="col-md-10">
 								<input type="text" class="form-control text" name="name[' . $language['uid'] . ']" id="name_' . $language['uid'] . '" value="' . htmlspecialchars($lngproduct[$language['uid']]['name']) . '" required="required">
@@ -1068,6 +1068,17 @@ if ($this->ms['show_main']) {
     $content = $tabs_element;
     // payment method admin system eof
 }
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_payment_modules.php']['adminPaymentModulesContentPostProc'])) {
+    $paramsInt = array(
+        'content' => &$content,
+        'lngproduct' => $lngproduct
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_payment_modules.php']['adminPaymentModulesContentPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+    }
+}
+// custom hook that can be controlled by third-party plugin eof
 $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
 $content = '' . mslib_fe::shadowBox($content) . '';
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods'] = '
