@@ -139,17 +139,23 @@ if ($this->post && $this->post['email']) {
                 $selectedGroups = array_unique($selectedGroups);
                 $updateArray['usergroup'] = implode(',', $selectedGroups);
             } else {
+                $originalGroups = explode(',', $this->post['tx_multishop_pi1']['original_groups']);
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
-                    $selectedGroups = array();
                     $selectedGroups = explode(",", $user['usergroup']);
-                    foreach ($this->excluded_userGroups as $usergroup) {
-                        if (in_array($usergroup, $selectedGroups)) {
-                            $selectedGroups[] = $usergroup;
+                    $currentGroups = array();
+                    foreach ($selectedGroups as $selectedGroup) {
+                        if (!in_array($originalGroups[0], $selectedGroups)) {
+                            $currentGroups[] = $selectedGroup;
                         }
                     }
-                    $selectedGroups = array_unique($selectedGroups);
-                    $updateArray['usergroup'] = implode(',', $selectedGroups);
+                    foreach ($this->excluded_userGroups as $usergroup) {
+                        if (in_array($usergroup, $selectedGroups)) {
+                            $currentGroups[] = $usergroup;
+                        }
+                    }
+                    $currentGroups = array_unique($currentGroups);
+                    $updateArray['usergroup'] = implode(',', $currentGroups);
                 }
             }
             //
@@ -904,6 +910,7 @@ if (count($selected_groups)) {
     $selected_group_str = implode(',', $selected_groups);
 }
 $customer_groups_input .= '<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="' . $selected_group_str . '" /></div>' . "\n";
+$customer_groups_input .= '<input type="hidden" name="tx_multishop_pi1[original_groups]" value="' . $selected_group_str . '" /></div>' . "\n";
 //
 /*$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
