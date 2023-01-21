@@ -909,7 +909,7 @@ $selected_group_str = '';
 if (count($selected_groups)) {
     $selected_group_str = implode(',', $selected_groups);
 }
-$customer_groups_input .= '<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="' . $selected_group_str . '" /></div>' . "\n";
+$customer_groups_input .= '<input type="hidden" id="groups" name="tx_multishop_pi1[groups]" value="' . $selected_group_str . '" />' . "\n";
 $customer_groups_input .= '<input type="hidden" name="tx_multishop_pi1[original_groups]" value="' . $selected_group_str . '" /></div>' . "\n";
 //
 /*$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
