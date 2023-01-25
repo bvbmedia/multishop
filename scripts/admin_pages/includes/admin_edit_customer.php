@@ -116,11 +116,26 @@ if ($this->post && $this->post['email']) {
             $updateArray['tx_multishop_newsletter'] = $this->post['tx_multishop_newsletter'];
         }
         if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
+            $postedUsergroup = array();
+            $originalGroups = array();
+            if (!empty($this->post['tx_multishop_pi1']['groups'])) {
+                $postedUsergroup = explode(',', $this->post['tx_multishop_pi1']['groups']);
+            }
+            if (!empty($this->post['tx_multishop_pi1']['original_groups'])) {
+                $originalGroups = explode(',', $this->post['tx_multishop_pi1']['original_groups']);
+            }
+            $removedGroups = array();
+            if (is_array($originalGroups) && count($originalGroups)) {
+                foreach ($originalGroups as $originalGroup) {
+                    if (!in_array($originalGroup, $postedUsergroup)) {
+                        $removedGroups[] = $originalGroup;
+                    }
+                }
+            }
             $customer_id = $this->post['tx_multishop_pi1']['cid'];
             // update mode
             if (!empty($this->post['tx_multishop_pi1']['groups'])) {
                 $selectedGroups = array();
-                $postedUsergroup = explode(',', $this->post['tx_multishop_pi1']['groups']);
                 foreach ($postedUsergroup as $postedGroup) {
                     $selectedGroups[] = $postedGroup;
                 }
@@ -128,10 +143,12 @@ if ($this->post && $this->post['email']) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
                     $currentUserGroup = explode(",", $user['usergroup']);
                     foreach ($currentUserGroup as $currentGroup) {
-                        $selectedGroups[] = $currentGroup;
+                        if (!in_array($currentGroup, $removedGroups)) {
+                            $selectedGroups[] = $currentGroup;
+                        }
                     }
                     foreach ($this->excluded_userGroups as $usergroup) {
-                        if (in_array($usergroup, $selectedGroups)) {
+                        if (in_array($usergroup, $selectedGroups) && !in_array($usergroup, $removedGroups)) {
                             $selectedGroups[] = $usergroup;
                         }
                     }
@@ -139,18 +156,17 @@ if ($this->post && $this->post['email']) {
                 $selectedGroups = array_unique($selectedGroups);
                 $updateArray['usergroup'] = implode(',', $selectedGroups);
             } else {
-                $originalGroups = explode(',', $this->post['tx_multishop_pi1']['original_groups']);
                 if (isset($user['usergroup'])) {
                     // first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
                     $selectedGroups = explode(",", $user['usergroup']);
                     $currentGroups = array();
                     foreach ($selectedGroups as $selectedGroup) {
-                        if (!in_array($originalGroups[0], $selectedGroups)) {
+                        if (!in_array($selectedGroup, $removedGroups)) {
                             $currentGroups[] = $selectedGroup;
                         }
                     }
                     foreach ($this->excluded_userGroups as $usergroup) {
-                        if (in_array($usergroup, $selectedGroups)) {
+                        if (in_array($usergroup, $selectedGroups) && !in_array($usergroup, $removedGroups)) {
                             $currentGroups[] = $usergroup;
                         }
                     }
