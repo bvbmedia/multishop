@@ -3,6 +3,7 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 if ($this->post) {
+    $redirectURL = '';
     if (is_array($this->post['shipping_zone']) && count($this->post['shipping_zone'])) {
         $shipping_methods = mslib_fe::loadShippingMethods();
         $zones = mslib_fe::loadAllCountriesZones();
@@ -22,8 +23,7 @@ if ($this->post) {
                 }
             }
         }
-        header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings');
-        exit();
+        $redirectURL = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings';
     }
     if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
         $shipping_methods = mslib_fe::loadShippingMethods();
@@ -44,12 +44,12 @@ if ($this->post) {
                 }
             }
         }
-        header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings');
-        exit();
+        $redirectURL = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings';
     }
     if ($this->post['sub'] == 'update_shipping_method' && $this->post['shipping_method_id']) {
         // update shipping method
         $row = mslib_fe::getShippingMethod($this->post['shipping_method_id'], 's.id');
+        $shipping_method_id = $row['id'];
         if ($row['id']) {
             $data = unserialize($row['vars']);
             foreach ($this->post as $key => $value) {
@@ -83,8 +83,7 @@ if ($this->post) {
                 }
             }
             $this->ms['show_main'] = 1;
-            header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
-            exit();
+            $redirectURL = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
         }
     } else if ($this->post['sub'] == 'add_shipping_method' && $this->post['shipping_method_code']) {
         $erno = array();
@@ -111,7 +110,7 @@ if ($this->post) {
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($res) {
-                $id = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                $shipping_method_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
                 foreach ($this->post['name'] as $key => $value) {
                     $updateArray = array();
                     $updateArray['name'] = $this->post['name'][$key];
@@ -122,18 +121,28 @@ if ($this->post) {
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_description', 'id=\'' . $id . '\' and language_id=\'' . $key . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
-                        $updateArray['id'] = $id;
+                        $updateArray['id'] = $shipping_method_id;
                         $updateArray['language_id'] = $key;
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
                 }
                 $this->ms['show_main'] = 1;
-                header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
-                exit();
+                $redirectURL = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid . ',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
             }
         }
     }
+    // custom hook that can be controlled by third-party plugin
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_modules.php']['adminShippingModulesSavePostProc'])) {
+        $conf = array(
+            'shipping_method_id' => $shipping_method_id
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_modules.php']['adminShippingModulesSavePostProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+        }
+    }
+    header('Location: ' . $redirectURL);
+    exit();
 }
 $GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods_edit'] = '
 <script type="text/javascript">
@@ -310,7 +319,7 @@ if (($this->get['sub'] == 'add_shipping_method' && $this->get['shipping_method_c
 				</div>
 			</div>
 		</div>
-		<div class="form-group">
+		<div class="form-group" id="taxIdWrapper">
 			<label for="tax_id" class="control-label col-md-2">' . $this->pi_getLL('admin_vat_rate') . '</label>
 			<div class="col-md-10">
 				<select name="tax_id" id="tax_id" class="form-control "><option value="0">' . $this->pi_getLL('admin_label_no_tax') . '</option>';
@@ -510,7 +519,7 @@ if (($this->get['sub'] == 'add_shipping_method' && $this->get['shipping_method_c
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" id="taxIdWrapper">
 	<label for="tax_id" class="control-label col-md-2">' . $this->pi_getLL('admin_vat_rate') . '</label>
 	<div class="col-md-10">
 	<select name="tax_id" id="tax_id" class="form-control">
@@ -976,6 +985,15 @@ if ($this->ms['show_main']) {
     // flush to render variable
     $content = $tabs_element;
     // shipping method admin system eof
+}
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_modules.php']['adminShippingModulesPostProc'])) {
+    $conf = array(
+        'content' => &$content
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_modules.php']['adminShippingModulesPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+    }
 }
 $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div></div>';
 $content = '' . mslib_fe::shadowBox($content) . '';
