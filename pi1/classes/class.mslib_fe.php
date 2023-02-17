@@ -6428,7 +6428,7 @@ class mslib_fe {
             return false;
         }
     }
-    public function getPaymentMethod($string, $key = 'p.id', $countries_id = 0, $filter = false, $sys_language_uid = '') {
+    public function getPaymentMethod($string, $key = 'p.id', $countries_id = 0, $filter = false, $sys_language_uid = '', $cart_id = '', $order_id = '') {
         if ($string) {
             if (!is_numeric($sys_language_uid)) {
                 $sys_language_uid = $this->sys_language_uid;
@@ -6453,7 +6453,11 @@ class mslib_fe {
                 $row['region_tax_rate'] = ($tax_ruleset['state_tax_rate'] / 100);
                 // custom hook for manipulating the installed payment methods
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'])) {
-                    $params = array('row' => &$row);
+                    $params = array(
+                        'row' => &$row,
+                        'cart_id' => &$cart_id,
+                        'order_id' => &$order_id
+                    );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getPaymentMethodPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                     }
