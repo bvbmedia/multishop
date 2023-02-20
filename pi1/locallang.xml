@@ -2540,7 +2540,7 @@
             <label index="special_price_start">startdatum</label>
             <label index="specials">Aanbiedingen</label>
             <label index="specified_email_address_already_in_use">Het opgegeven e-mailadres is reeds in gebruik</label>
-            <label index="specified_username_already_in_use">The opgegeven gebruikersnaam is al reeds in gebruik</label>
+            <label index="specified_username_already_in_use">Het opgegeven emailadres is reeds in gebruik</label>
             <label index="start_time">Starttijd</label>
             <label index="state">Provincie</label>
             <label index="state_is_required">Provincie is verplicht.</label>
