@@ -1461,6 +1461,7 @@
             <label index="feed_exporter_fields_label_products_date_added">Product date added</label>
             <label index="feed_exporter_fields_label_products_date_available">Product date available</label>
             <label index="feed_exporter_fields_label_products_last_modified">Product last modified</label>
+            <label index="feed_exporter_fields_label_products_negative_keywords">Product alternative keywords</label>
             <label index="order_on">Order on</label>
             <label index="export_customer_with_discount">Customer with discount</label>
             <label index="admin_label_select_feature_highlights">Select attribute option</label>
@@ -2909,6 +2910,7 @@
             <label index="feed_exporter_fields_label_products_date_added">Product datum toegevoegd</label>
             <label index="feed_exporter_fields_label_products_date_available">Product releasedatum</label>
             <label index="feed_exporter_fields_label_products_last_modified">Product wijzigingsdatum</label>
+            <label index="feed_exporter_fields_label_products_negative_keywords">Product alternatieve zoekwoorden</label>
             <label index="order_on">Besteld op</label>
             <label index="export_customer_with_discount">Klant met korting</label>
             <label index="admin_label_select_feature_highlights">Selecteer attribuutoptie</label>

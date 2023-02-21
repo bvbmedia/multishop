@@ -1110,6 +1110,9 @@ if ($this->get['feed_hash']) {
                                 $tmpcontent .= strftime('%x', $row['products_last_modified']);
                             }
                             break;
+                        case 'products_negative_keywords':
+                            $tmpcontent .= $row['products_negative_keywords'];
+                            break;
                         default:
                             if ($field) {
                                 // COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES

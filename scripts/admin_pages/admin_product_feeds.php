@@ -146,6 +146,7 @@ $array['products_feed_generated_date'] = $this->pi_getLL('feed_exporter_fields_l
 $array['products_date_added'] = $this->pi_getLL('feed_exporter_fields_label_products_date_added');
 $array['products_date_available'] = $this->pi_getLL('feed_exporter_fields_label_products_date_available');
 $array['products_last_modified'] = $this->pi_getLL('feed_exporter_fields_label_products_last_modified');
+$array['products_negative_keywords'] = $this->pi_getLL('feed_exporter_fields_label_products_negative_keywords');
 // load shipping costs per zone
 $str = "SELECT * from tx_multishop_zones order by name";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
