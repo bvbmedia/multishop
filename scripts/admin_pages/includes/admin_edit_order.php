@@ -430,6 +430,18 @@ if (is_numeric($this->get['orders_id'])) {
                                             $insertArray['products_options_values_id'] = $optvalid;
                                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                                            $orderProductAttributesId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                            // hook for adding new items to details fieldset
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProductsAttributes'])) {
+                                                $params = array(
+                                                    'orderProductAttributesId' => $orderProductAttributesId,
+                                                    'insertArray' => $insertArray
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProductsAttributes'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                                }
+                                            }
+                                            // hook oef
                                             //$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
                                             //$GLOBALS['TYPO3_DB']->sql_query($sql);
                                         }
@@ -605,8 +617,18 @@ if (is_numeric($this->get['orders_id'])) {
                                             $insertArray['products_options_values_id'] = $optvalid;
                                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                                            //$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
-                                            //$GLOBALS['TYPO3_DB']->sql_query($sql);
+                                            $orderProductAttributesId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+                                            // hook for adding new items to details fieldset
+                                            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProductsAttributes'])) {
+                                                $params = array(
+                                                    'orderProductAttributesId' => $orderProductAttributesId,
+                                                    'insertArray' => $insertArray
+                                                );
+                                                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPostSaveOrderProductsAttributes'] as $funcRef) {
+                                                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                                                }
+                                            }
+                                            // hook oef
                                         }
                                     }
                                 }
