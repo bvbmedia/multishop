@@ -4206,9 +4206,13 @@ if (is_numeric($this->get['orders_id'])) {
 										$("#add_attributes").show();
 									}
 									$.each(optionsData, function(i, opt){
-										var valid=opt.value.valid
+									    var valid = 0;
+									    if (typeof opt.value != "undefined") { 
+										    valid = opt.value.valid;
+										}
 										var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
-										add_new_attributes(product_id, opt.optid, valid, price_data);
+										var option_type = opt.opttype;
+										add_new_attributes(product_id, opt.optid, valid, price_data, option_type);
 									});
                                 }
                             });
@@ -4565,7 +4569,7 @@ if (is_numeric($this->get['orders_id'])) {
                 });
                 select2_discount("#product_discount_percentage");
                 ' : '') . '
-                var add_new_attributes = function(product_id, optid_value, optvalid_value, price_data) {
+                var add_new_attributes = function(product_id, optid_value, optvalid_value, price_data, option_type) {
                     var d = new Date();
                     var n = d.getTime();
                     var row_class=$(\'#last_edit_product_row\').prev("tr").attr("class");
@@ -4627,7 +4631,7 @@ if (is_numeric($this->get['orders_id'])) {
                 jQuery(document).ready(function($) {';
                 $tmpcontent .= '
                     $(document).on("click", \'#edit_add_attributes, #add_attributes\', function() {
-                        add_new_attributes("", "", "", "");
+                        add_new_attributes("", "", "", "", "");
                     });
                     $(document).on("click", ".remove_attributes", function(){
                         $(this).parent().parent().remove();

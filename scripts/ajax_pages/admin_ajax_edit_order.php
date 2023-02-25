@@ -460,8 +460,19 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
             $where[] = "po.products_options_id = '" . addslashes($this->get['preselected_id']) . "'";
         }
         if (is_numeric($pid) && $pid > 0) {
-            $from[] = 'tx_multishop_products_attributes pa';
-            $where[] = 'pa.products_id=\'' . $pid . '\' and pa.options_id=po.products_options_id';
+            $from['products_attributes'] = 'tx_multishop_products_attributes pa';
+            $where['products_attributes'] = 'pa.products_id=\'' . $pid . '\' and pa.options_id=po.products_options_id';
+        }
+        //hook to let other plugins further manipulate the replacers
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsAttributesOptionsQueryPreProc'])) {
+            $paramsInt = array(
+                'pid' => &$pid,
+                'from' => &$from,
+                'where' => &$where
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_edit_order.php']['getProductsAttributesOptionsQueryPreProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+            }
         }
         $str = $GLOBALS ['TYPO3_DB']->SELECTquery('po.*', // SELECT ...
                 implode(', ', $from), // FROM ...
@@ -588,7 +599,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                         'id' => $this->get['preselected_id'],
                         'text' => $this->get['preselected_id']
                 );
-            } else {
+            } else if (isset($this->get['q']) && !empty($this->get['q'])) {
                 $data[] = array(
                         'id' => $this->get['q'],
                         'text' => $this->get['q']
