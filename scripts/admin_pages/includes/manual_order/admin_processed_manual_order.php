@@ -4,7 +4,7 @@ if (!defined('TYPO3_MODE')) {
 }
 //add order
 if ($this->post['proceed_order']) {
-    $unique_id = md5($this->post['first_name'] . $this->post['last_name'] . $this->post['company'] . $this->post['tx_multishop_pi1']['telephone']);
+    $unique_id = md5($this->post['first_name'] . $this->post['last_name'] . $this->post['company'] . $this->post['tx_multishop_pi1']['telephone'] . $this->post['email']);
     if ($this->post['customer_id']) {
         $user = mslib_fe::getUser($this->post['customer_id']);
         if ($user['uid']) {
