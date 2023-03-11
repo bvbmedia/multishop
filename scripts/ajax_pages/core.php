@@ -2984,6 +2984,9 @@ switch ($this->ms['page']) {
         break;
     case 'product':
         if ($this->ADMIN_USER) {
+            if ($this->get['type'] == '2002' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+                $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+            }
             // custom page hook that can be controlled by third-party plugin
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'])) {
                 $params = array();
