@@ -83,11 +83,11 @@ if (!$count_categories && $parent_id > 0) {
     $categories_id = $parent_id;
 }
 if ($categories_id > 0) {
-    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQuesryFilter'])) {
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQueryFilter'])) {
         $params = array(
                 'filter' => &$filter,
         );
-        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQuesryFilter'] as $funcRef) {
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_sort_products.php']['adminSortProductsQueryFilter'] as $funcRef) {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
     }
