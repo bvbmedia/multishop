@@ -287,6 +287,11 @@ if ($this->post) {
     } else {
         $updateArray['hide_in_menu'] = 0;
     }
+    if (isset($this->post['hide_in_footer_menu'])) {
+        $updateArray['hide_in_footer_menu'] = $this->post['hide_in_footer_menu'];
+    } else {
+        $updateArray['hide_in_footer_menu'] = 0;
+    }
     $updateArray['categories_url'] = $this->post['categories_url'];
     $updateArray['status'] = $this->post['status'];
     if ($update_category_image) {
@@ -1157,6 +1162,11 @@ if ($this->post) {
         } else {
             $subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###'] = '';
         }
+        if ($category['hide_in_footer_menu'] == 1) {
+            $subpartArray['###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED###'] = 'checked="checked"';
+        } else {
+            $subpartArray['###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED###'] = '';
+        }
         $subpartArray['###CATEGORIES_ID0###'] = $category['categories_id'];
         $subpartArray['###CATEGORIES_ID1###'] = $category['categories_id'];
         $subpartArray['###FORM_POST_URL###'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=' . $_REQUEST['action'] . '&cid=' . $_REQUEST['cid'] . '&action=edit_category');
@@ -1214,6 +1224,7 @@ if ($this->post) {
         $subpartArray['###PAGE_ACTION###'] = $_REQUEST['action'];
         $subpartArray['###CATEGORIES_ID_FOOTER1###'] = $category['categories_id'];
         $subpartArray['###LABEL_HIDE_IN_MENU###'] = $this->pi_getLL('hide_in_menu', 'Hide in menu');
+        $subpartArray['###LABEL_HIDE_IN_FOOTER_MENU###'] = $this->pi_getLL('hide_in_footer_menu', 'Hide in footer menu');
         // js extra triggers init
         $js_extra = array();
         if (!$this->ms['MODULES']['DISPLAY_EXCLUDE_FROM_FEED_INPUT']) {

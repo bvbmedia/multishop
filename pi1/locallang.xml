@@ -828,6 +828,7 @@
             <label index="has_not_been_paid">Has not been paid</label>
             <label index="hidden_in_checkout">hidden in checkout</label>
             <label index="hide_in_menu">Hide in menu</label>
+            <label index="hide_in_footer_menu">Hide in footer menu</label>
             <label index="id">ID</label>
             <label index="ignore_first_line">Ignore first line</label>
             <label index="import">Import</label>
@@ -2297,6 +2298,7 @@
             <label index="has_not_been_paid">Is nog niet betaald</label>
             <label index="hidden_in_checkout">verborgen in afrekengedeelte</label>
             <label index="hide_in_menu">Verberg in menu</label>
+            <label index="hide_in_footer_menu">Verberg in footer-menu</label>
             <label index="id">ID</label>
             <label index="ignore_first_line">Sla eerste regel over</label>
             <label index="import">Importeren</label>

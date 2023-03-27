@@ -120,6 +120,7 @@ CREATE TABLE `tx_multishop_categories` (
  `google_taxonomy_id` int(11) default '0',
  `hashed_id` varchar(32) default '',
  `hide_in_menu` tinyint(1) default '0',
+ `hide_in_footer_menu` tinyint(1) default '0',
  `col_position` tinyint(1) default '0',
  `related_to` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
@@ -136,6 +137,7 @@ CREATE TABLE `tx_multishop_categories` (
  KEY `google_taxonomy_id` (`google_taxonomy_id`),
  KEY `hashed_id` (`hashed_id`),
  KEY `hide_in_menu` (`hide_in_menu`),
+ KEY `hide_in_footer_menu` (`hide_in_footer_menu`),
  KEY `col_position` (`col_position`),
  KEY `related_to` (`related_to`),
  KEY `foreign_source_name` (`foreign_source_name`)

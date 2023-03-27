@@ -1165,6 +1165,7 @@ class tx_mslib_catalog {
         $select[]='cd.content_footer as description_bottom';
         $select[]='c.last_modified';
         $select[]='c.date_added';
+	    $select[] = 'c.hide_in_footer_menu';
         $from=array();
         $from[]='tx_multishop_categories c';
         $from[]='tx_multishop_categories_description cd';
