@@ -82,6 +82,7 @@ if ($this->post) {
     $updateArray['manufacturers_name'] = $this->post['manufacturers_name'];
     $updateArray['status'] = $this->post['status'];
     $updateArray['hide_in_menu'] = $this->post['hide_in_menu'];
+    $updateArray['hide_in_footer_menu'] = $this->post['hide_in_footer_menu'];
     if ($update_manufacturers_image) {
         $updateArray['manufacturers_image'] = $update_manufacturers_image;
     }
@@ -348,7 +349,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action'] == 'add_manufacture
     $subpartArray['###LABEL_MANUFACTURER_ADMIN_YES###'] = $this->pi_getLL('admin_yes');
     $subpartArray['###LABEL_MANUFACTURER_ADMIN_NO###'] = $this->pi_getLL('admin_no');
     $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###'] = $this->pi_getLL('admin_cancel');
-    $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###'] = ($this->get['action'] == 'edit_manufacturer') ? $this->pi_getLL('admin_update') : $this->pi_getLL('admin_save');
+    $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###'] = ($this->get['action'] == 'edit_manufacturer') ? $this->pi_getLL('update') : $this->pi_getLL('save');
     $subpartArray['###LABEL_BUTTON_ADMIN_SAVE_CLOSE###'] = ($this->get['action'] == 'edit_manufacturer') ? $this->pi_getLL('admin_update_close') : $this->pi_getLL('admin_save_close');
     $subpartArray['###LINK_BUTTON_CANCEL###'] = $subpartArray['###VALUE_REFERRER###'];
     $subpartArray['###VALUE_FORM_MANUFACTURER_ACTION_URL###'] = $_REQUEST['action'];
@@ -383,6 +384,12 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action'] == 'add_manufacture
         $subpartArray['###MANUFACTURER_HIDE_IN_MENU_CHECKED###'] = 'checked="checked"';
     } else {
         $subpartArray['###MANUFACTURER_HIDE_IN_MENU_CHECKED###'] = '';
+    }
+    $subpartArray['###LABEL_HIDE_IN_FOOTER_MENU###'] = $this->pi_getLL('hide_in_footer_menu', 'Hide in footer menu');
+    if ($manufacturer['hide_in_footer_menu'] == 1) {
+        $subpartArray['###MANUFACTURER_HIDE_IN_FOOTER_MENU_CHECKED###'] = 'checked="checked"';
+    } else {
+        $subpartArray['###MANUFACTURER_HIDE_IN_FOOTER_MENU_CHECKED###'] = '';
     }
     // plugin marker place holder
     $plugins_extra_tab = array();

@@ -112,6 +112,14 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group" id="msEditManufacturerInputHideInFooterMenu">
+							<label class="control-label col-md-2" for="hide_in_footer_menu">###LABEL_HIDE_IN_FOOTER_MENU###</label>
+							<div class="col-md-10">
+								<div class="checkbox checkbox-success checkbox-inline">
+									<input name="hide_in_footer_menu" id="hide_in_footer_menu" type="checkbox" value="1" ###MANUFACTURER_HIDE_IN_FOOTER_MENU_CHECKED### /><label></label>
+								</div>
+							</div>
+						</div>
                         <div class="form-group" id="msEditManufacturerInputVisibility">
 	                        <label for="status" class="control-label col-md-2">###LABEL_MANUFACTURER_VISIBLE###</label>
 	                        <div class="col-md-10">
@@ -192,17 +200,18 @@
 					###CONTENT_EXTRA_PLUGIN_TABS###
 				</div>
 			</div>
-
-                        <div class="clearfix">
-                            <div class="pull-right">
-                                <a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
-                                <button name="Submit" type="submit" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
-								<button name="SaveClose" type="submit" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE_CLOSE###</button>
-                            </div>
-                        </div>
-<input name="manufacturers_id" type="hidden" value="###MANUFACTURER_ID###" />
+			<input name="manufacturers_id" type="hidden" value="###MANUFACTURER_ID###" />
+    	<div id="ajax_message_###MANUFACTURER_ID###" class="ajax_message"></div>
+		<div class="panel-footer">
+			<div class="clearfix">
+				<div class="pull-right">
+					<a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
+					<button name="Submit" type="submit" class="btn btn-success" id="btnSave"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
+					<button name="SaveClose" type="submit" class="btn btn-success" id="btnSaveClose"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE_CLOSE###</button>
+				</div>
+			</div>
+		</div>
 		</form>
-    <div id="ajax_message_###MANUFACTURER_ID###" class="ajax_message"></div>
 	</div>
 </div>
 

@@ -1009,3 +1009,10 @@ if (!$qry) {
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }
+$str = "select hide_in_footer_menu from tx_multishop_manufacturers limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str = "ALTER TABLE  `tx_multishop_manufacturers` ADD `hide_in_footer_menu` tinyint(1) default '0'";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[] = $str;
+}

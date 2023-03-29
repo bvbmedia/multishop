@@ -368,6 +368,7 @@ CREATE TABLE `tx_multishop_manufacturers` (
  `status` tinyint(1) default '1',
  `foreign_source_name` varchar(30) default '',
  `hide_in_menu` tinyint(1) default '0',
+ `hide_in_footer_menu` tinyint(1) default '0',
  PRIMARY KEY (`manufacturers_id`),
  KEY `IDX_MANUFACTURERS_NAME` (`manufacturers_name`),
  KEY `sort_order` (`sort_order`),
