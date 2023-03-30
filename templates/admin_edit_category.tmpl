@@ -93,9 +93,12 @@ jQuery(document).ready(function ($) {
                 <div class="form-group" id="msEditCategoryInputHideInFooterMenu">
                     <label class="control-label col-md-2" for="hide_in_footer_menu">###LABEL_HIDE_IN_FOOTER_MENU###</label>
                     <div class="col-md-10">
-                        <div class="checkbox checkbox-success checkbox-inline">
-                            <input name="hide_in_footer_menu" id="hide_in_footer_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED### /><label></label>
-                        </div>
+                        <div class="toggleButton">
+                        <input name="hide_in_footer_menu" id="hide_in_footer_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED### />
+                        <label for="enable_layout_left_col">
+                            <span class="toggleButtonTextEnable"></span>
+                            <span class="toggleButtonTextDisable"></span><span class="toggleButtonHandler"></span>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group" id="msEditCategoryInputImage">
