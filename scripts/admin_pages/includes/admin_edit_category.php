@@ -288,9 +288,9 @@ if ($this->post) {
         $updateArray['hide_in_menu'] = 0;
     }
     if (isset($this->post['hide_in_footer_menu'])) {
-        $updateArray['hide_in_footer_menu'] = $this->post['hide_in_footer_menu'];
-    } else {
         $updateArray['hide_in_footer_menu'] = 0;
+    } else {
+        $updateArray['hide_in_footer_menu'] = 1;
     }
     $updateArray['categories_url'] = $this->post['categories_url'];
     $updateArray['status'] = $this->post['status'];
@@ -1162,7 +1162,7 @@ if ($this->post) {
         } else {
             $subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###'] = '';
         }
-        if ($category['hide_in_footer_menu'] == 1) {
+        if ($category['hide_in_footer_menu'] == '0') {
             $subpartArray['###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED###'] = 'checked="checked"';
         } else {
             $subpartArray['###CATEGORY_HIDE_IN_FOOTER_MENU_CHECKED###'] = '';
