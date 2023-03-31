@@ -82,7 +82,7 @@ if ($this->post) {
     $updateArray['manufacturers_name'] = $this->post['manufacturers_name'];
     $updateArray['status'] = $this->post['status'];
     $updateArray['hide_in_menu'] = $this->post['hide_in_menu'];
-    $updateArray['hide_in_footer_menu'] = $this->post['hide_in_footer_menu'];
+    $updateArray['hide_in_footer_menu'] = (isset($this->post['hide_in_footer_menu']) ? 0 : 1);
     if ($update_manufacturers_image) {
         $updateArray['manufacturers_image'] = $update_manufacturers_image;
     }
@@ -386,7 +386,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action'] == 'add_manufacture
         $subpartArray['###MANUFACTURER_HIDE_IN_MENU_CHECKED###'] = '';
     }
     $subpartArray['###LABEL_HIDE_IN_FOOTER_MENU###'] = $this->pi_getLL('hide_in_footer_menu', 'Hide in footer menu');
-    if ($manufacturer['hide_in_footer_menu'] == 1) {
+    if ($manufacturer['hide_in_footer_menu'] == 0) {
         $subpartArray['###MANUFACTURER_HIDE_IN_FOOTER_MENU_CHECKED###'] = 'checked="checked"';
     } else {
         $subpartArray['###MANUFACTURER_HIDE_IN_FOOTER_MENU_CHECKED###'] = '';
