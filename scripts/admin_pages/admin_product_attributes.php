@@ -43,7 +43,7 @@ $content .= '<input type="text" id="new_option_name" name="new_option_name" clas
 $content .= '</div>';
 $content .= '</div>';
 $content .= $options_group;
-$content .= '<div class="form-group">';
+$content .= '<div class="form-group" id="adminProductAttributesNewListType">';
 $content .= '<label class="col-md-2 control-label">' . $this->pi_getLL('admin_label_listing_type') . ': </label><div class="col-md-4"><select name="listtype" id="new_listtype" class="form-control add_new_attributes_options">';
 foreach ($selects as $key => $value) {
     $content .= '<option value="' . $key . '">' . htmlspecialchars($value) . '</option>';
@@ -51,7 +51,7 @@ foreach ($selects as $key => $value) {
 $content .= '</select></div>';
 $content .= '</div>';
 $content .= '
-<div class="form-group">
+<div class="form-group" id="adminProductAttributesCheckboxGroup">
     <div class="col-md-10 col-md-offset-2">
         <div class="checkbox checkbox-success checkbox-inline">
             <input name="required" id="required_checkbox" type="checkbox" value="1" class="add_new_attributes_options"><label for="required_checkbox">' . $this->pi_getLL('required') . '</label>
@@ -1285,4 +1285,14 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 </script>';
 $content .= '<hr><div class="clearfix"><a class="btn btn-success msAdminBackToCatalog" href="' . mslib_fe::typolink() . '"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ' . $this->pi_getLL('admin_close_and_go_back_to_catalog') . '</a></div></div>';
 $content = '<div class="panel panel-default">' . mslib_fe::shadowBox($content) . '</div>';
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesPostProc'])) {
+    // hook
+    $conf = array(
+        'content' => &$content
+    );
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminEditProductAttributesPostProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
+    }
+    // hook oef
+}
 ?>
