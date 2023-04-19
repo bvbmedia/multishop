@@ -932,10 +932,28 @@ if ($this->get['feed_hash']) {
                             }
                             break;
                         case 'category_crum_path':
-                            $tmpcontent .= $row['categories_crum'][0]['name'];
-                            for ($i = 1; $i < 6; $i++) {
-                                if ($row['categories_crum'][$i]['name']) {
-                                    $tmpcontent .= " > " . $row['categories_crum'][$i]['name'];
+                            $current_deepest_categories_id = mslib_fe::getProductToCategories($row['products_id'], $row['categories_id']);
+                            $currentCategoriesId = explode(',', $current_deepest_categories_id);
+                            $categoriesStructure = array();
+                            if (count($currentCategoriesId) > 1) {
+                                foreach ($currentCategoriesId as $currentCategoryId) {
+                                    $categoryStructure = array();
+                                    $cats = mslib_fe::Crumbar($currentCategoryId);
+                                    $cats = array_reverse($cats);
+                                    if (count($cats) > 0) {
+                                        foreach ($cats as $cat) {
+                                            $categoryStructure[] = $cat['name'];
+                                        }
+                                    }
+                                    $categoriesStructure[] = implode(' > ', $categoryStructure);
+                                }
+                                $tmpcontent .= implode(',', $categoriesStructure);
+                            } else {
+                                $tmpcontent .= $row['categories_crum'][0]['name'];
+                                for ($i = 1; $i < 6; $i++) {
+                                    if ($row['categories_crum'][$i]['name']) {
+                                        $tmpcontent .= " > " . $row['categories_crum'][$i]['name'];
+                                    }
                                 }
                             }
                             break;
