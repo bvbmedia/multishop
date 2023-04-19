@@ -272,7 +272,7 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
                             //
                             $updateArray = array();
                             $updateArray['options_values_id'] = $target_value_id;
-                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $src_option_id . '\' and options_values_id=\'' . $src_value_id . '\' and page_uid=\'' . $this->showCatalogFromPage . '\'', $updateArray);
+                            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $src_option_id . '\' and options_values_id=\'' . $src_value_id . '\'', $updateArray);
                             $GLOBALS['TYPO3_DB']->sql_query($query);
                         }
                     }
@@ -289,7 +289,7 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
             //
             $updateArray = array();
             $updateArray['options_id'] = $target_option_id;
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $src_option_id . '\' and page_uid=\'' . $this->showCatalogFromPage . '\'', $updateArray);
+            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\'' . $src_option_id . '\'', $updateArray);
             $GLOBALS['TYPO3_DB']->sql_query($query);
             // cleanup double record in tx_multishop_products_options_values_to_products_options
             $query = 'DELETE pov2po1 FROM tx_multishop_products_options_values_to_products_options pov2po1, tx_multishop_products_options_values_to_products_options pov2po2 WHERE pov2po1.products_options_values_to_products_options_id > pov2po2.products_options_values_to_products_options_id AND pov2po1.products_options_id = pov2po2.products_options_id AND pov2po1.products_options_values_id = pov2po2.products_options_values_id';
