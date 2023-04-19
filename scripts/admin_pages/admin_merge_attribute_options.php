@@ -172,12 +172,14 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
         // make sure the manual input is not option id
 	    $filter = array();
 	    if (is_numeric($target_option_id)) {
-		    $is_target_option_id_exist = mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_id', array('language_id=\'0\''));
+		    $filter[] = 'products_options_id=' . $target_option_id;
 	    } else {
-		    $is_target_option_id_exist = mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_name', array('language_id=\'0\''));
-			if ($is_target_option_id_exist['products_options_id']) {
-				$target_option_id = $is_target_option_id_exist['products_options_id'];
-			}
+		    $filter[] = 'products_options_name=\'' . addslashes($target_option_id) . '\'';
+	    }
+		$filter[] = 'language_id=0';
+	    $is_target_option_id_exist = mslib_befe::getRecord('', 'tx_multishop_products_options', '', $filter);
+	    if ($is_target_option_id_exist['products_options_id'] && !is_numeric($target_option_id)) {
+		    $target_option_id = $is_target_option_id_exist['products_options_id'];
 	    }
         if (!is_array($is_target_option_id_exist) || (isset($new_attribute_option_id[$target_option_id]) && $new_attribute_option_id[$pa_option_name] > 0)) {
             $new_option = true;
