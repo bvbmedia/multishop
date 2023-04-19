@@ -107,17 +107,33 @@ var select2_sb = function(selector_str, exclude_id) {
 		formatResult: function(data){
 			if (data.text === undefined) {
 				$.each(data, function(i,val){
-					return val.text;
+                    var return_text = val.text;
+	                if (val.id != val.text) {
+						return_text += " (ID: " + val.id + ")";
+	                }
+	                return return_text;
 				});
 			} else {
-				return data.text;
+                var return_text = data.text;
+                if (data.id != data.text) {
+					return_text += " (ID: " + data.id + ")";
+                }
+                return return_text;
 			}
 		},
 		formatSelection: function(data){
 			if (data.text === undefined) {
-				return data[0].text;
+                var return_text = data[0].text;
+                if (data[0].id != data[0].text) {
+					return_text += " (ID: " + data[0].id + ")";
+                }
+                return return_text;
 			} else {
-				return data.text;
+                var return_text = data.text;
+                if (data.id != data.text) {
+					return_text += " (ID: " + data.id + ")";
+                }
+                return return_text;
 			}
 		},
 		dropdownCssClass: "new_product_attribute_options_dropdown",
@@ -154,7 +170,15 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
         $new_option = false;
         $target_option_id = $this->post['tx_multishop_pi1']['merge_attribute_options_target'][$src_option_id];
         // make sure the manual input is not option id
-        $is_target_option_id_exist = mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_id', array('language_id=\'0\''));
+	    $filter = array();
+	    if (is_numeric($target_option_id)) {
+		    $is_target_option_id_exist = mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_id', array('language_id=\'0\''));
+	    } else {
+		    $is_target_option_id_exist = mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_name', array('language_id=\'0\''));
+			if ($is_target_option_id_exist['products_options_id']) {
+				$target_option_id = $is_target_option_id_exist['products_options_id'];
+			}
+	    }
         if (!is_array($is_target_option_id_exist) || (isset($new_attribute_option_id[$target_option_id]) && $new_attribute_option_id[$pa_option_name] > 0)) {
             $new_option = true;
         }
