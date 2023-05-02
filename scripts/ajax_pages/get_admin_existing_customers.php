@@ -38,6 +38,16 @@ if ($this->ADMIN_USER) {
             $filter[] = 'disable=0';
         }
         $filter[] = 'deleted=0';
+	    // post processing by third party plugins
+	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_existing_customers.php']['getAdminExistingCustomersQueriesPostHookProc'])) {
+		    $params = array();
+		    $params['filter'] =& $filter;
+		    $params['orderby'] =& $orderby;
+		    $params['select'] =& $select;
+		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_existing_customers.php']['getAdminExistingCustomersQueriesPostHookProc'] as $funcRef) {
+			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		    }
+	    }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'fe_users', // FROM ...
                 implode(' and ', $filter), // WHERE...

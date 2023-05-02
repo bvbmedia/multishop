@@ -450,6 +450,19 @@ if ($this->conf['shopAdminEditableInEditCustomer'] == '0') {
         $filter[] = $GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
     }
 }
+// post processing by third party plugins
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersQueriesPostHookProc'])) {
+    $params = array();
+    $params['filter'] =& $filter;
+    $params['having'] =& $having;
+    $params['match'] =& $match;
+    $params['where'] =& $where;
+    $params['orderby'] =& $orderby;
+    $params['select'] =& $select;
+    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersQueriesPostHookProc'] as $funcRef) {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+    }
+}
 // subquery to summarize grand total per customer
 $select[] = '(select sum(grand_total) from tx_multishop_orders where deleted=0 and customer_id=f.uid) as grand_total';
 // subquery to summarize grand total by year, per customer
