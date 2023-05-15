@@ -528,6 +528,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 }
             }
         }
+        if (!$optid && $this->get['option_id']) {
+            $optid = $this->get['option_id'];
+        }
         if (!$pid) {
             if (is_numeric($this->get['pid']) && $this->get['pid'] > 0) {
                 $pid = $this->get['pid'];
