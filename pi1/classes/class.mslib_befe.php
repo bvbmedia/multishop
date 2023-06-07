@@ -3670,6 +3670,9 @@ class mslib_befe {
             if ($GLOBALS['TSFE']->fe_user->user['uid']) {
                 $insertArray['customer_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
             }
+			if ($this->conf['user_id']) {
+				$insertArray['customer_id'] = $this->conf['user_id'];
+			}
             if (!$categories_id && is_numeric($this->get['categories_id']) && $this->get['categories_id'] > 0) {
                 $categories_id = $this->get['categories_id'];
             }
