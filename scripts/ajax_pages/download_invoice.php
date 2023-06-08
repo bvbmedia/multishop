@@ -117,7 +117,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
         }
         // billing address
         if (!empty($order['billing_company'])) {
-            $markerArray['###BILLING_COMPANY###'] = htmlspecialchars($order['billing_company']) . '<br/>';
+            $markerArray['###BILLING_COMPANY###'] = '<strong>' . htmlspecialchars($order['billing_company']) . '</strong><br/>';
         } else {
             $markerArray['###BILLING_COMPANY###'] = '';
         }
