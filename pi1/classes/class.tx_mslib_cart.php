@@ -3142,7 +3142,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                                     $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . $row['products_options_name'] . ': </span><span class="attribute-value">' . implode(', ', $attributes_values_name) . '</span></div>';
                                     break;
                                 case 'input':
-                                    $item['ITEM_NAME'] .= '<br />' . $row['products_options_name'] . ': ' . $attribute_values['products_options_values_name'];
+                                    $item['ITEM_NAME'] .= '<div class="attributes-items"><span class="attribute-option">' . $row['products_options_name'] . ': : </span><span class="attribute-value">' . $attribute_values['products_options_values_name'] . '</span></div>';
                                     $multiple = 0;
                                     $continue = 0;
                                     break;
