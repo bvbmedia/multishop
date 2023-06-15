@@ -1032,6 +1032,16 @@ if ($this->get['feed_hash']) {
                                 $tmpcontent .= $string;
                             }
                             break;
+                        case 'products_description_strip_tags_decoded':
+                            $string = html_entity_decode(strip_tags($row['products_description']));
+                            if (!$this->get['format'] == 'excel') {
+                                $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                            }
+                            if ($string) {
+                                $string = preg_replace('/\s+/', ' ', $string);
+                                $tmpcontent .= $string;
+                            }
+                            break;
                         case 'products_external_url':
                             if ($row['products_url']) {
                                 $tmpcontent .= $row['products_url'];
@@ -1191,6 +1201,7 @@ if ($this->get['feed_hash']) {
                                             $descriptionKeys['products_description_encoded_tab_content_' . $i] = 'products_description_tab_content_' . $i;
                                             $descriptionKeys['products_description_decoded_tab_content_' . $i] = 'products_description_tab_content_' . $i;
                                             $descriptionKeys['products_description_strip_tags_tab_content_' . $i] = 'products_description_tab_content_' . $i;
+                                            $descriptionKeys['products_description_strip_tags_decoded_tab_content_' . $i] = 'products_description_tab_content_' . $i;
                                         }
                                         if (count($descriptionKeys) && isset($descriptionKeys[$field])) {
                                             if (strpos($field, 'products_description_encoded_') !== false) {
@@ -1199,12 +1210,17 @@ if ($this->get['feed_hash']) {
                                                     $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
                                                 }
                                                 $string = htmlentities($string);
-                                            } if (strpos($field, 'products_description_decoded_') !== false) {
+                                            } else if (strpos($field, 'products_description_decoded_') !== false) {
                                                 $string = $row[$descriptionKeys[$field]];
                                                 if (!$this->get['format'] == 'excel') {
                                                     $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
                                                 }
                                                 $string = html_entity_decode($string);
+                                            } else if (strpos($field, 'products_description_strip_tags_decoded_tab_content_') !== false) {
+                                                $string = html_entity_decode(strip_tags($row[$descriptionKeys[$field]]));
+                                                if (!$this->get['format'] == 'excel') {
+                                                    $string = preg_replace("/\r\n|\n|\\" . $feed['delimiter_char'] . "/", " ", $string);
+                                                }
                                             } else if (strpos($field, 'products_description_strip_tags_') !== false) {
                                                 $string = strip_tags($row[$descriptionKeys[$field]]);
                                                 if (!$this->get['format'] == 'excel') {
