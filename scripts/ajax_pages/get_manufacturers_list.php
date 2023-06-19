@@ -22,9 +22,11 @@ if ($this->ADMIN_USER) {
         }
     }
     if (count($filter) || (isset($this->get['q']) && empty($this->get['q']))) {
-        $return_data[$counter]['text'] = htmlentities($this->pi_getLL('all'));
-        $return_data[$counter]['id'] = 'all';
-        $counter++;
+        if (!isset($this->get['preselected_id'])) {
+            $return_data[$counter]['text'] = htmlentities($this->pi_getLL('all'));
+            $return_data[$counter]['id'] = 'all';
+            $counter++;
+        }
         $query = $GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
                 'tx_multishop_manufacturers', // FROM ...
                 implode(' and ', $filter), // WHERE...
