@@ -3640,6 +3640,9 @@ class mslib_fe {
         if (!is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
+        if (!is_numeric($product_id)) {
+            return false;
+        }
         /*
          * the past query that using page_uid
         $qry = $GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id, p2c.crumbar_identifier', // SELECT ...

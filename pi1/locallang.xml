@@ -752,7 +752,9 @@
             <label index="feed_exporter_fields_label_products_condition">Products condition</label>
             <label index="feed_exporter_fields_label_products_description">Products description</label>
             <label index="feed_exporter_fields_label_products_description_html_encoded">Products description (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_html_decoded">Products description (HTML decoded)</label>
             <label index="feed_exporter_fields_label_products_description_plain_stripped_tags">Products description (plain / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_plain_stripped_tags_decoded">Products description (plain / stripped tags + HTML decoded)</label>
             <label index="feed_exporter_fields_label_products_ean_code">Products EAN code</label>
             <label index="feed_exporter_fields_label_products_external_url">Products external URL</label>
             <label index="feed_exporter_fields_label_products_id">Products id</label>
@@ -1447,7 +1449,9 @@
             <label index="feed_exporter_fields_label_products_description_tab_title_x">Products description title Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_x">Products description content Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Products description content Tab: %d (HTML encoded)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_html_decoded_x">Products description content Tab: %d (HTML decoded)</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Products description content Tab: %d (platte tekst / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_decoded_x">Products description content Tab: %d (platte tekst / stripped tags + HTML decoded)</label>
             <label index="admin_ignore_stock_level">Product always orderable (ignore actual stock level)</label>
             <label index="updated_by">Updated by</label>
             <label index="email_create_account_completed">E-mail create account completed</label>
@@ -2223,6 +2227,7 @@
             <label index="feed_exporter_fields_label_products_description">Productbeschrijving</label>
             <label index="feed_exporter_fields_label_products_description_html_encoded">Productbeschrijving (HTML encoded)</label>
             <label index="feed_exporter_fields_label_products_description_plain_stripped_tags">Productbeschrijving (platte tekst / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_plain_stripped_tags_decoded">Productbeschrijving (platte tekst / stripped tags + HTML decoded)</label>
             <label index="feed_exporter_fields_label_products_ean_code">Product EAN code</label>
             <label index="feed_exporter_fields_label_products_external_url">Product externe URL</label>
             <label index="feed_exporter_fields_label_products_id">Artikelnummer</label>
@@ -2900,6 +2905,7 @@
             <label index="feed_exporter_fields_label_products_description_tab_content_x">Productbeschrijving inhoud Tab: %d</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_html_encoded_x">Productbeschrijving inhoud Tab: %d (HTML encoded)</label>
             <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_x">Productbeschrijving inhoud Tab: %d (platte tekst / stripped tags)</label>
+            <label index="feed_exporter_fields_label_products_description_tab_content_plain_stripped_tags_decoded_x">Productbeschrijving inhoud Tab: %d (platte tekst / stripped tags + HTML decoded)</label>
             <label index="admin_ignore_stock_level">Product altijd bestelbaar (negeer actuele voorraadwaarde)</label>
             <label index="updated_by">Geactualiseerd door</label>
             <label index="email_create_account_completed">E-mail account aanmaken voltooid</label>
