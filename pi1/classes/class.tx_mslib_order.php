@@ -1763,6 +1763,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
             }
+            // Allow dispatcher to inject additional data that must be saved in the orders table
+            if (is_array($address['tx_multishop_orders']) && count($address['tx_multishop_orders'])) {
+                foreach ($address['tx_multishop_orders'] as $key => $val) {
+                    $insertArray[$key]=$val;
+                }
+            }
             foreach ($insertArray as $key => $val) {
                 if (is_null($insertArray[$key])) {
                     $insertArray[$key] = '';
