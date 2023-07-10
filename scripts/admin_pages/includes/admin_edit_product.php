@@ -4961,6 +4961,13 @@ if ($this->post) {
         /*
 		 * special price percentage
 		 */
+        // Reset percentage value when the set of due date is expired
+        $current_tstamp = time();
+        if ($product['specials_expired_date'] > 0) {
+            if ($current_tstamp > $product['specials_expired_date']) {
+                $product['specials_price_percentage'] = '';
+            }
+        }
         $special_price_percentage_value_selectbox = '<select name="specials_price_percentage" id="specials_price_percentage"><option value="">' . $this->pi_getLL('select_percentage') . '</option>';
         for ($i = 1; $i <= 100; $i++) {
             if ($product['specials_price_percentage'] == $i) {
