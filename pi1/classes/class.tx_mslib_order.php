@@ -125,6 +125,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                         }
                     }
                 }
+                if ($this->ms['MODULES']['FORCE_SHIPPING_VAT_RATE']) {
+                    $tax_rate['total_tax_rate'] = $this->ms['MODULES']['FORCE_SHIPPING_VAT_RATE'];
+                }
                 $shipping_tax_rate = ($tax_rate['total_tax_rate'] / 100);
                 // get payment tax rate
                 $payment_method = mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', $iso_customer['cn_iso_nr']);
@@ -134,6 +137,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 }
                 if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
                     $tax_rate['total_tax_rate'] = 0;
+                }
+                if ($this->ms['MODULES']['FORCE_PAYMENT_VAT_RATE']) {
+                    $tax_rate['total_tax_rate'] = $this->ms['MODULES']['FORCE_PAYMENT_VAT_RATE'];
                 }
                 $payment_tax_rate = ($tax_rate['total_tax_rate'] / 100);
                 if ($shipping_tax_rate > 0 or $payment_tax_rate > 0) {
