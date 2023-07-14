@@ -252,8 +252,16 @@ if ($this->post && $this->post['email']) {
                         $updateTTAddressArray['department'] = $this->post['department'];
                     }
                 }
-                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
-                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                if (!$this->post['different_delivery_address']) {
+                    $updateTTAddressArray['is_delivery_same'] = 1;
+                }
+                if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing')) {
+                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                } else {
+                    $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
+                    $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                }
                 if (!$this->post['different_delivery_address']) {
                     $updateTTAddressArray['tx_multishop_address_type'] = 'delivery';
                     $updateTTAddressArray['tx_multishop_default'] = 0;
@@ -261,9 +269,7 @@ if ($this->post && $this->post['email']) {
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
-                        //$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
-                        //$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-                        $query = $GLOBALS['TYPO3_DB']->DELETEquery('tt_address', 'tx_multishop_customer_id=\'' . $customer_id . '\' and tx_multishop_address_type=\'delivery\'');
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id . ' and tx_multishop_address_type=\'delivery\'', $updateTTAddressArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
                 } else {
@@ -1243,7 +1249,7 @@ switch ($_REQUEST['action']) {
                 </div>';
             }
             $md5_list = array();
-            $md5_list[] = $this->post['gender'];
+            $md5_list[] = ($this->post['gender'] == '0' ? 'm' : 'f');
             $md5_list[] = $this->post['first_name'];
             $md5_list[] = $this->post['middle_name'];
             $md5_list[] = $this->post['last_name'];
@@ -1294,7 +1300,7 @@ switch ($_REQUEST['action']) {
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($user['uid'], 'delivery');
             if ($delivery_address) {
                 $md5_list = array();
-                $md5_list[] = ($delivery_address['gender'] == 'm' ? '0' : '1');
+                $md5_list[] = $delivery_address['gender'];
                 $md5_list[] = $delivery_address['first_name'];
                 $md5_list[] = $delivery_address['middle_name'];
                 $md5_list[] = $delivery_address['last_name'];
