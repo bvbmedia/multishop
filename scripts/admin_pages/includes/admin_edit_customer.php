@@ -252,8 +252,44 @@ if ($this->post && $this->post['email']) {
                         $updateTTAddressArray['department'] = $this->post['department'];
                     }
                 }
+                $updateTTAddressArray['is_delivery_same'] = 0;
                 if (!$this->post['different_delivery_address']) {
                     $updateTTAddressArray['is_delivery_same'] = 1;
+                } else {
+                    // Recheck if data all the same or not
+                    // Billing details
+                    $md5_list = array();
+                    $md5_list[] = ($this->post['gender'] == '0' ? 'm' : 'f');
+                    $md5_list[] = $this->post['first_name'];
+                    $md5_list[] = $this->post['middle_name'];
+                    $md5_list[] = $this->post['last_name'];
+                    $md5_list[] = $this->post['company'];
+                    $md5_list[] = $this->post['street_name'];
+                    $md5_list[] = $this->post['address_number'];
+                    $md5_list[] = $this->post['address_ext'];
+                    $md5_list[] = $this->post['zip'];
+                    $md5_list[] = $this->post['city'];
+                    $md5_list[] = $this->post['telephone'];
+                    $md5_list[] = $this->post['email'];
+                    $billing_address_md5 = md5(implode("", $md5_list));
+                    // Delivery details
+                    $md5_list = array();
+                    $md5_list[] = ($this->post['delivery_gender'] == '0' ? 'm' : 'f');
+                    $md5_list[] = $this->post['delivery_first_name'];
+                    $md5_list[] = $this->post['delivery_middle_name'];
+                    $md5_list[] = $this->post['delivery_last_name'];
+                    $md5_list[] = $this->post['delivery_company'];
+                    $md5_list[] = $this->post['delivery_street_name'];
+                    $md5_list[] = $this->post['delivery_address_number'];
+                    $md5_list[] = $this->post['delivery_address_ext'];
+                    $md5_list[] = $this->post['delivery_zip'];
+                    $md5_list[] = $this->post['delivery_city'];
+                    $md5_list[] = $this->post['delivery_telephone'];
+                    $md5_list[] = $this->post['delivery_email'];
+                    $delivery_address_md5 = md5(implode("", $md5_list));
+                    if ($billing_address_md5 == $delivery_address_md5) {
+                        $updateTTAddressArray['is_delivery_same'] = 1;
+                    }
                 }
                 if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'billing')) {
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
@@ -327,6 +363,10 @@ if ($this->post && $this->post['email']) {
                         if (isset($this->post['delivery_department'])) {
                             $updateTTAddressArray['department'] = $this->post['delivery_department'];
                         }
+                    }
+                    $updateTTAddressArray['is_delivery_same'] = 0;
+                    if ($billing_address_md5 == $delivery_address_md5) {
+                        $updateTTAddressArray['is_delivery_same'] = 1;
                     }
                     if (!mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery')) {
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $updateTTAddressArray);
