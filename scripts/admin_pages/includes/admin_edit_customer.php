@@ -278,7 +278,7 @@ if ($this->post && $this->post['email']) {
                     $updateTTAddressArray['tstamp'] = time();
                     $updateTTAddressArray['company'] = $this->post['delivery_company'];
                     $updateTTAddressArray['name'] = $this->post['delivery_first_name'] . ' ' . $this->post['delivery_middle_name'] . ' ' . $this->post['delivery_last_name'];
-                    $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $insertArray['name']);
+                    $updateTTAddressArray['name'] = preg_replace('/\s+/', ' ', $updateTTAddressArray['name']);
                     $updateTTAddressArray['first_name'] = $this->post['delivery_first_name'];
                     $updateTTAddressArray['middle_name'] = $this->post['delivery_middle_name'];
                     $updateTTAddressArray['last_name'] = $this->post['delivery_last_name'];
