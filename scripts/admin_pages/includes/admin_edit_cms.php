@@ -57,7 +57,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
                 $array['name'] = $value;
                 $array['content'] = $this->post['cms_content'][$key];
                 $array['meta_title'] = $this->post['meta_title'][$key];
-                $array['meta_description'] = $this->post['meta_description'][$key];
+                $array['meta_description'] = $this->post['meta_desc'][$key];
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms_description', 'id=\'' . addslashes($cms_id) . '\' and language_id=\'' . $key . '\'', $array);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
             } else {
