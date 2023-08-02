@@ -256,7 +256,16 @@ switch ($this->ms['page']) {
         break;
     case 'admin_invoices':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_invoices.php');
+	        if (strstr($this->ms['MODULES']['ADMIN_INVOICES_TYPE'], "..")) {
+		        die('error in ADMIN_INVOICES_TYPE value');
+	        } else {
+		        if (strstr($this->ms['MODULES']['ADMIN_INVOICES_TYPE'], "/")) {
+			        // relative mode
+			        require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_INVOICES_TYPE'] . '.php');
+		        } else {
+			        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_invoices.php');
+		        }
+	        }
         }
         break;
     case 'admin_orders_status':
