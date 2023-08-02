@@ -757,7 +757,7 @@ CREATE TABLE `tx_multishop_orders_status_history` (
  `customer_notified` int(1) default '0',
  `comments` text,
  `requester_ip_addr` varchar(127) default '',
- `action_call` varchar(256) default '',
+ `action_call` varchar(500) default '',
  `cruser_id` int(11) default '0',
  PRIMARY KEY (`orders_status_history_id`),
  KEY `orders_id` (`orders_id`),
