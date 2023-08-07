@@ -2362,7 +2362,7 @@ if ($this->post) {
                         $attributesArray['options_values_price'] = $pa_price;
                         $attributesArray['sort_order_option_name'] = $option_sort_order[$pa_option];
                         $attributesArray['sort_order_option_value'] = $values_sort_order[$pa_option][$pa_value];
-                        $attributesArray['page_uid'] = $this->showCatalogFromPage;
+                        $attributesArray['page_uid'] = ($this->post['save_as_new_target_pid'] > 0 ? $this->post['save_as_new_target_pid'] : $this->showCatalogFromPage);
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $this->post['tx_multishop_pi1']['pa_id'][$opt_sort] = $GLOBALS['TYPO3_DB']->sql_insert_id();
