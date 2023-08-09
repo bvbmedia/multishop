@@ -339,6 +339,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateArray['orders_tax_data'] = $serial_orders;
                 if ($row['discount'] > 0) {
                     $updateArray['discount'] = $discount_price;
+                    $updateArray['discount_percentage'] = $discount_percentage;
                 }
                 $updateArray['orders_last_modified'] = time();
                 // hook
