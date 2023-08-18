@@ -462,6 +462,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'])) {
                         $conf = array(
                             'col' => $col,
+							'interfaceKey' => $params['interfaceKey'],
                             'valArray' => &$valArray,
                         );
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['adminInterfaceTableRowsEnableSortDbOnHeaderPreProc'] as $funcRef) {
