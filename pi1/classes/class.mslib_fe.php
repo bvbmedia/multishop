@@ -2419,6 +2419,8 @@ class mslib_fe {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+		// Get the product page_uid
+	    $productPageUidRec = mslib_befe::getRecord($products_id, 'tx_multishop_products', 'products_id', array(), 'page_uid');
         $required_formfields = array();
         if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
             $add_tax_rate = '';
@@ -2447,7 +2449,11 @@ class mslib_fe {
         }
         $query_array['from'][] = 'tx_multishop_products_attributes patrib';
         $query_array['where'][] = 'patrib.products_id=\'' . (int)$products_id . '\'';
-        $query_array['where'][] = 'patrib.page_uid=\'' . (int)$this->showCatalogFromPage . '\'';
+		if ($productPageUidRec['page_uid'] != (int)$this->showCatalogFromPage) {
+			$query_array['where'][] = '(patrib.page_uid=\'' . (int) $productPageUidRec['page_uid'] . '\' OR patrib.page_uid=\'' . (int) $this->showCatalogFromPage . '\')';
+		} else {
+			$query_array['where'][] = 'patrib.page_uid=\'' . (int) $this->showCatalogFromPage . '\'';
+		}
         $query_array['where'][] = 'popt.language_id = \'' . $this->sys_language_uid . '\'';
         //todo: hide_in_cart line should be enabled, but im not sure if it will cause bugs in other plugins so temporary disabled it
         //$query_array['where'][]='(popt.hide_in_cart=0 or popt.hide_in_cart is null)';
@@ -2491,6 +2497,11 @@ class mslib_fe {
                     }
                     $from = 'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp ';
                     $from .= 'LEFT OUTER JOIN tx_multishop_products_options_values_to_products_options_desc povdesc ON povdesc.language_id=\'' . $this->sys_language_uid . '\' AND povdesc.products_options_values_to_products_options_id=povp.products_options_values_to_products_options_id';
+	                if ($productPageUidRec['page_uid'] != (int) $this->showCatalogFromPage) {
+		                $where = 'pa.products_id = \'' . (int) $products_id . '\' and pa.options_id = \'' . addslashes($options['products_options_id']) . '\' and (pa.page_uid = \'' . addslashes($productPageUidRec['page_uid']) . '\' OR pa.page_uid = \'' . addslashes($this->showCatalogFromPage) . '\') and pov.language_id = \'' . addslashes($this->sys_language_uid) . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . addslashes($options['products_options_id']) . '\' and povp.products_options_values_id=pov.products_options_values_id';
+	                } else {
+		                $where = 'pa.products_id = \'' . (int) $products_id . '\' and pa.options_id = \'' . addslashes($options['products_options_id']) . '\' and pa.page_uid = \'' . addslashes($this->showCatalogFromPage) . '\' and pov.language_id = \'' . addslashes($this->sys_language_uid) . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . addslashes($options['products_options_id']) . '\' and povp.products_options_values_id=pov.products_options_values_id';
+	                }
                     $order_by = 'pa.sort_order_option_value asc';
                     //$order_by = 'pov.products_options_values_name asc';
                     // hook to let other plugins further manipulate the option values display
@@ -2509,7 +2520,7 @@ class mslib_fe {
                     //products_options_values_to_products_options_id
                     $str = $GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $select), // SELECT ...
                             $from, // FROM ...
-                            'pa.products_id = \'' . (int)$products_id . '\' and pa.options_id = \'' . addslashes($options['products_options_id']) . '\' and pa.page_uid = \'' . addslashes($this->showCatalogFromPage) . '\' and pov.language_id = \'' . addslashes($this->sys_language_uid) . '\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\'' . addslashes($options['products_options_id']) . '\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
+	                        $where, // WHERE...
                             '', // GROUP BY...
                             $order_by, // ORDER BY...
                             '' // LIMIT ...
