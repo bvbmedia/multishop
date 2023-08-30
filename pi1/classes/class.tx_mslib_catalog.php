@@ -150,6 +150,11 @@ class tx_mslib_catalog {
                         } else {
                             $updateArray['is_deepest'] = 0;
                         }
+						if ($dataArray['page_uid']) {
+							$updateArray['page_uid'] = $dataArray['page_uid'];
+						} else {
+							$updateArray['page_uid'] = $item['page_uid'];
+						}
                         $updateArray['crumbar_identifier'] = $crumbar_ident_string;
                         if (is_array($dataArray) && isset($dataArray['sort_order']) && is_numeric($dataArray['sort_order'])) {
                             $updateArray['sort_order'] = $dataArray['sort_order'];
