@@ -178,6 +178,12 @@ if ($this->post['proceed_order']) {
         $insertArray['shipping_method_costs'] = $this->post['shipping_method_costs'];
         $insertArray['payment_method_costs'] = $this->post['payment_method_costs'];
         $insertArray['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+        $insertArray['status'] = '';
+        // get default orders status
+        $status = mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
+        if (is_array($status) && isset($status['id']) && $status['id'] > 0) {
+            $insertArray['status'] = $status['id'];
+        }
         if (!$this->post['different_delivery_address']) {
             $delivery_address = mslib_fe::getFeUserTTaddressDetails($customer_id, 'delivery');
             if ($delivery_address) {
