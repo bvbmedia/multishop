@@ -913,6 +913,7 @@ if ($this->post['action'] == 'category-insert') {
     $locked_fields['specials_new_products_price'] = 'Products specials price';
     $locked_fields['products_vat_rate'] = 'Products VAT rate';
     $locked_fields['products_name'] = 'Products name';
+    $locked_fields['products_model'] = 'Products model';
     $locked_fields['products_quantity'] = 'Products quantity';
     $locked_fields['products_description'] = 'Products description';
     foreach ($locked_fields as $key => $val) {
@@ -937,6 +938,7 @@ if ($this->post['action'] == 'category-insert') {
     $locked_fields['specials_new_products_price'] = 'Products specials price';
     $locked_fields['products_vat_rate'] = 'Products VAT rate';
     $locked_fields['products_name'] = 'Products name';
+    $locked_fields['products_model'] = 'Products model';
     $locked_fields['products_quantity'] = 'Products quantity';
     $locked_fields['products_description'] = 'Products description';
     foreach ($locked_fields as $key => $val) {
