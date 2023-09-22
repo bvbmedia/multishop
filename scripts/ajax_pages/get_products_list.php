@@ -151,7 +151,20 @@ if ($this->ADMIN_USER) {
             $limit = 15;
         }
         //$this->msDebug=1;
-        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, array('products_status desc, ' . $prefix . 'products_name asc'));
+        $orderby = array('products_status desc, ' . $prefix . 'products_name asc');
+        $having = array();
+        $select = array();
+        $where = array();
+        $redirect_if_one_product = 0;
+        $extra_from = array();
+        $groupby = array();
+        $select_total_count = '';
+        $returnTotalCountOnly = 0;
+        $enableFetchTaxRate = 1;
+        $extra_join = array();
+        $includeDisabled = 1;
+        $skipIsDeepest = 0;
+        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, $orderby, $having, $select, $where, $redirect_if_one_product, $extra_from, $groupby, 'admin_products_search', $select_total_count, $returnTotalCountOnly, $enableFetchTaxRate, $extra_join, $includeDisabled, $skipIsDeepest);
         //echo $this->msDebugInfo;
         //die();
         $counter = 0;
