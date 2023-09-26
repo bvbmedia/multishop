@@ -3794,7 +3794,19 @@ class mslib_befe {
         }
         return $text;
     }
-    public function cacheLite($action = '', $key = '', $timeout = '', $serialized = 0, $content = '') {
+    public function cacheLite($action = '', $key = '', $timeout = '', $serialized = 0, $content = '', $options = array()) {
+        if (!count($options)) {
+            // Default cache lite configuration
+            $options = array(
+                    'caching' => true,
+                    'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+                    'lifeTime' => $timeout
+            );
+        }
+        if (!$options['cacheDir'] || !is_dir($options['cacheDir'])) {
+            echo 'Cache lite directory does not exist: '.$options['cacheDir'];
+            die();
+        }
         if ($action == 'delete_all') {
             if ($this->conf['debugPurgeCacheLite']) {
                 $subject = '[cacheLite] ' . $this->HTTP_HOST . ' delete cache requested by ' . htmlspecialchars($this->REMOTE_ADDR);
@@ -3803,12 +3815,13 @@ class mslib_befe {
                 $body .= '<strong>Browser:</strong><br/>' . htmlspecialchars($this->server['HTTP_USER_AGENT']) . '<br/><br/>';
                 $body .= '<strong>Referer:</strong><br/>' . htmlspecialchars($this->server['HTTP_REFERER']) . '<br/><br/>';
                 $body .= '<strong>Time:</strong><br/>' . ucfirst(strftime($this->pi_getLL('full_date_format'))) . '<br/><br/>';
+                $body .= '<strong>Options:</strong><br/><pre>' . print_r($options,1) . '</pre><br/><br/>';
                 $body .= '<strong>Backtrace:</strong><br/>';
                 $body .= mslib_befe::print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2));
                 mslib_befe::mailDev($subject, $body);
             }
-            if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache")) {
-                $command = "rm -rf " . $this->DOCUMENT_ROOT . "uploads/tx_multishop/tmp/cache/*";
+            if ($options['cacheDir'] and !strstr($options['cacheDir'], '..') && is_dir($options['cacheDir'])) {
+                $command = 'rm -rf ' . $options['cacheDir'].'/*';
                 exec($command);
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'])) {
                     $params = array();
@@ -3821,11 +3834,6 @@ class mslib_befe {
             if (!class_exists('Cache_Lite')) {
                 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'res/Cache_Lite-1.7.16/Cache/Lite.php');
             }
-            $options = array(
-                    'caching' => true,
-                    'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
-                    'lifeTime' => $timeout
-            );
             $Cache_Lite = new Cache_Lite($options);
             //$Cache_Lite =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Cache_Lite');
             //$string = md5($key);
