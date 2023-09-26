@@ -3799,7 +3799,7 @@ class mslib_befe {
             // Default cache lite configuration
             $options = array(
                     'caching' => true,
-                    'cacheDir' => $this->DOCUMENT_ROOT . 'uploads/tx_multishop/tmp/cache/',
+                    'cacheDir' => PATH_site . 'uploads/tx_multishop/tmp/cache/',
                     'lifeTime' => $timeout
             );
         }
