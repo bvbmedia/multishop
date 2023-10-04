@@ -1333,7 +1333,7 @@ if ($this->get['feed_hash']) {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $this);
                             }
                         }
-                        if ($output) {
+                        if ($output != '') {
                             $tmpcontent = $output;
                             $global_output[$row['products_id']][] = $output;
                         }
