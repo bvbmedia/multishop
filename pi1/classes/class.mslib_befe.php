@@ -652,6 +652,11 @@ class mslib_befe {
         if (!is_numeric($products_id)) {
             return false;
         }
+	    if ($this->get['type'] == '2003' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+		    // Force to update by disabling the cache when updating flat table
+		    $this->ms['MODULES']['CACHE_FRONT_END'] = 0;
+		    $this->ms['MODULES']['FORCE_CACHE_FRONT_END'] = 0;
+	    }
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlat'])) {
             $params = array(
                     'status' => $status,

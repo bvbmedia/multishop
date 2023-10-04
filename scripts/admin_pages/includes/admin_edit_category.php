@@ -323,15 +323,6 @@ if ($this->post) {
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\'' . $this->post['cid'] . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $catid = $this->post['cid'];
-            if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                $products = mslib_fe::getProducts('', $catid);
-                if (is_array($products)) {
-                    foreach ($products as $product) {
-                        // if the flat database module is enabled we have to sync the changes to the flat table
-                        mslib_befe::convertProductToFlat($product['products_id']);
-                    }
-                }
-            }
             if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
                 // clean up the link
                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_to_categories', 'categories_id=\'' . $catid . '\' and page_uid=\'' . $this->showCatalogFromPage . '\'');
@@ -727,6 +718,20 @@ if ($this->post) {
             );
             foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['saveCategoryPostHook'] as $funcRef) {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        if ($_REQUEST['action'] == 'edit_category') {
+            if ($this->get['type'] == '2003' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+                $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+            }
+            if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                $products = mslib_fe::getProducts('', $catid);
+                if (is_array($products)) {
+                    foreach ($products as $product) {
+                        // if the flat database module is enabled we have to sync the changes to the flat table
+                        mslib_befe::convertProductToFlat($product['products_id']);
+                    }
+                }
             }
         }
         // clear the multishop cache
