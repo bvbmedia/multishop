@@ -6091,9 +6091,15 @@ class mslib_fe {
             $sdata[$keys] = $values['price'];
             $sdata2[$keys]['min'] = $values['min'];
             $sdata2[$keys]['max'] = $values['max'];
+
+            // Slow version:
+            /*
             for ($xx = $values['min']; $xx <= $values['max']; $xx++) {
                 $sdata3[$keys]['count'] += 1;
             }
+            */
+            // Fast version:
+            $sdata3[$keys]['count'] = $sdata3[$keys]['count']  + ($values['max']-$values['min']);
         }
         $plevel = 0;
         foreach ($sdata2 as $level => $range) {
