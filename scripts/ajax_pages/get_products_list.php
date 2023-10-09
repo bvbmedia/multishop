@@ -151,7 +151,10 @@ if ($this->ADMIN_USER) {
             $limit = 15;
         }
         //$this->msDebug=1;
-        $orderby = array('products_status desc, ' . $prefix . 'products_name asc');
+        $orderby = '';
+        if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+            $orderby = array('products_status desc, ' . $prefix . 'products_name asc');
+        }
         $having = array();
         $select = array();
         $where = array();
@@ -164,9 +167,10 @@ if ($this->ADMIN_USER) {
         $extra_join = array();
         $includeDisabled = 1;
         $skipIsDeepest = 0;
-        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, $orderby, $having, $select, $where, $redirect_if_one_product, $extra_from, $groupby, 'admin_products_search', $select_total_count, $returnTotalCountOnly, $enableFetchTaxRate, $extra_join, $includeDisabled, $skipIsDeepest);
+        //$this->msDebug=1;
+        $products = mslib_fe::getProductsPageSet($filter, 0, $limit, $orderby, $having, $select, $where, $redirect_if_one_product, $extra_from, $groupby, 'products_search', $select_total_count, $returnTotalCountOnly, $enableFetchTaxRate, $extra_join, $includeDisabled, $skipIsDeepest);
         //echo $this->msDebugInfo;
-        //die();
+        //die('sss');
         $counter = 0;
         foreach ($products['products'] as $row) {
             $records[] = $row;
