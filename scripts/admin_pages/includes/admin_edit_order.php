@@ -3898,13 +3898,13 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
             $discount_content = '';
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-                $discount_content = '<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;' . ($orders['discount_percentage'] > 0 ? ' display:none;' : '') . '">';
+                $discount_content = '<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;' . ($orders['discount'] > 0 ? '' : ' display:none;') . '">';
                 $discount_content .= '<span class="input-group-addon">' . mslib_fe::currency() . '</span><input name="edit_discount_value" id="edit_discount_value" class="form-control text-right priceInputDisplay" type="text" value="' . number_format($orders['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '') . '">';
                 $discount_content .= '</div>';
                 /*
                  * discount percentage
                  */
-                $discount_percentage_value_selectbox = '<select name="edit_discount_percentage" id="edit_discount_percentage"><option value="">' . $this->pi_getLL('select_percentage') . '</option>';
+                $discount_percentage_value_selectbox = '<select name="edit_discount_percentage" id="edit_discount_percentage"'.($orders['discount'] > 0 ? ' disabled="disabled"' : '').'><option value="">' . $this->pi_getLL('select_percentage') . '</option>';
                 for ($i = 1; $i <= 100; $i++) {
                     if ($orders['discount_percentage'] == $i) {
                         $discount_percentage_value_selectbox .= '<option value="' . $i . '" selected="selected">' . $i . '%</option>';
@@ -3913,11 +3913,11 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 }
                 $discount_percentage_value_selectbox .= '</select>';
-                $discount_content .= '<div class="input-group pull-right" id="discount_percentage_wrapper" style="' . ($orders['discount_percentage'] > 0 ? '' : 'display:none; ') . 'width:140px;">';
+                $discount_content .= '<div class="input-group pull-right" id="discount_percentage_wrapper" style="' . ($orders['discount'] > 0 ? 'display:none; ' : '') . 'width:140px;">';
                 $discount_content .= $discount_percentage_value_selectbox;
                 $discount_content .= '</div>';
                 $discount_content .= '<div class="input-group pull-right">';
-                $discount_content .= '<a href="#" id="switch_to_discount_amount"' . ($orders['discount_percentage'] > 0 ? '' : ' style="display:none;"') . '>' . $this->pi_getLL('switch_to_discount_amount') . '</a><a href="#" id="switch_to_discount_percentage"' . ($orders['discount_percentage'] > 0 ? ' style="display:none;"' : '') . '>' . $this->pi_getLL('switch_to_discount_percentage') . '</a>';
+                $discount_content .= '<a href="#" id="switch_to_discount_amount"' . ($orders['discount'] > 0 ? ' style="display:none;"' : '') . '>' . $this->pi_getLL('switch_to_discount_amount') . '</a><a href="#" id="switch_to_discount_percentage"' . ($orders['discount'] > 0 ? '' : ' style="display:none;"') . '>' . $this->pi_getLL('switch_to_discount_percentage') . '</a>';
                 $discount_content .= '</div>';
             } else {
                 if ($orders['discount'] > 0) {
@@ -4574,11 +4574,9 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                 }
                 // eof autocomplete for option
-                ' . ($orders['discount_percentage'] > 0 ? '
                 $("#edit_discount_percentage").select2({
                     width:"140px"
                 });
-                ' : '') . '
                 ' . (($this->get['action'] == 'edit_order' && isset($this->get['edit_product']) && $this->get['edit_product'] > 0) ? '
                 select2_cn("#categories_filter_id", "categories", "categories_name_input", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree') . '");
                 select2_pn(".product_name_input", "product", "product_name_input", "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products') . '");
@@ -5148,9 +5146,9 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("click", "#switch_to_discount_amount", function(e){
                 e.preventDefault();
                 $(this).hide();
-                //$("#edit_discount_value").prop("disabled", false);
+                $("#edit_discount_value").prop("disabled", false);
                 $("#edit_discount_percentage").select2("destroy");
-                //$("#edit_discount_percentage").prop("disabled", true);
+                $("#edit_discount_percentage").prop("disabled", true);
                 $("#switch_to_discount_percentage").show();
                 $("#discount_percentage_wrapper").hide();
                 $("#discount_amount_wrapper").show();
@@ -5158,8 +5156,8 @@ if (is_numeric($this->get['orders_id'])) {
             $(document).on("click", "#switch_to_discount_percentage", function(e){
                 e.preventDefault();
                 $(this).hide();
-                //$("#edit_discount_value").prop("disabled", true);
-                //$("#edit_discount_percentage").prop("disabled", false);
+                $("#edit_discount_value").prop("disabled", true);
+                $("#edit_discount_percentage").prop("disabled", false);
                 $("#edit_discount_percentage").select2({
                     width:"140px"
                 });
