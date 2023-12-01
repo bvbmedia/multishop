@@ -2882,6 +2882,9 @@ class mslib_befe {
                 }
             }
             $product_arr_new['sort_order'] = time();
+	        $product_arr_new['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+	        $product_arr_new['products_date_added'] = time();
+	        $product_arr_new['products_last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $product_arr_new);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $id_product_new = $GLOBALS['TYPO3_DB']->sql_insert_id();
