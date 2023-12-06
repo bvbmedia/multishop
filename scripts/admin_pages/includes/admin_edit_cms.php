@@ -27,13 +27,13 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
         }
         $array['page_uid'] = $this->post['related_shop_pid'];
         $array['last_modified'] = time();
+	    $array['status'] = $this->post['tx_multishop_pi1']['status'];
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms', 'id=\'' . addslashes($this->post['cms_id']) . '\'', $array);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $cms_id = $this->post['cms_id'];
     } else {
         // add
         $array = array();
-        $array['status'] = 1;
         $array['page_uid'] = $this->post['related_shop_pid'];
         if (!$this->post['tx_multishop_pi1']['type'] and $this->post['tx_multishop_pi1']['custom_type']) {
             $array['type'] = $this->post['tx_multishop_pi1']['custom_type'];
@@ -44,6 +44,7 @@ if ($this->post and $_REQUEST['action'] == 'edit_cms') {
         $array['crdate'] = time();
         $array['last_modified'] = time();
         $array['hash'] = $cms_hash;
+        $array['status'] = $this->post['tx_multishop_pi1']['status'];
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $array);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query) or die($query . "<br/>" . $GLOBALS['TYPO3_DB']->sql_error());
         $cms_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -214,7 +215,18 @@ if ($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
         }
     }
-    $tmpcontent .= '<div class="form-group" id="cms_types">
+    $tmpcontent .= '<div class="form-group" id="msEditCMSInputStatus">
+        <label for="cms_status" class="col-md-2 control-label">'.$this->pi_getLL('admin_visible').'</label>
+        <div class="col-md-10">
+            <div class="radio radio-success radio-inline">
+                <input name="tx_multishop_pi1[status]" id="cms_status1" type="radio" value="1" '.(($cms[0]['status'] or $_REQUEST['action'] == 'edit_cms') ? 'checked="checked"' : '').' /><label for="cms_status1">'.$this->pi_getLL('admin_yes').'</label>
+            </div>
+            <div class="radio radio-success radio-inline">
+                <input name="tx_multishop_pi1[status]" id="cms_status2" type="radio" value="0" '.((!$cms[0]['status'] and $_REQUEST['action'] == 'edit_cms') ? 'checked="checked"' : '').' /><label for="cms_status2">'.$this->pi_getLL('admin_no').'</label>
+            </div>
+        </div>
+    </div>
+	<div class="form-group" id="cms_types">
 			<label for="type" class="control-label control-label-select2 col-md-2">Type <a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"><i class="fa fa-question-circle"></i></a></label>
 			<div class="col-md-10">
 			<select name="tx_multishop_pi1[type]" id="selected_type" class="control-form"><option value="" data-title="' . htmlspecialchars($this->pi_getLL('choose_type_of_content')) . '">' . htmlspecialchars($this->pi_getLL('choose_type_of_content')) . '</option>';
