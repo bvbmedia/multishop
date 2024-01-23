@@ -515,11 +515,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							});
 						});
 					</script>';
+					$checkboxFieldKeyName = 'tableOverviewSelection';
+					if (isset($params['settings']['rowBasedCheckboxSelectionFieldKeyName']) && !empty($params['settings']['rowBasedCheckboxSelectionFieldKeyName'])) {
+						$checkboxFieldKeyName = $params['settings']['rowBasedCheckboxSelectionFieldKeyName'];
+					}
                     $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
                     $headerData = '';
                     $tableContent .= '<td class="cellCheckbox">
 						<div class="checkbox checkbox-success checkbox-inline">
-							<input type="checkbox" name="tx_multishop_pi1[tableOverviewSelection][]" id="tableOverviewSelectionCheckbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '" value="' . htmlspecialchars($row[$params['settings']['rowBasedCheckboxSelectionKey']]) . '">
+							<input type="checkbox" name="tx_multishop_pi1[' . $checkboxFieldKeyName . '][]" id="tableOverviewSelectionCheckbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '" value="' . htmlspecialchars($row[$params['settings']['rowBasedCheckboxSelectionKey']]) . '">
 							<label for="tableOverviewSelectionCheckbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '"></label>
 						</div>
 					</td>';
