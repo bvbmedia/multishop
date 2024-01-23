@@ -402,12 +402,16 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             }
             $tableContent .= '<thead><tr>';
             if ($params['settings']['enableRowBasedCheckboxSelection']) {
+	            $checkboxFieldKeyName = 'tableOverviewSelection';
+	            if (isset($params['settings']['rowBasedCheckboxSelectionFieldKeyName']) && !empty($params['settings']['rowBasedCheckboxSelectionFieldKeyName'])) {
+		            $checkboxFieldKeyName = $params['settings']['rowBasedCheckboxSelectionFieldKeyName'];
+	            }
                 $headerData = '';
                 $headerData .= '
 				<script type="text/javascript">
 					jQuery(document).ready(function($) {
-						$(\'#check_all_1\').click(function(){
-							$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
+						$(\'#check_all_' . $checkboxFieldKeyName . '\').click(function(){
+							$(\'td > div.' . $checkboxFieldKeyName . 'CheckboxClass > input:checkbox\').prop(\'checked\', this.checked);
 						});
 					});
 				</script>';
@@ -416,8 +420,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $tableContent .= '
 				<th class="cellCheckbox">
 					<div class="checkbox checkbox-success checkbox-inline">
-					<input type="checkbox" id="check_all_1">
-					<label for="check_all_1"></label>
+					<input type="checkbox" id="check_all_' . $checkboxFieldKeyName . '">
+					<label for="check_all_' . $checkboxFieldKeyName . '"></label>
 					</div>
 				</th>';
                 if (isset($params['settings']['colsSortable']) && $params['settings']['colsSortable'] > 0) {
@@ -506,25 +510,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
                 $tableContent .= $tr_tag;
                 if ($params['settings']['enableRowBasedCheckboxSelection'] && $params['settings']['rowBasedCheckboxSelectionKey']) {
-                    $headerData = '';
-                    $headerData .= '
-					<script type="text/javascript">
-						jQuery(document).ready(function($) {
-							$(\'#check_all_1\').click(function(){
-								$(\'td > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
-							});
-						});
-					</script>';
-					$checkboxFieldKeyName = 'tableOverviewSelection';
-					if (isset($params['settings']['rowBasedCheckboxSelectionFieldKeyName']) && !empty($params['settings']['rowBasedCheckboxSelectionFieldKeyName'])) {
-						$checkboxFieldKeyName = $params['settings']['rowBasedCheckboxSelectionFieldKeyName'];
-					}
-                    $GLOBALS['TSFE']->additionalHeaderData[] = $headerData;
-                    $headerData = '';
                     $tableContent .= '<td class="cellCheckbox">
-						<div class="checkbox checkbox-success checkbox-inline">
-							<input type="checkbox" name="tx_multishop_pi1[' . $checkboxFieldKeyName . '][]" id="tableOverviewSelectionCheckbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '" value="' . htmlspecialchars($row[$params['settings']['rowBasedCheckboxSelectionKey']]) . '">
-							<label for="tableOverviewSelectionCheckbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '"></label>
+						<div class="checkbox ' . $checkboxFieldKeyName . 'CheckboxClass checkbox-success checkbox-inline">
+							<input type="checkbox" name="tx_multishop_pi1[' . $checkboxFieldKeyName . '][]" id="' . $checkboxFieldKeyName . 'Checkbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '" value="' . htmlspecialchars($row[$params['settings']['rowBasedCheckboxSelectionKey']]) . '">
+							<label for="' . $checkboxFieldKeyName . 'Checkbox_' . $row[$params['settings']['rowBasedCheckboxSelectionKey']] . '"></label>
 						</div>
 					</td>';
                 }
