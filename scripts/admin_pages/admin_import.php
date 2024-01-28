@@ -1751,6 +1751,7 @@ if ($this->post['action'] == 'category-insert') {
                                 $updateArray['categories_id'] = $this->ms['target-cid'];
                                 $updateArray['language_id'] = $language_id;
                                 $updateArray['categories_name'] = $item['categories_name' . $x];
+	                            $updateArray['last_updated_at'] = time();
                                 $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
                                 if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -1769,6 +1770,7 @@ if ($this->post['action'] == 'category-insert') {
                                 }
                                 //$updateArray['categories_name']=trim($item['categories_name'.$x]);
                                 if (count($updateArray)) {
+	                                $updateArray['last_updated_at'] = time();
                                     $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', "language_id=" . $language_id . " and categories_id=" . $this->ms['target-cid'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1806,11 +1808,13 @@ if ($this->post['action'] == 'category-insert') {
                                     // get existing record
                                     $record = mslib_befe::getRecord($this->ms['target-cid'], 'tx_multishop_categories_description', 'categories_id', array(0 => 'language_id=' . $langKey));
                                     if ($record['categories_id']) {
+	                                    $updateArray2['last_updated_at'] = time();
                                         $updateArray2 = mslib_befe::rmNullValuedKeys($updateArray2);
                                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=' . $this->ms['target-cid'] . ' and language_id=' . $langKey, $updateArray2);
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     } else {
                                         // add new record
+	                                    $updateArray2['last_updated_at'] = time();
                                         $updateArray2 = mslib_befe::rmNullValuedKeys($updateArray2);
                                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
                                         if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -1984,6 +1988,7 @@ if ($this->post['action'] == 'category-insert') {
                                                 $updateArray2 = array();
                                                 $updateArray2['categories_name'] = $languageCats[$langKey][$tel];
                                                 $updateArray2['language_id'] = $langKey;
+	                                            $updateArray2['last_updated_at'] = time();
                                                 $filter=array();
                                                 $filter[]='language_id='.$langKey;
                                                 $filter[]='categories_id='.$this->ms['target-cid'];
@@ -2027,6 +2032,7 @@ if ($this->post['action'] == 'category-insert') {
                                     $updateArray['categories_id'] = $this->ms['target-cid'];
                                     $updateArray['language_id'] = $language_id;
                                     $updateArray['categories_name'] = trim($cat);
+	                                $updateArray['last_updated_at'] = time();
                                     $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
                                     if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -2047,6 +2053,7 @@ if ($this->post['action'] == 'category-insert') {
                                             }
                                             $updateArray2['language_id'] = $langKey;
                                             // add new record
+	                                        $updateArray2['last_updated_at'] = time();
                                             $updateArray2 = mslib_befe::rmNullValuedKeys($updateArray2);
                                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
                                             if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -2157,6 +2164,7 @@ if ($this->post['action'] == 'category-insert') {
                                 // save also the feed source name, maybe we need it later
                                 $insertArrayManufacturer['foreign_source_name'] = $this->post['prefix_source_name'];
                             }
+	                        $insertArrayManufacturer['last_modified'] = time();
                             $query_insert_manufacturer = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers', $insertArrayManufacturer);
                             $qry = $GLOBALS['TYPO3_DB']->sql_query($query_insert_manufacturer);
                             $item['manufacturers_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2240,6 +2248,7 @@ if ($this->post['action'] == 'category-insert') {
                                             if ($manufacturers_image_name) {
                                                 $updateArray = array();
                                                 $updateArray['manufacturers_image'] = $manufacturers_image_name;
+	                                            $updateArray['last_modified'] = time();
                                                 $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', "manufacturers_id=" . $rowchk['manufacturers_id'], $updateArray);
                                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);

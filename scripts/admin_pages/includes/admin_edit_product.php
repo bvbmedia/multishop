@@ -1186,6 +1186,7 @@ if ($this->post) {
             $updateArray2['manufacturers_name'] = $this->post['manufacturers_name'];
             $updateArray2['date_added'] = time();
             $updateArray2['status'] = 1;
+            $updateArray2['last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers', $updateArray2);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $manufacturers_id = $GLOBALS['TYPO3_DB']->sql_insert_id();

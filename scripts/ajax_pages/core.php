@@ -885,7 +885,8 @@ switch ($this->ms['page']) {
                 if (is_numeric($manid)) {
                     $where = 'manufacturers_id = \'' . addslashes($manid).'\'';
                     $updateArray = array(
-                            'sort_order' => $no
+                            'sort_order' => $no,
+                        'last_modified' => time()
                     );
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2313,6 +2314,7 @@ switch ($this->ms['page']) {
             if ($mid > 0) {
                 $updateArray = array();
                 $updateArray['manufacturers_image'] = '';
+                $updateArray['last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\'' . $mid . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
@@ -3108,7 +3110,8 @@ switch ($this->ms['page']) {
                 if (is_numeric($man_id)) {
                     $where = "manufacturers_id = $man_id";
                     $updateArray = array(
-                            'sort_order' => $no
+                            'sort_order' => $no,
+                        'last_modified' => time()
                     );
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);

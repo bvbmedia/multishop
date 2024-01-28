@@ -268,6 +268,7 @@ class tx_mslib_catalog {
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $counter;
+	                        $updateArray['last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=' . $row['manufacturers_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             $counter++;
@@ -1170,6 +1171,7 @@ class tx_mslib_catalog {
             $insertArray['categories_id'] = $id;
             $insertArray['categories_name'] = $data['categories_name'];
             $insertArray['language_id'] = $data['language_id'];
+	        $insertArray['last_updated_at'] = time();
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             return $id;

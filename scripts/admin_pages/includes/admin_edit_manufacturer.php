@@ -88,6 +88,7 @@ if ($this->post) {
     }
     if ($_REQUEST['action'] == 'add_manufacturer') {
         $updateArray['date_added'] = time();
+        $updateArray['last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_manufacturers', $updateArray);
         if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
             $postErno[] = array(

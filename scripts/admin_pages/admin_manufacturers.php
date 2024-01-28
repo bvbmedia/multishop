@@ -17,6 +17,7 @@ $subparts['manufacturers'] = $this->cObj->getSubpart($subparts['results'], '###M
 if (is_numeric($this->get['status']) and is_numeric($this->get['manufacturers_id'])) {
     $updateArray = array();
     $updateArray['status'] = $this->get['status'];
+	$updateArray['last_modified'] = time();
     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\'' . $this->get['manufacturers_id'] . '\'', $updateArray);
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
 } elseif (is_numeric($this->get['delete']) and is_numeric($this->get['manufacturers_id'])) {

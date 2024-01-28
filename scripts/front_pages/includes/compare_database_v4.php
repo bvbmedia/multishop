@@ -1031,3 +1031,10 @@ if (!$qry) {
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }
+$str = "select last_updated_at from tx_multishop_categories_description limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str = "ALTER TABLE `tx_multishop_categories_description` ADD `last_updated_at` int(11) default '0'";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[] = $str;
+}

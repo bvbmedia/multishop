@@ -158,6 +158,7 @@ CREATE TABLE `tx_multishop_categories_description` (
  `meta_description` text,
  `meta_keywords` text,
  `categories_external_url` text,
+ `last_updated_at` int(11) default '0',
  PRIMARY KEY (`categories_id`,`language_id`),
  KEY `idx_categories_name` (`categories_name`),
  KEY `categories_id` (`categories_id`),

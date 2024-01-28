@@ -116,6 +116,7 @@ if ($this->post) {
                         $updateArray['content'] = '';
                         $updateArray['content_footer'] = '';
                         $updateArray['categories_external_url'] = '';
+	                    $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\'' . $catid . '\' and language_id=\'0\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
@@ -128,6 +129,7 @@ if ($this->post) {
                         $updateArray['meta_description'] = '';
                         $updateArray['content'] = '';
                         $updateArray['content_footer'] = '';
+	                    $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }

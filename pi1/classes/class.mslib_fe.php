@@ -8664,6 +8664,7 @@ class mslib_fe {
                             $insertArray[$desc_colname] = (!empty($desc_colvalue) ? $desc_colvalue : '');
                         }
                     }
+	                $insertArray['last_updated_at'] = time();
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 } else {

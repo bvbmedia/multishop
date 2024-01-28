@@ -457,6 +457,7 @@ if ($this->post) {
                         }
                     }
                 }
+                $updateArray['last_updated_at'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\'' . $catid . '\' and language_id=\'' . $key . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
@@ -477,6 +478,7 @@ if ($this->post) {
                         }
                     }
                 }
+                $updateArray['last_updated_at'] = time();
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
@@ -607,6 +609,7 @@ if ($this->post) {
                         $updateArray = array();
                         $updateArray['categories_name'] = $this->post['categories_name'][$key];
                         $updateArray['categories_external_url'] = $this->post['categories_external_url'][$key];
+                        $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id=\'' . $row['categories_id'] . '\' and language_id=\'' . $key . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
