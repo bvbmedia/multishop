@@ -8,6 +8,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
     $updateArray['disable'] = 0;
     $updateArray['tx_multishop_optin_crdate'] = time();
     $updateArray['tx_multishop_optin_ip'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+	$updateArray['last_updated_at'] = time();
     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $user['uid'], $updateArray);
     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     // send e-mail

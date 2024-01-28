@@ -540,6 +540,7 @@ class tx_mslib_user {
             $updateArray['pid'] = $this->ref->conf['fe_customer_pid'];
             $updateArray['tx_multishop_code'] = md5(uniqid('', true));
             $updateArray['crdate'] = time();
+	        $updateArray['last_updated_at'] = time();
             $updateArray['page_uid'] = $this->ref->shop_pid;
             $updateArray['tx_multishop_quick_checkout'] = 0;
             if (isset($this->ref->cookie['HTTP_REFERER']) && !empty($this->ref->cookie['HTTP_REFERER'])) {
@@ -653,6 +654,7 @@ class tx_mslib_user {
             $insertArray['pid'] = $this->ref->conf['fe_customer_pid'];
             $insertArray['tx_multishop_code'] = md5(uniqid('', true));
             $insertArray['crdate'] = time();
+	        $updateArray['last_updated_at'] = time();
             $insertArray['page_uid'] = $this->ref->shop_pid;
             if (isset($this->ref->cookie['HTTP_REFERER']) && !empty($this->ref->cookie['HTTP_REFERER'])) {
                 $insertArray['http_referer'] = $this->ref->cookie['HTTP_REFERER'];

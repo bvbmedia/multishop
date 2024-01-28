@@ -1773,6 +1773,7 @@ switch ($this->ms['page']) {
                                             $updateArray = array(
                                                     'image' => $filename
                                             );
+                                            $updateArray['last_updated_at'] = time();
                                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $this->get['tx_multishop_pi1']['uid'], $updateArray);
                                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                         }

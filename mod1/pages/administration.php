@@ -587,6 +587,8 @@ switch ($_REQUEST['action']) {
                                 $insertArray['zip'] = $row['entry_postcode'];
                                 $insertArray['city'] = $row['entry_city'];
                                 $insertArray['tstamp'] = time();
+                                $insertArray['crdate'] = time();
+                                $insertArray['last_updated_at'] = time();
                                 $insertArray['tx_multishop_code'] = md5(uniqid('', true));
                                 $insertArray['page_uid'] = $this->post['page_uid'];
                                 $insertArray['usergroup'] = '';

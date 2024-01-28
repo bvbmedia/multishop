@@ -1527,7 +1527,9 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['country'] = $address['country'];
             $insertArray['usergroup'] = $this->conf['fe_customer_usergroup'];
             $insertArray['pid'] = $this->conf['fe_customer_pid'];
+            $insertArray['crdate'] = time();
             $insertArray['tstamp'] = time();
+            $insertArray['last_updated_at'] = time();
             $insertArray['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
             $insertArray['password'] = mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10, $insertArray['username']));
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);

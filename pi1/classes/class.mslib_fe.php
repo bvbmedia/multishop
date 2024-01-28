@@ -8992,6 +8992,7 @@ class mslib_fe {
                 $new_groups = array_unique($new_groups);
                 $new_string = implode(",", $new_groups);
                 $updateArray = array('usergroup' => $new_string);
+	            $updateArray['last_updated_at'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $uid, $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 return $new_string;

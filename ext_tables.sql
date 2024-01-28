@@ -37,6 +37,7 @@ CREATE TABLE `fe_users` (
  `contact_email` varchar(256) default '',
  `foreign_customer_id` int(11) default '0',
  `foreign_source_name` varchar(30) default '',
+ `last_updated_at` int(11) default '0',
  KEY `username` (`username`),
  KEY `is_online` (`is_online`),
  KEY `pid` (`pid`,`username`),
@@ -73,7 +74,8 @@ CREATE TABLE `fe_users` (
  KEY `region` (`region`),
  KEY `department` (`department`),
  KEY `foreign_customer_id` (`foreign_customer_id`),
- KEY `foreign_source_name` (`foreign_source_name`)
+ KEY `foreign_source_name` (`foreign_source_name`),
+ KEY `last_updated_at` (`last_updated_at`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
@@ -165,7 +167,8 @@ CREATE TABLE `tx_multishop_categories_description` (
  KEY `language_id` (`language_id`),
  KEY `combined_one` (`language_id`,`categories_name`),
  KEY `combined_two` (`language_id`,`categories_id`),
- KEY `combined_three` (`language_id`,`categories_id`,`categories_name`)
+ KEY `combined_three` (`language_id`,`categories_id`,`categories_name`),
+ KEY `last_updated_at` (`last_updated_at`)
 );
 
 CREATE TABLE `tx_multishop_cms` (
@@ -1215,7 +1218,8 @@ CREATE TABLE `tx_multishop_products_to_categories` (
  KEY `crumbar_identifier` (`crumbar_identifier`),
  KEY `node_id` (`node_id`),
  KEY `is_deepest` (`is_deepest`),
- KEY `default_path` (`default_path`)
+ KEY `default_path` (`default_path`),
+ KEY `last_updated_at` (`last_updated_at`)
 );
 
 CREATE TABLE `tx_multishop_categories_to_categories` (

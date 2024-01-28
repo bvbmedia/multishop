@@ -1020,21 +1020,28 @@ if (!$qry) {
 $str = "select crdate from tx_multishop_products_to_categories limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `crdate` int(11) default '0'";
+	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `crdate` int(11) default '0', ADD KEY `crdate` (`crdate`)";
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }
 $str = "select last_updated_at from tx_multishop_products_to_categories limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `last_updated_at` int(11) default '0'";
+	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `last_updated_at` int(11) default '0', ADD KEY `last_updated_at` (`last_updated_at`)";
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }
 $str = "select last_updated_at from tx_multishop_categories_description limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
-	$str = "ALTER TABLE `tx_multishop_categories_description` ADD `last_updated_at` int(11) default '0'";
+	$str = "ALTER TABLE `tx_multishop_categories_description` ADD `last_updated_at` int(11) default '0', ADD KEY `last_updated_at` (`last_updated_at`)";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[] = $str;
+}
+$str = "select last_updated_at from fe_users limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str = "ALTER TABLE `fe_users` ADD `last_updated_at` int(11) default '0', ADD KEY `last_updated_at` (`last_updated_at`)";
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }

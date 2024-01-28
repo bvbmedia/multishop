@@ -194,6 +194,7 @@ if ($this->post && $this->post['email']) {
                 $continue = 1;
             }
             if ($continue) {
+                $updateArray['last_updated_at'] = time();
                 // custom hook that can be controlled by third-party plugin eof
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $this->post['tx_multishop_pi1']['cid'], $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -467,6 +468,7 @@ if ($this->post && $this->post['email']) {
             $updateArray['tx_multishop_code'] = md5(uniqid('', true));
             $updateArray['tstamp'] = time();
             $updateArray['crdate'] = time();
+            $updateArray['last_updated_at'] = time();
             if ($this->post['password']) {
                 $updateArray['password'] = mslib_befe::getHashedPassword($this->post['password']);
             } else {

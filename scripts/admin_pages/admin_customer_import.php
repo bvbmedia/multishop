@@ -1162,6 +1162,7 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                         // custom hook that can be controlled by third-party
                         // plugin eof
                         if (!$skipRecord) {
+                            $user['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . $user_check['uid'], $user);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             $name = array();
@@ -1299,6 +1300,7 @@ if ($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get
                             if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
                                 $user['tx_multishop_source_id'] = $user['uid'];
                             }
+                            $user['last_updated_at'] = time();
                             $user = mslib_befe::rmNullValuedKeys($user);
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);

@@ -1555,6 +1555,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
             $insertArray['tx_multishop_code'] = md5(uniqid('', true));
             $insertArray['tstamp'] = time();
             $insertArray['crdate'] = time();
+	        $insertArray['last_updated_at'] = time();
             if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
                 $insertArray['tx_multishop_newsletter'] = $address['tx_multishop_newsletter'];
             } else {
@@ -1773,6 +1774,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                 $updateFEUsers['tx_multishop_newsletter'] = '';
             }
             if ($continue_update_details_info) {
+	            $updateFEUsers['last_updated_at'] = time();
                 $queryFEUser = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=' . addslashes($customer_id), $updateFEUsers);
                 $GLOBALS['TYPO3_DB']->sql_query($queryFEUser);
             }

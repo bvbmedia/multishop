@@ -69,6 +69,9 @@ if ($this->post['proceed_order']) {
         $insertArray['tx_multishop_vat_id'] = $this->post['tx_multishop_vat_id'];
         $insertArray['tx_multishop_coc_id'] = $this->post['tx_multishop_coc_id'];
         $insertArray['tx_multishop_newsletter'] = (!$this->post['tx_multishop_newsletter_manual'] ? 0 : 1);
+        $insertArray['crdate'] = time();
+        $insertArray['tstamp'] = time();
+        $insertArray['last_updated_at'] = time();
         $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderFEUsersPreHook'])) {
             // hook

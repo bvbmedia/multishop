@@ -978,6 +978,7 @@ class mslib_befe {
                 }
                 $updateArray = array();
                 $updateArray['disable'] = $disable;
+	            $updateArray['last_updated_at'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\'' . $uid . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
@@ -1001,6 +1002,7 @@ class mslib_befe {
             }
             $updateArray = array();
             $updateArray['disable'] = $disable;
+	        $updateArray['last_updated_at'] = time();
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\'' . $uid . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         }
@@ -1022,6 +1024,7 @@ class mslib_befe {
                 }
             }
             $updateArray['deleted'] = $deleted;
+	        $updateArray['last_updated_at'] = time();
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\'' . $uid . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         }
