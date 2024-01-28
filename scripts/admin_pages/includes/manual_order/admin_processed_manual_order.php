@@ -301,6 +301,7 @@ if ($this->post['proceed_order']) {
             }
             // hook eof
         }
+        $insertArray['orders_last_modified'] = time();
         $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);

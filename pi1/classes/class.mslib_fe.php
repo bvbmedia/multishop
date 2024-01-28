@@ -9067,6 +9067,7 @@ class mslib_fe {
                         // update orders to paid
                         $updateArray = array();
                         $updateArray['orders_paid_timestamp'] = time();
+	                    $updateArray['orders_last_modified'] = time();
                         if (isset($setDebitInvoicePaidStatus) && $setDebitInvoicePaidStatus != '') {
                             $updateArray['paid'] = $setDebitInvoicePaidStatus;
                         }

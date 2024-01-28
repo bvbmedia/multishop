@@ -1791,6 +1791,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
                     $insertArray[$key] = '';
                 }
             }
+            $insertArray['orders_last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // now add the order eof

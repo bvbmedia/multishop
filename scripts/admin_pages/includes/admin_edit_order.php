@@ -174,6 +174,7 @@ if (is_numeric($this->get['orders_id'])) {
                             //$discount_value = mslib_befe::formatNumbersToMysql($discount_value);
                             $updateArray['discount'] = $discount_value;
                         }
+                        $updateArray['orders_last_modified'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\'' . $this->get['orders_id'] . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         // repair tax stuff
