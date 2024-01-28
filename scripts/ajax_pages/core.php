@@ -2243,6 +2243,7 @@ switch ($this->ms['page']) {
                 if ($image_array_key == 'products_image') {
                     $updateArray['contains_image'] = 0;
                 }
+                $updateArray['products_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $pid . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
@@ -3004,12 +3005,14 @@ switch ($this->ms['page']) {
                 }
                 foreach ($getPost as $prod_id) {
                     if (is_numeric($prod_id) and is_numeric($cat_id)) {
-                        $where = 'categories_id = ' . $cat_id . ' and products_id = ' . $prod_id;
-                        $updateArray = array(
-                                'sort_order' => $no
-                        );
-                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', $where, $updateArray);
+                        $updateArray = array();
+                        $updateArray['sort_order'] = $no;
+                        $updateArray['last_updated_at'] = time();
+                        $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id = ' . $cat_id . ' and products_id = ' . $prod_id, $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                        $updateArray = array();
+                        $updateArray['sort_order'] = $no;
+                        $updateArray['products_last_modified'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $prod_id", $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -3057,6 +3060,7 @@ switch ($this->ms['page']) {
                         }
                         $updateArray['products_image' . $internal_col_index] = $image_value;
                     }
+                    $updateArray['products_last_modified'] = time();
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $product_id", $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }

@@ -10,6 +10,7 @@ if ($this->post) {
             $updateArray = array();
             $where = "manufacturers_id = " . $man_source_id;
             $updateArray['manufacturers_id'] = $man_target_id;
+	        $updateArray['products_last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', $where, $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             //

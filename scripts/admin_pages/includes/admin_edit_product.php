@@ -1409,6 +1409,7 @@ if ($this->post) {
                                 // update the counterpart relation
                                 $updateArray = array();
                                 $updateArray['related_to'] = $catId;
+                                $updateArray['last_updated_at'] = time();
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $relCatId . '\' and products_id=\'' . $prodid . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
@@ -1706,6 +1707,7 @@ if ($this->post) {
                                 if ($relCatId > 0) {
                                     $updateArray = array();
                                     $updateArray['related_to'] = $catId;
+                                    $updateArray['last_updated_at'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $relCatId . '\' and products_id=\'' . $prodid . '\'', $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }
@@ -1879,6 +1881,7 @@ if ($this->post) {
                             // update the counterpart relation
                             $updateArray = array();
                             $updateArray['related_to'] = $catId;
+                            $updateArray['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $relCatId . '\' and products_id=\'' . $prodid . '\'', $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
@@ -2489,6 +2492,7 @@ if ($this->post) {
             }
             $updatePreviousValue = array();
             $updatePreviousValue['default_path'] = 0;
+            $updatePreviousValue['last_updated_at'] = time();
             $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=\'' . $pid . '\'', $updatePreviousValue);
             $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             // update the new one
@@ -2502,6 +2506,7 @@ if ($this->post) {
                 }
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
+                $updateArray['last_updated_at'] = time();
                 $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\'' . $this->post['default_path_categories_id'] . '\' and products_id=\'' . $pid . '\'', $updateArray);
                 $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             }

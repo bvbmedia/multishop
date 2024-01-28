@@ -14,6 +14,7 @@ while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 
 	$updateArray=array();
 	$updateArray['products_price'] = $newAmount;
+	$updateArray['products_last_modified'] = time();
 	$query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$row['products_id'].'\'',$updateArray);
 	$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
 	

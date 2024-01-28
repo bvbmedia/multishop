@@ -1202,6 +1202,8 @@ CREATE TABLE `tx_multishop_products_to_categories` (
  `node_id` int(11) default '0',
  `is_deepest` tinyint(1) default '0',
  `default_path` tinyint(1) default '0',
+ `crdate` int(11) default '0',
+ `last_updated_at` int(11) default '0',
  PRIMARY KEY (`products_to_categories_id`),
  UNIQUE KEY `p2c_unique_key` (`products_id`,`categories_id`,`page_uid`,`node_id`,`is_deepest`,`crumbar_identifier`),
  KEY `categories_id` (`categories_id`),

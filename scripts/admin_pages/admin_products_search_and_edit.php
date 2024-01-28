@@ -54,29 +54,7 @@ if ($this->post['submit']) {
             if (strstr($price, ",")) {
                 $price = str_replace(",", ".", $price);
             }
-            $data_update[$pid]['price'] = $price;
-            $updateArray = array();
-            $updateArray['products_price'] = $price;
-            // if product is originally coming from products importer we have to define that the merchant changed it
-            $filter = array();
-            $filter[] = 'products_id=' . $pid;
-            if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-                // lock changed columns
-                mslib_befe::updateImportedProductsLockedFields($pid, 'tx_multishop_products', $updateArray);
-            }
-            /*
-            // if product is originally coming from products importer we have to define that the merchant changed it
-            $str="select products_id from tx_multishop_products where imported_product=1 and lock_imported_product=0 and products_id='".$pid."'";
-            $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-            if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                $updateArray['lock_imported_product']=1;
-            }
-            */
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $pid . '\'', $updateArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
-            if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                $updateFlatProductIds[] = $pid;
-            }
+            $data_update[$pid]['products_price'] = $price;
         }
     }
     foreach ($this->post['up']['capital_price'] as $pid => $price) {
@@ -84,56 +62,73 @@ if ($this->post['submit']) {
             if (strstr($price, ",")) {
                 $price = str_replace(",", ".", $price);
             }
-            $updateArray = array();
-            $updateArray['product_capital_price'] = $price;
-            $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $pid . '\'', $updateArray);
-            $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+            $data_update[$pid]['product_capital_price'] = $price;
         }
     }
     foreach ($this->post['up']['weight'] as $pid => $weight) {
-        $data_update[$pid]['weight'] = $weight;
-        $sql_upd = "update tx_multishop_products set products_weight = '" . $weight . "' where products_id = " . $pid;
-        $GLOBALS['TYPO3_DB']->sql_query($sql_upd);
-        if ($this->ms['MODULES']['FLAT_DATABASE']) {
-            $updateFlatProductIds[] = $pid;
-        }
+        $data_update[$pid]['products_weight'] = $weight;
     }
     foreach ($this->post['up']['stock'] as $pid => $qty) {
-        $data_update[$pid]['qty'] = $qty;
-        $sql_upd = "update tx_multishop_products set products_quantity = '" . $qty . "' where products_id = " . $pid;
-        $GLOBALS['TYPO3_DB']->sql_query($sql_upd);
-        if ($this->ms['MODULES']['FLAT_DATABASE']) {
-            $updateFlatProductIds[] = $pid;
-        }
+        $data_update[$pid]['products_quantity'] = $qty;
     }
     foreach ($this->post['up']['special_price'] as $pid => $price) {
-        $data_update[$pid]['special_price'] = $price;
         if (strstr($price, ",")) {
             $price = str_replace(",", ".", $price);
         }
         if ($price > 0) {
             $sql_check = "select products_id from tx_multishop_specials where products_id = " . $pid;
             $qry_check = $GLOBALS['TYPO3_DB']->sql_query($sql_check);
+            $updateArray = array();
+            $updateArray['specials_new_products_price'] = $price;
+            $updateArray['status'] = 1;
+            $updateArray['specials_last_modified'] = time();
             if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check) > 0 && $price > 0) {
-                $sql_upd = "update tx_multishop_specials set specials_new_products_price = '" . $price . "', status = 1 where products_id = " . $pid;
-                $GLOBALS['TYPO3_DB']->sql_query($sql_upd);
-                if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                    $updateFlatProductIds[] = $pid;
-                }
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\'' . $pid . '\'', $updateArray);
+                $GLOBALS['TYPO3_DB']->sql_query($query);
             } else {
                 if ($price > 0) {
-                    $sql_ins = "insert into tx_multishop_specials (products_id, status, specials_new_products_price, specials_date_added, news_item, home_item, scroll_item) values (" . $pid . ", 1, '" . $price . "', NOW(), 1, 1, 1)";
-                    $GLOBALS['TYPO3_DB']->sql_query($sql_ins);
-                    if ($this->ms['MODULES']['FLAT_DATABASE']) {
-                        $updateFlatProductIds[] = $pid;
-                    }
+                    $updateArray['products_id'] = $pid;
+                    $updateArray['specials_date_added'] = time();
+                    $updateArray['news_item'] = 1;
+                    $updateArray['home_item'] = 1;
+                    $updateArray['scroll_item'] = 1;
+                    $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials', $updateArray);
+                    $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
+            }
+            if ($price > 0 && $this->ms['MODULES']['FLAT_DATABASE']) {
+                $updateFlatProductIds[] = $pid;
             }
         } else {
             $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id=\'' . addslashes($pid) . '\'');
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
                 $updateFlatProductIds[] = $pid;
+            }
+        }
+    }
+    $countProductDataUpdate = count($data_update);
+    // Update product data all at once
+    if (count($data_update)) {
+        foreach ($data_update as $productId => $productUpdate) {
+            $updateArray = array();
+            foreach ($productUpdate as $column => $value) {
+                $updateArray[$column] = $value;
+            }
+            if (count($updateArray)) {
+                $updateArray['products_last_modified'] = time();
+                $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $productId . '\'', $updateArray);
+                $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+                // if product is originally coming from products importer we have to define that the merchant changed it
+                $filter = array();
+                $filter[] = 'products_id=' . $productId;
+                if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+                    // lock changed columns
+                    mslib_befe::updateImportedProductsLockedFields($pid, 'tx_multishop_products', $updateArray);
+                }
+                if ($this->ms['MODULES']['FLAT_DATABASE']) {
+                    $updateFlatProductIds[] = $productId;
+                }
             }
         }
     }

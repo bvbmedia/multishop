@@ -959,6 +959,7 @@ if (!$qry) {
         foreach ($products as $product) {
             $updateArray = array();
             $updateArray['tax_rate'] = $product['rate'];
+	        $updateArray['products_last_modified'] = time();
             $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $product['products_id'] . '\'', $updateArray);
             $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
         }
@@ -1013,6 +1014,20 @@ $str = "select hide_in_footer_menu from tx_multishop_manufacturers limit 1";
 $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
 	$str = "ALTER TABLE  `tx_multishop_manufacturers` ADD `hide_in_footer_menu` tinyint(1) default '0'";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[] = $str;
+}
+$str = "select crdate from tx_multishop_products_to_categories limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `crdate` int(11) default '0'";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[] = $str;
+}
+$str = "select last_updated_at from tx_multishop_products_to_categories limit 1";
+$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+if (!$qry) {
+	$str = "ALTER TABLE `tx_multishop_products_to_categories` ADD `last_updated_at` int(11) default '0'";
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
 }

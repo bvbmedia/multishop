@@ -630,6 +630,7 @@ class mslib_befe {
             //hook to let other plugins further manipulate the create table query eol
             $updateArray = array();
             $updateArray['products_status'] = 1;
+	        $updateArray['products_last_modified'] = time();
             $str = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $products_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -935,6 +936,7 @@ class mslib_befe {
             $updateArray['starttime'] = 0;
             $updateArray['endtime'] = 0;
             $updateArray['products_status'] = 0;
+	        $updateArray['products_last_modified'] = time();
             $str = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $products_id . '\'', $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($str);
             if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -1602,6 +1604,7 @@ class mslib_befe {
                     } else {
                         $array['contains_image'] = 0;
                     }
+	                $array['products_last_modified'] = time();
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $products_id, $array);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -2787,6 +2790,7 @@ class mslib_befe {
                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
                     $updateArray = array();
                     $updateArray['lock_imported_product'] = 1;
+	                $updateArray['products_last_modified'] = time();
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['pid'] . '\'', $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
@@ -5472,6 +5476,7 @@ class mslib_befe {
             if ($set_default_path) {
                 $updateArray = array();
                 $updateArray['default_path'] = 1;
+	            $updateArray['last_updated_at'] = time();
                 $queryProduct = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\'' . $p2c_records[0]['products_to_categories_id'] . '\' and categories_id=\'' . $p2c_records[0]['categories_id'] . '\' and products_id=\'' . $p2c_records[0]['products_id'] . '\'', $updateArray);
                 $GLOBALS['TYPO3_DB']->sql_query($queryProduct);
             }

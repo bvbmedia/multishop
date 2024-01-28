@@ -28,6 +28,7 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
                 }
                 $updateArray = array();
                 $updateArray['products_price'] = $this->post['tx_multishop_pi1']['value'];
+	            $updateArray['products_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['tx_multishop_pi1']['pid'] . '\'', $updateArray);
                 if ($GLOBALS['TYPO3_DB']->sql_query($query)) {
                     $response['status'] = 'OK';
@@ -44,6 +45,7 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
             if (!count($erno)) {
                 $updateArray = array();
                 $updateArray['products_quantity'] = $this->post['tx_multishop_pi1']['value'];
+	            $updateArray['products_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['tx_multishop_pi1']['pid'] . '\'', $updateArray);
                 if ($GLOBALS['TYPO3_DB']->sql_query($query)) {
                     $response['status'] = 'OK';
@@ -60,6 +62,7 @@ if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
             if (!count($erno)) {
                 $updateArray = array();
                 $updateArray['products_status'] = $this->post['tx_multishop_pi1']['value'];
+	            $updateArray['products_last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $this->post['tx_multishop_pi1']['pid'] . '\'', $updateArray);
                 if ($GLOBALS['TYPO3_DB']->sql_query($query)) {
                     $response['status'] = 'OK';

@@ -67,6 +67,7 @@ class tx_mslib_catalog {
         if (!$insertArray['products_date_added']) {
             $insertArray['products_date_added'] = time();
         }
+	    $insertArray['products_last_modified'] = time();
         $insertArray['products_condition'] = $data['products_condition'];
         if (!$insertArray['products_condition']) {
             $insertArray['products_condition'] = 'new';
@@ -141,6 +142,8 @@ class tx_mslib_catalog {
                             $insertArray['is_deepest'] = 0;
                         }
                         $insertArray['crumbar_identifier'] = $crumbar_ident_string;
+	                    $updateArray['crdate'] = time();
+	                    $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
@@ -159,6 +162,7 @@ class tx_mslib_catalog {
                         if (is_array($dataArray) && isset($dataArray['sort_order']) && is_numeric($dataArray['sort_order'])) {
                             $updateArray['sort_order'] = $dataArray['sort_order'];
                         }
+	                    $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\'' . $rec['products_to_categories_id'] . '\'', $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     }
@@ -419,11 +423,17 @@ class tx_mslib_catalog {
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $counter;
+	                        $updateArray['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $row['products_id'] . ' and categories_id=' . $row['categories_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
+							// Update product
+	                        $updateArray = array();
+	                        $updateArray['sort_order'] = $counter;
+	                        $updateArray['products_last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->ms['MODULES']['FLAT_DATABASE']) {
+	                            unset($updateArray['products_last_modified']);
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_flat', 'products_id=' . $row['products_id'], $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
@@ -510,8 +520,13 @@ class tx_mslib_catalog {
                                 foreach ($valuesArray as $products_id => $values_name) {
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $sort;
+	                                $updateArray['last_updated_at'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $products_id, $updateArray);
                                     $GLOBALS['TYPO3_DB']->sql_query($query);
+	                                // Update product
+	                                $updateArray = array();
+	                                $updateArray['sort_order'] = $sort;
+	                                $updateArray['products_last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $products_id, $updateArray);
                                     $GLOBALS['TYPO3_DB']->sql_query($query);
                                     $sort++;
@@ -543,10 +558,12 @@ class tx_mslib_catalog {
                                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $counter;
+	                                $updateArray['last_updated_at'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $row['products_id'] . ' and categories_id=' . $row['categories_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $counter;
+	                                $updateArray['products_last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     $counter++;
@@ -579,6 +596,7 @@ class tx_mslib_catalog {
                                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $no;
+	                                $updateArray['last_updated_at'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $row['products_id'] . ' and categories_id=' . $row['categories_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     if ($this->conf['debugEnabled'] == '1') {
@@ -587,6 +605,7 @@ class tx_mslib_catalog {
                                     }
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $no;
+	                                $updateArray['products_last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     if ($this->conf['debugEnabled'] == '1') {
@@ -623,6 +642,7 @@ class tx_mslib_catalog {
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $row['sort_order'];
+	                        $updateArray['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $row['products_id'] . ' and page_uid=' . $this->showCatalogFromPage, $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->conf['debugEnabled'] == '1') {
@@ -630,7 +650,8 @@ class tx_mslib_catalog {
                                 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', 0);
                             }
                             $updateArray = array();
-                            $updateArray['sort_order'] = $no;
+                            $updateArray['sort_order'] = $row['sort_order'];
+	                        $updateArray['products_last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->conf['debugEnabled'] == '1') {
@@ -661,6 +682,7 @@ class tx_mslib_catalog {
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $row['sort_order'];
+	                        $updateArray['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id=' . $row['products_id'] . ' and page_uid=' . $this->showCatalogFromPage, $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->conf['debugEnabled'] == '1') {
@@ -669,6 +691,7 @@ class tx_mslib_catalog {
                             }
                             $updateArray = array();
                             $updateArray['sort_order'] = $no;
+	                        $updateArray['products_last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->conf['debugEnabled'] == '1') {
@@ -1003,6 +1026,8 @@ class tx_mslib_catalog {
                             $insertArray['is_deepest'] = 0;
                         }
                         $insertArray['crumbar_identifier'] = $crumbar_ident_string;
+	                    $insertArray['crdate'] = time();
+	                    $insertArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     } else {
@@ -1017,6 +1042,7 @@ class tx_mslib_catalog {
                                     $updateArray['is_deepest'] = 0;
                                 }
                                 $updateArray['crumbar_identifier'] = $crumbar_ident_string;
+	                            $updateArray['last_updated_at'] = time();
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\'' . $rec['products_to_categories_id'] . '\'', $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             }
@@ -1027,6 +1053,7 @@ class tx_mslib_catalog {
                                 $updateArray['is_deepest'] = 0;
                             }
                             $updateArray['crumbar_identifier'] = $crumbar_ident_string;
+	                        $updateArray['last_updated_at'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\'' . $rec['products_to_categories_id'] . '\'', $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         }

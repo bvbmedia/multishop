@@ -58,6 +58,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
             foreach ($records as $record) {
                 $updateArray = array();
                 $updateArray['extid'] = md5(uniqid());
+	            $updateArray['products_last_modified'] = time();
                 $query2 = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $record['products_id'] . '\'', $updateArray);
                 $res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
                 $messages[] = $query2;

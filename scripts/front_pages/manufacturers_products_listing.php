@@ -132,6 +132,7 @@ if (is_numeric($this->get['manufacturers_id'])) {
                     while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                         $updateArray = array();
                         $updateArray['sort_order'] = $counter;
+                        $updateArray['last_updated_at'] = time();
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=' . $row['categories_id'] . ' and products_id=' . $row['products_id'], $updateArray);
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $counter++;

@@ -224,6 +224,7 @@ switch ($_REQUEST['action']) {
                             }
                         }
                         if (count($updateArray)) {
+                            $updateArray['products_last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\'' . $item['products_id'] . '\'', $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             if ($this->ms['MODULES']['FLAT_DATABASE']) {

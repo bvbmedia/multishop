@@ -11,7 +11,7 @@ if ($_GET['update_dates']) {
     $str = "SELECT * from tx_multishop_products order by products_id asc";
     $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
     while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-        $array = array("products_date_available" => $row['products_date_added']);
+        $array = array("products_date_available" => $row['products_date_added'], 'products_last_modified' => time());
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $array);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
     }
@@ -222,6 +222,7 @@ while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
     }
     if (count($updateArray)) {
         $unmapped_images++;
+	    $updateArray['products_last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=' . $row['products_id'], $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         // update flat database

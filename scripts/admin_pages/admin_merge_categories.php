@@ -46,6 +46,7 @@ if ($this->post) {
                     $updateArray['node_id'] = $cat_target_id;
                 }
                 $updateArray['crumbar_identifier'] = $rs['crumbar_identifier'];
+	            $updateArray['last_updated_at'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', "products_to_categories_id = " . $rs['products_to_categories_id'], $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 if (!in_array($rs['products_id'], $product_ids)) {
