@@ -860,7 +860,8 @@ switch ($this->ms['page']) {
                 if (is_numeric($catid)) {
                     $where = 'categories_id = \'' . addslashes($catid).'\'';
                     $updateArray = array(
-                            'sort_order' => $no
+                            'sort_order' => $no,
+                            'last_modified' => time()
                     );
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2278,6 +2279,7 @@ switch ($this->ms['page']) {
             if ($cid > 0) {
                 $updateArray = array();
                 $updateArray['categories_image'] = '';
+                $updateArray['last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\'' . $cid . '\'', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             }
@@ -3124,7 +3126,8 @@ switch ($this->ms['page']) {
                 if (is_numeric($cat_id)) {
                     $where = "categories_id = $cat_id";
                     $updateArray = array(
-                            'sort_order' => $no
+                            'sort_order' => $no,
+                        'last_modified' => time()
                     );
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -3142,7 +3145,8 @@ switch ($this->ms['page']) {
                 if (is_numeric($cat_id)) {
                     $where = "categories_id = $cat_id";
                     $updateArray = array(
-                            'sort_order' => $no
+                            'sort_order' => $no,
+                        'lst_modified' => time()
                     );
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -3169,6 +3173,7 @@ switch ($this->ms['page']) {
                             $updateArray['col_position'] = $col;
                         }
                     }
+                    $updateArray['last_modified'] = time();
                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $no++;

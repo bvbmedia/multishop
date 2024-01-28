@@ -131,6 +131,7 @@ switch ($_REQUEST['action']) {
                                     $content .= '<i>(' . $dbFilename . ' has been converted to: ' . $newFilename . ')</i><br/>';
                                     $updateArray = array();
                                     $updateArray['categories_image'] = $newFilename;
+                                    $updateArray['last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\'' . $item['categories_id'] . '\'', $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 }

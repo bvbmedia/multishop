@@ -317,6 +317,7 @@ class tx_mslib_catalog {
                         foreach ($valuesArray as $categories_id => $values_name) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $sort;
+	                        $updateArray['last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=' . $categories_id, $updateArray);
                             $GLOBALS['TYPO3_DB']->sql_query($query);
                             $sort++;
@@ -341,6 +342,7 @@ class tx_mslib_catalog {
                         while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                             $updateArray = array();
                             $updateArray['sort_order'] = $counter;
+	                        $updateArray['last_modified'] = time();
                             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=' . $row['categories_id'], $updateArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                             $content .= $row['categories_id'] . '<br />';
@@ -369,6 +371,7 @@ class tx_mslib_catalog {
                                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                                     $updateArray = array();
                                     $updateArray['sort_order'] = $counter;
+	                                $updateArray['last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=' . $row['categories_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                     $counter++;
@@ -389,6 +392,7 @@ class tx_mslib_catalog {
                                     while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
                                         $updateArray = array();
                                         $updateArray['sort_order'] = $counter;
+	                                    $updateArray['last_modified'] = time();
                                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=' . $row2['categories_id'], $updateArray);
                                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                         $counter++;
@@ -1153,6 +1157,7 @@ class tx_mslib_catalog {
         // ADD CATEGORY
         $insertArray = array();
         $insertArray['date_added'] = time();
+	    $insertArray['last_modified'] = time();
         $insertArray['sort_order'] = time();
         $insertArray['status'] = 1;
         $insertArray['page_uid'] = $this->showCatalogFromPage;

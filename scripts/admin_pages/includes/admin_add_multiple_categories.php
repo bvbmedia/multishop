@@ -99,6 +99,8 @@ if ($this->post) {
                 $updateArray['status'] = $this->post['status'];
                 $updateArray['option_attributes'] = '';
                 $updateArray['page_uid'] = $this->showCatalogFromPage;
+	            $updateArray['date_added'] = time();
+	            $updateArray['last_modified'] = time();
                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 $catid = $GLOBALS['TYPO3_DB']->sql_insert_id();

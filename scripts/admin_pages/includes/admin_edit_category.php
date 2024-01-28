@@ -314,6 +314,8 @@ if ($this->post) {
     $updateArray['search_engines_allow_indexing'] = $this->post['search_engines_allow_indexing'];
     if ($_REQUEST['action'] == 'add_category') {
         $updateArray['page_uid'] = $this->showCatalogFromPage;
+        $updateArray['date_added'] = time();
+        $updateArray['last_modified'] = time();
         $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
         $catid = $GLOBALS['TYPO3_DB']->sql_insert_id();

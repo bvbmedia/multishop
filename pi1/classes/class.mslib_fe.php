@@ -8641,6 +8641,8 @@ class mslib_fe {
                             $insertArray[$data_colname] = (!empty($data_colvalue) ? $data_colvalue : '');
                         }
                     }
+	                $insertArray['date_added'] = time();
+	                $insertArray['last_modified'] = time();
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                     $new_catid = $GLOBALS['TYPO3_DB']->sql_insert_id();

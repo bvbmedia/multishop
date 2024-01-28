@@ -17,6 +17,7 @@ if ($this->post) {
             $updateArray = array();
             $where = "parent_id = " . $cat_source_id;
             $updateArray['parent_id'] = $cat_target_id;
+	        $updateArray['last_modified'] = time();
             $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             // check the p2c that have categories_id=$cat_source_id

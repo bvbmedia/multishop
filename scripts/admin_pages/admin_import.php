@@ -1723,6 +1723,7 @@ if ($this->post['action'] == 'category-insert') {
                                     $rowchk = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
                                     $updateArray = array();
                                     $updateArray['hashed_id'] = md5($hashed_id);
+	                                $updateArray['last_modified'] = time();
                                     $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                     $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', "categories_id=" . $rowchk['categories_id'], $updateArray);
                                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1882,6 +1883,7 @@ if ($this->post['action'] == 'category-insert') {
                                             if ($categories_image_name) {
                                                 $updateArray = array();
                                                 $updateArray['categories_image'] = $categories_image_name;
+	                                            $updateArray['last_modified'] = time();
                                                 $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', "categories_id=" . $rowchk['categories_id'], $updateArray);
                                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2014,6 +2016,8 @@ if ($this->post['action'] == 'category-insert') {
                                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                                         }
                                     }
+	                                $insertArray['date_added'] = time();
+	                                $insertArray['last_modified'] = time();
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
                                     if (!$res = $GLOBALS['TYPO3_DB']->sql_query($query)) {
                                         $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
@@ -2114,6 +2118,7 @@ if ($this->post['action'] == 'category-insert') {
                                                     if ($categories_image_name) {
                                                         $updateArray = array();
                                                         $updateArray['categories_image'] = $categories_image_name;
+	                                                    $updateArray['last_modified'] = time();
                                                         $updateArray = mslib_befe::rmNullValuedKeys($updateArray);
                                                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', "categories_id=" . $rowchk['categories_id'], $updateArray);
                                                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);

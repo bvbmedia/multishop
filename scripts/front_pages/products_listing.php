@@ -144,6 +144,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array = $Cache_Lite->ge
                             while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
                                 $updateArray = array();
                                 $updateArray['sort_order'] = $counter;
+                                $updateArray['last_modified'] = time();
                                 $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=' . $row['categories_id'], $updateArray);
                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                                 $counter++;
