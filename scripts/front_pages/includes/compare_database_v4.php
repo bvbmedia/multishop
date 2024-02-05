@@ -1044,4 +1044,7 @@ if (!$qry) {
 	$str = "ALTER TABLE `fe_users` ADD `last_updated_at` int(11) default '0', ADD KEY `last_updated_at` (`last_updated_at`)";
 	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[] = $str;
+
+	$str = "UPDATE`fe_users` SET `last_updated_at` = `tstamp`";
+	$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 }
