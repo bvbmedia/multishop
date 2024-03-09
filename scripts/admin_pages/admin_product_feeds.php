@@ -366,7 +366,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         if (count($shipping_methods)) {
             if (count($shipping_methods)) {
                 foreach ($shipping_methods as $code => $item) {
-                    $shipping_methods_options .= '<option value="' . $item['id'] . '"' . (($post_data['shipping_costs_per_product'] == $item['id']) ? ' selected="selected"' : '') . '>' . $item['name'] . '</option>';
+                    $shipping_methods_options .= '<option value="' . $item['id'] . '"' . (($post_data['shipping_costs_per_product'] == $item['id']) ? ' selected="selected"' : '') . '>' . $item['name'] . ' (' . $item['code'] . ')</option>';
                 }
             }
         }
