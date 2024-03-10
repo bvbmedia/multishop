@@ -5620,6 +5620,10 @@ class mslib_befe {
             $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
             // If we do not want to parse a th then set skipCellHeading to 1
             if (!$settings['skipTableHeadings']) {
+	            if (isset($settings['emptyTfootAfterThead'])) {
+		            $emptyTfoots = array();
+		            $emptyTfoots[] = '<tfoot><tr>';
+	            }
                 $content .= '<thead><tr>';
                 if ($settings['keyNameAsHeadingTitle']) {
                     $cellCounter = 0;
@@ -5637,6 +5641,7 @@ class mslib_befe {
                         }
                         $classes[] = 'cell' . ($cellCounter + 1);
                         $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colName . '</th>';
+	                    $emptyTfoots[] = '<td></td>';
                         $cellCounter++;
                     }
                 } else {
@@ -5655,10 +5660,15 @@ class mslib_befe {
                         }
                         $classes[] = 'cell' . ($cellCounter + 1);
                         $content .= '<th' . $inlineStyle . (count($classes) ? ' class="' . implode(' ', $classes) . '"' : '') . '>' . $colVal . '</th>';
+	                    $emptyTfoots[] = '<td></td>';
                         $cellCounter++;
                     }
                 }
                 $content .= '</tr></thead>';
+	            if (isset($settings['emptyTfootAfterThead'])) {
+		            $emptyTfoots[] = '</tr></tfoot>';
+					$content .= implode('', $emptyTfoots);
+	            }
                 $rowCounter = 0;
                 if ($settings['keyNameAsHeadingTitle']) {
                     $rowCounter = 1;
