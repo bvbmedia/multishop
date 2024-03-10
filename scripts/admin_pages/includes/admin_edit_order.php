@@ -4350,10 +4350,10 @@ if (is_numeric($this->get['orders_id'])) {
                         },
                         minimumInputLength: 0,
                         query: function(query) {
-                            if ($(".product_name").length) {
-                            	var product_id=$(".product_name").select2("val");
-                            } else {
+                            if ($(".product_name_input").length) {
                             	var product_id=$(".product_name_input").select2("val");
+                            } else {
+                            	var product_id=$(".product_name").select2("val");
                             }
                             var current_optid=$(selector_str).parent().prev().prev().children("input").val();
                             //if (attributesSearchValues[query.term + "||" + current_optid] !== undefined) {
