@@ -536,7 +536,13 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 $pid = $this->get['pid'];
             }
         }
-        if ($optid || (isset($this->get['q']) && !empty($this->get['q']))) {
+        if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+            if (is_numeric($this->get['preselected_id'])) {
+                $where[] = "optval2opt.products_options_values_id = '" . $this->get['preselected_id'] . "'";
+            } else {
+                $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
+            }
+        } else if ($optid || (isset($this->get['q']) && !empty($this->get['q']))) {
             if ($optid) {
                 if (!empty($search_term)) {
                     $where_str = '';
@@ -558,12 +564,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
                 }
             } else {
                 $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['q']) . "%'";
-            }
-        } else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-            if (is_numeric($this->get['preselected_id'])) {
-                $where[] = "optval2opt.products_options_values_id = '" . $this->get['preselected_id'] . "'";
-            } else {
-                $where[] = "optval.products_options_values_name like '%" . addslashes($this->get['preselected_id']) . "%'";
             }
         }
         if (is_numeric($pid) && $pid > 0) {
