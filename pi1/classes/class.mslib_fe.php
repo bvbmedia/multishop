@@ -944,6 +944,9 @@ class mslib_fe {
         if (!$this->masterShop && !is_numeric($page_uid)) {
             $page_uid = $this->showCatalogFromPage;
         }
+		if ($languages_id === '') {
+			$languages_id = $this->sys_language_uid;
+		}
         if (is_numeric($c)) {
             if ($this->ms['MODULES']['CACHE_FRONT_END'] || $this->ms['MODULES']['FORCE_CACHE_FRONT_END']) {
                 if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
@@ -973,7 +976,7 @@ class mslib_fe {
                     $filter[] = 'c.page_uid=\'' . $page_uid . '\'';
                 }
                 $filter[] = 'c.categories_id = \'' . $c . '\'';
-                $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
+                $filter[] = 'cd.language_id=\'' . $languages_id . '\'';
                 $filter[] = 'c.categories_id = cd.categories_id';
                 $sql = $GLOBALS['TYPO3_DB']->SELECTquery('c.categories_image, c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, c.search_engines_allow_indexing, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
                         'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
@@ -1016,7 +1019,7 @@ class mslib_fe {
                             echo 'crumbar is looping.';
                             die();
                         } else {
-                            $output = mslib_fe::Crumbar($data['parent_id'], '', $output, $page_uid);
+                            $output = mslib_fe::Crumbar($data['parent_id'], $languages_id, $output, $page_uid);
                         }
                     }
                     $GLOBALS['TYPO3_DB']->sql_free_result($qry);
