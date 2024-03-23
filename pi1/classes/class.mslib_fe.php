@@ -5284,7 +5284,7 @@ class mslib_fe {
         }
         return false;
     }
-    public function getProduct($products_id, $categories_id = '', $extra_fields = '', $include_disabled_products = 0, $skipFlatDatabase = 0, $ignoreStartEndTime = 0) {
+    public function getProduct($products_id, $categories_id = '', $extra_fields = '', $include_disabled_products = 0, $skipFlatDatabase = 0, $ignoreStartEndTime = 0, $language_id = '') {
         if (!is_numeric($products_id)) {
             return false;
         }
@@ -5330,7 +5330,11 @@ class mslib_fe {
                 $where[] = 'c.status=1';
             }
             $where[] = 'p.products_id=\'' . $products_id . '\'';
-            $where[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
+			if ($language_id === '') {
+				$where[] = 'pd.language_id=\'' . $this->sys_language_uid . '\'';
+			} else {
+				$where[] = 'pd.language_id=\'' . $language_id . '\'';
+			}
             $where[] = 'cd.language_id=pd.language_id';
             $where[] = 'p.products_id=pd.products_id';
             $where[] = 'p.products_id=p2c.products_id';
@@ -5347,7 +5351,11 @@ class mslib_fe {
             $from[] = 'tx_multishop_products_flat';
             $where = array();
             $where[] = 'products_id=\'' . $products_id . '\'';
-            $where[] = 'language_id=\'' . $this->sys_language_uid . '\'';
+	        if ($language_id === '') {
+		        $where[] = 'language_id=\'' . $this->sys_language_uid . '\'';
+	        } else {
+		        $where[] = 'language_id=\'' . $language_id . '\'';
+	        }
         }
         $query_elements = array();
         $query_elements['select'] = &$select;
@@ -5445,7 +5453,11 @@ class mslib_fe {
             if ($product['categories_id']) {
                 // get all cats to generate multilevel fake url
                 $level = 0;
-                $cats = mslib_fe::Crumbar($product['categories_id']);
+	            if ($language_id === '') {
+		            $cats = mslib_fe::Crumbar($product['categories_id']);
+	            } else {
+		            $cats = mslib_fe::Crumbar($product['categories_id'], $language_id);
+	            }
                 $cats = array_reverse($cats);
                 $product_crumbar_tree = array();
                 if (count($cats) > 0) {
