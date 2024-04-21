@@ -461,8 +461,9 @@ class mslib_fe {
                 $query_elements['search_section'] =& $search_section;
                 $query_elements['extra_join'] =& $extra_join;
                 $params = array(
-                        'query_elements' => &$query_elements,
-                        'enableFetchTaxRate' => &$enableFetchTaxRate
+	                'includeDisabled' => &$includeDisabled,
+                    'query_elements' => &$query_elements,
+                    'enableFetchTaxRate' => &$enableFetchTaxRate
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -616,8 +617,9 @@ class mslib_fe {
                 $query_elements['search_section'] =& $search_section;
                 $query_elements['extra_join'] =& $extra_join;
                 $params = array(
-                        'query_elements' => &$query_elements,
-                        'enableFetchTaxRate' => &$enableFetchTaxRate
+	                'includeDisabled' => &$includeDisabled,
+                    'query_elements' => &$query_elements,
+                    'enableFetchTaxRate' => &$enableFetchTaxRate
                 );
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
