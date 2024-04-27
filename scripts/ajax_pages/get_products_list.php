@@ -123,6 +123,10 @@ if ($this->ADMIN_USER) {
         $selectFields = array();
         $selectFields[] = $prefix_pd . 'products_name';
         $selectFields[] = $prefix_p . 'products_id';
+        if ($this->ms['MODULES']['FLAT_DATABASE']) {
+            $selectFields[] = $prefix_p . 'categories_id';
+        }
+        $selectFields[] = $prefix_p . 'products_model';
         if (!$this->ms['MODULES']['FLAT_DATABASE']) {
             $selectFields[] = 'p.products_status';
             $selectFields[] = 'p2c.categories_id';
