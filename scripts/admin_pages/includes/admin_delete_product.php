@@ -10,6 +10,13 @@ if (is_numeric($_REQUEST['pid'])) {
         } else if (isset($this->post['SubmitDeleteFromAllCat'])) {
             mslib_befe::deleteProduct($_REQUEST['pid'], $_REQUEST['cid'], false, true);
         }
+	    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_flat_catalog')) {
+		    $this->ms['MODULES']['FLAT_DATABASE'] = 1;
+	    }
+	    if ($this->ms['MODULES']['FLAT_DATABASE']) {
+		    // if the flat database module is enabled we have to sync the changes to the flat table
+		    mslib_befe::convertProductToFlat($_REQUEST['pid']);
+	    }
         if ($this->post['tx_multishop_pi1']['referrer']) {
             header("Location: " . $this->post['tx_multishop_pi1']['referrer']);
             exit();
