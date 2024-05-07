@@ -980,7 +980,17 @@ if ($this->post['action'] == 'category-insert') {
 				</div>
 			</div>
 		</div>
-		<input name="database_name" type="hidden" value="' . $this->post['database_name'] . '" />
+		';
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productEditImportCustomExtraFields'])) {
+		$params = array(
+			'combinedContent' => &$combinedContent
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productEditImportCustomExtraFields'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	$combinedContent .= '<input name="database_name" type="hidden" value="' . $this->post['database_name'] . '" />
 		<input name="cron_data" type="hidden" value="' . htmlspecialchars(serialize($this->post)) . '" />
 		</div>
 		</div>
