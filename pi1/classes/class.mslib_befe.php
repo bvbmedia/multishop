@@ -3836,7 +3836,10 @@ class mslib_befe {
                 mslib_befe::mailDev($subject, $body);
             }
             if ($options['cacheDir'] and !strstr($options['cacheDir'], '..') && is_dir($options['cacheDir'])) {
-                $command = 'rm -rf ' . $options['cacheDir'].'/*';
+                // We use find to only delete files and not directories. This is to prevent bugs with concurrent sessions
+                $command = 'find '.$options['cacheDir'].' -type f -delete';
+                // Old way that causes sometimes error "Cache_Lite : Unable to write cache file" in concurrent session:
+                //$command = 'rm -rf ' . $options['cacheDir'].'/*';
                 exec($command);
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLiteDeleteAllPostProc'])) {
                     $params = array();
