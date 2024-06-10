@@ -5609,12 +5609,17 @@ class mslib_befe {
             $maxCellCounter = 0;
             foreach ($rows as $row) {
                 $cellCounter = 0;
+                $newMaxCellCounter=0;
                 foreach ($row as $col => $val) {
                     $cellCounter++;
-                    if ($cellCounter >= $maxCellCounter) {
-                        $maxCellCounter++;
+                    if ($cellCounter >= $newMaxCellCounter) {
+                        $newMaxCellCounter++;
                     }
                 }
+                if ($newMaxCellCounter > $maxCellCounter) {
+                    $maxCellCounter=$newMaxCellCounter;
+                }
+                break;
             }
             $inlineStyle = '';
             if (isset($settings['inlineStyles']['table']) && is_array($settings['inlineStyles']['table'])) {
