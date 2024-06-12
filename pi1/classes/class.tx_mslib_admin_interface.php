@@ -103,6 +103,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
+
         $tableId = uniqid();
         // for pagination
         $this->get = $that->get;
@@ -146,6 +147,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 }
             }
         }
+
         $updateCookie = 0;
         $that->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');
         if (!isset($params['settings']['limit'])) {
@@ -930,8 +932,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			';
         }
         $searchForm = '';
+        if ($params['settings']['contentAboveForm']) {
+            $searchForm .= $params['settings']['contentAboveForm'];
+        }
         if ($params['settings']['enableKeywordSearch']) {
-            $searchForm = '
+            $searchForm .= '
 			<form id="form1" name="form1" method="get" action="index.php">
 				<div class="well">
 					<div class="row formfield-container-wrapper">
