@@ -734,7 +734,9 @@ if ($this->post) {
                 if (is_array($products)) {
                     foreach ($products as $product) {
                         // if the flat database module is enabled we have to sync the changes to the flat table
-                        mslib_befe::convertProductToFlat($product['products_id']);
+                        //mslib_befe::convertProductToFlat($product['products_id']);
+                        // Use the latest version, since it using multishop_flat_catalog plugin
+                        tx_multishop_flat_catalog::convertProductToFlat($product['products_id']);
                     }
                 }
             }
