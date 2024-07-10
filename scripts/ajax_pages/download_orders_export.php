@@ -387,7 +387,8 @@ if ($this->get['orders_export_hash']) {
 		//hook to let other plugins further manipulate the settings
 	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedHeaderPostProc'])) {
 		    $params = array(
-			    'excelHeaderCols' => &$excelHeaderCols
+			    'excelHeaderCols' => &$excelHeaderCols,
+			    'post_data' => $post_data
 		    );
 		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedHeaderPostProc'] as $funcRef) {
 			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -540,7 +541,7 @@ if ($this->get['orders_export_hash']) {
                                     if ($prod_ctr >= $max_cols_num) {
                                         break;
                                     }
-                                    $excelCols = $product_tmp['products_id'];
+                                    $excelCols[] = $product_tmp['products_id'];
                                     $excelCols[] = $product_tmp['products_name'];
                                     $excelCols[] = $product_tmp['product_model'];
                                     $excelCols[] = $product_tmp['ean_code'];
