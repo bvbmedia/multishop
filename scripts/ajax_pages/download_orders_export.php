@@ -540,17 +540,17 @@ if ($this->get['orders_export_hash']) {
                                     if ($prod_ctr >= $max_cols_num) {
                                         break;
                                     }
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_id'];
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_name'];
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['product_model'];
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['ean_code'];
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['sku_code'];
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['qty'];
-                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'], 2, ',', '.');
-                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
-                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
-                                    $excelCols[$field . $prod_ctr] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
-                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_tax'] . '%';
+                                    $excelCols = $product_tmp['products_id'];
+                                    $excelCols[] = $product_tmp['products_name'];
+                                    $excelCols[] = $product_tmp['product_model'];
+                                    $excelCols[] = $product_tmp['ean_code'];
+                                    $excelCols[] = $product_tmp['sku_code'];
+                                    $excelCols[] = $product_tmp['qty'];
+                                    $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
+                                    $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                                    $excelCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[] = $product_tmp['products_tax'] . '%';
                                     //hook to let other plugins further manipulate the replacers
                                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'])) {
                                         $params = array(
@@ -567,7 +567,7 @@ if ($this->get['orders_export_hash']) {
                                 if ($prod_ctr < $max_cols_num) {
                                     for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
                                         for ($i=1;$i<=11;$i++) {
-                                            $excelCols[$field . $i] = '';
+                                            $excelCols[] = '';
                                         }
                                         //hook to let other plugins further manipulate the replacers
                                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
@@ -676,9 +676,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($categories_data_incl_vat as $categories_index_main => $categories_id) {
                             if (isset($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[$field . $categories_index_main] = number_format($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[] = number_format($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
+                                $excelCols[] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -706,9 +706,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($categories_data_excl_vat as $categories_index_main => $categories_id) {
                             if (isset($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[$field . $categories_index_main] = number_format($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[] = number_format($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
+                                $excelCols[] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -737,9 +737,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_incl_vat as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[$field . $categories_index_main] = number_format($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[] = number_format($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
+                                $excelCols[] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -767,9 +767,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_excl_vat as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[$field . $categories_index_main] = number_format($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[] = number_format($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
+                                $excelCols[] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -787,9 +787,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_bought_products as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[$field . $categories_index_main] = $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main];
+                                $excelCols[] = $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main];
                             } else {
-                                $excelCols[$field . $categories_index_main] = '0';
+                                $excelCols[] = '0';
                             }
                         }
                         break;
