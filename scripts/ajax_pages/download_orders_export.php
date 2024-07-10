@@ -23,8 +23,19 @@ if ($this->get['orders_export_hash']) {
         }
     }
     if (!$content = $Cache_Lite->get($string)) {
-        $fields = unserialize($orders_export['fields']);
-        $post_data = unserialize($orders_export['post_data']);
+	    // custom page hook that can be controlled by third-party plugin
+	    $fields = unserialize($orders_export['fields']);
+	    $post_data = unserialize($orders_export['post_data']);
+	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedTypesProc'])) {
+		    $params = array(
+			    'orders_export' => &$orders_export,
+			    'fields' => &$fields,
+			    'post_data' => &$post_data,
+		    );
+		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedTypesProc'] as $funcRef) {
+			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		    }
+	    }
         switch ($post_data['delimeter_type']) {
             case '\t':
                 $post_data['delimeter_type'] = "\t";
@@ -373,6 +384,15 @@ if ($this->get['orders_export_hash']) {
                 }
             }
         }
+		//hook to let other plugins further manipulate the settings
+	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedHeaderPostProc'])) {
+		    $params = array(
+			    'excelHeaderCols' => &$excelHeaderCols
+		    );
+		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportFeedHeaderPostProc'] as $funcRef) {
+			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		    }
+	    }
         if ($this->get['format'] == 'excel') {
             $excelRows[] = $excelHeaderCols;
         } else {
@@ -397,118 +417,118 @@ if ($this->get['orders_export_hash']) {
                 $tmpcontent = '';
                 switch ($field) {
                     case 'orders_id':
-                        $excelCols[] = $row['orders_id'];
+                        $excelCols[$field] = $row['orders_id'];
                         break;
                     case 'customer_id':
-                        $excelCols[] = $row['customer_id'];
+                        $excelCols[$field] = $row['customer_id'];
                         break;
                     case 'orders_status':
-                        $excelCols[] = $row['orders_status'];
+                        $excelCols[$field] = $row['orders_status'];
                         break;
                     case 'customer_billing_email':
-                        $excelCols[] = $row['billing_email'];
+                        $excelCols[$field] = $row['billing_email'];
                         break;
                     case 'customer_billing_telephone':
-                        $excelCols[] = $row['billing_telephone'];
+                        $excelCols[$field] = $row['billing_telephone'];
                         break;
                     case 'customer_billing_mobile':
-                        $excelCols[] = $row['billing_mobile'];
+                        $excelCols[$field] = $row['billing_mobile'];
                         break;
                     case 'customer_billing_name':
-                        $excelCols[] = $row['billing_name'];
+                        $excelCols[$field] = $row['billing_name'];
                         break;
                     case 'customer_billing_company':
-                        $excelCols[] = $row['billing_company'];
+                        $excelCols[$field] = $row['billing_company'];
                         break;
                     case 'customer_billing_address':
-                        $excelCols[] = $row['billing_address'];
+                        $excelCols[$field] = $row['billing_address'];
                         break;
                     case 'customer_billing_street_name':
-                        $excelCols[] = $row['billing_street_name'];
+                        $excelCols[$field] = $row['billing_street_name'];
                         break;
                     case 'customer_billing_address_number':
-                        $excelCols[] = $row['billing_address_number'];
+                        $excelCols[$field] = $row['billing_address_number'];
                         break;
                     case 'customer_billing_address_ext':
-                        $excelCols[] = $row['billing_address_ext'];
+                        $excelCols[$field] = $row['billing_address_ext'];
                         break;
                     case 'customer_billing_city':
-                        $excelCols[] = $row['billing_city'];
+                        $excelCols[$field] = $row['billing_city'];
                         break;
                     case 'customer_billing_zip':
-                        $excelCols[] = $row['billing_zip'];
+                        $excelCols[$field] = $row['billing_zip'];
                         break;
                     case 'customer_billing_country':
-                        $excelCols[] = $row['billing_country'];
+                        $excelCols[$field] = $row['billing_country'];
                         break;
                     case 'customer_delivery_email':
-                        $excelCols[] = $row['delivery_email'];
+                        $excelCols[$field] = $row['delivery_email'];
                         break;
                     case 'customer_delivery_telephone':
-                        $excelCols[] = $row['delivery_telephone'];
+                        $excelCols[$field] = $row['delivery_telephone'];
                         break;
                     case 'customer_delivery_mobile':
-                        $excelCols[] = $row['delivery_mobile'];
+                        $excelCols[$field] = $row['delivery_mobile'];
                         break;
                     case 'customer_delivery_name':
-                        $excelCols[] = $row['delivery_name'];
+                        $excelCols[$field] = $row['delivery_name'];
                         break;
                     case 'customer_delivery_company':
-                        $excelCols[] = $row['delivery_company'];
+                        $excelCols[$field] = $row['delivery_company'];
                         break;
                     case 'customer_delivery_address':
-                        $excelCols[] = $row['delivery_address'];
+                        $excelCols[$field] = $row['delivery_address'];
                         break;
                     case 'customer_delivery_street_name':
-                        $excelCols[] = $row['delivery_street_name'];
+                        $excelCols[$field] = $row['delivery_street_name'];
                         break;
                     case 'customer_delivery_address_number':
-                        $excelCols[] = $row['delivery_address_number'];
+                        $excelCols[$field] = $row['delivery_address_number'];
                         break;
                     case 'customer_delivery_address_ext':
-                        $excelCols[] = $row['delivery_address_ext'];
+                        $excelCols[$field] = $row['delivery_address_ext'];
                         break;
                     case 'customer_delivery_city':
-                        $excelCols[] = $row['delivery_city'];
+                        $excelCols[$field] = $row['delivery_city'];
                         break;
                     case 'customer_delivery_zip':
-                        $excelCols[] = $row['delivery_zip'];
+                        $excelCols[$field] = $row['delivery_zip'];
                         break;
                     case 'customer_delivery_country':
-                        $excelCols[] = $row['delivery_country'];
+                        $excelCols[$field] = $row['delivery_country'];
                         break;
                     case 'orders_grand_total_excl_vat':
-                        $excelCols[] = number_format($order_tax_data['grand_total'] - $order_tax_data['total_orders_tax'], 2, ',', '.');
+                        $excelCols[$field] = number_format($order_tax_data['grand_total'] - $order_tax_data['total_orders_tax'], 2, ',', '.');
                         break;
                     case 'orders_grand_total_incl_vat':
-                        $excelCols[] = number_format($order_tax_data['grand_total'], 2, ',', '.');
+                        $excelCols[$field] = number_format($order_tax_data['grand_total'], 2, ',', '.');
                         break;
                     case 'payment_status':
-                        $excelCols[] = ($row['paid']) ? $this->pi_getLL('paid') : $this->pi_getLL('unpaid');
+                        $excelCols[$field] = ($row['paid']) ? $this->pi_getLL('paid') : $this->pi_getLL('unpaid');
                         break;
                     case 'shipping_method':
-                        $excelCols[] = $row['shipping_method_label'];
+                        $excelCols[$field] = $row['shipping_method_label'];
                         break;
                     case 'shipping_cost_excl_vat':
-                        $excelCols[] = number_format($row['shipping_method_costs'], 2, ',', '.');
+                        $excelCols[$field] = number_format($row['shipping_method_costs'], 2, ',', '.');
                         break;
                     case 'shipping_cost_incl_vat':
-                        $excelCols[] = number_format($row['shipping_method_costs'] + $order_tmp['orders_tax_data']['shipping_tax'], 2, ',', '.');
+                        $excelCols[$field] = number_format($row['shipping_method_costs'] + $order_tmp['orders_tax_data']['shipping_tax'], 2, ',', '.');
                         break;
                     case 'shipping_cost_vat_rate':
-                        $excelCols[] = ($order_tmp['orders_tax_data']['shipping_total_tax_rate'] * 100) . '%';
+                        $excelCols[$field] = ($order_tmp['orders_tax_data']['shipping_total_tax_rate'] * 100) . '%';
                         break;
                     case 'payment_method':
-                        $excelCols[] = $row['payment_method_label'];
+                        $excelCols[$field] = $row['payment_method_label'];
                         break;
                     case 'payment_cost_excl_vat':
-                        $excelCols[] = number_format($row['payment_method_cost'], 2, ',', '.');
+                        $excelCols[$field] = number_format($row['payment_method_cost'], 2, ',', '.');
                         break;
                     case 'payment_cost_incl_vat':
-                        $excelCols[] = number_format($row['payment_method_cost'] + $order_tmp['orders_tax_data']['payment_tax'], 2, ',', '.');
+                        $excelCols[$field] = number_format($row['payment_method_cost'] + $order_tmp['orders_tax_data']['payment_tax'], 2, ',', '.');
                         break;
                     case 'payment_cost_vat_rate':
-                        $excelCols[] = ($order_tmp['orders_tax_data']['payment_total_tax_rate'] * 100) . '%';
+                        $excelCols[$field] = ($order_tmp['orders_tax_data']['payment_total_tax_rate'] * 100) . '%';
                         break;
                     case 'order_products':
                         $order_products = $order_tmp['products'];
@@ -520,17 +540,17 @@ if ($this->get['orders_export_hash']) {
                                     if ($prod_ctr >= $max_cols_num) {
                                         break;
                                     }
-                                    $excelCols[] = $product_tmp['products_id'];
-                                    $excelCols[] = $product_tmp['products_name'];
-                                    $excelCols[] = $product_tmp['product_model'];
-                                    $excelCols[] = $product_tmp['ean_code'];
-                                    $excelCols[] = $product_tmp['sku_code'];
-                                    $excelCols[] = $product_tmp['qty'];
-                                    $excelCols[] = number_format($product_tmp['final_price'], 2, ',', '.');
-                                    $excelCols[] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
-                                    $excelCols[] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
-                                    $excelCols[] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
-                                    $excelCols[] = $product_tmp['products_tax'] . '%';
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_id'];
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_name'];
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['product_model'];
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['ean_code'];
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['sku_code'];
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['qty'];
+                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'], 2, ',', '.');
+                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+                                    $excelCols[$field . $prod_ctr] = number_format($product_tmp['final_price'] * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[$field . $prod_ctr] = number_format(($product_tmp['final_price'] + $product_tmp['products_tax_data']['total_tax']) * $product_tmp['qty'], 2, ',', '.');
+                                    $excelCols[$field . $prod_ctr] = $product_tmp['products_tax'] . '%';
                                     //hook to let other plugins further manipulate the replacers
                                     if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsPostProc'])) {
                                         $params = array(
@@ -547,7 +567,7 @@ if ($this->get['orders_export_hash']) {
                                 if ($prod_ctr < $max_cols_num) {
                                     for ($x = $prod_ctr; $x < $max_cols_num; $x++) {
                                         for ($i=1;$i<=11;$i++) {
-                                            $excelCols[] = '';
+                                            $excelCols[$field . $i] = '';
                                         }
                                         //hook to let other plugins further manipulate the replacers
                                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['exportOrdersBodyOrderProductsAppendPostProc'])) {
@@ -583,53 +603,53 @@ if ($this->get['orders_export_hash']) {
                         }
                         break;
                     case 'order_total_vat':
-                        $excelCols[] = number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
+                        $excelCols[$field] = number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
                         break;
                     case 'order_date':
-                        $excelCols[] = ($row['crdate'] > 0 ? strftime('%x', $row['crdate']) : '');
+                        $excelCols[$field] = ($row['crdate'] > 0 ? strftime('%x', $row['crdate']) : '');
                         break;
                     case 'order_datetime':
-                        $excelCols[] = ($row['crdate'] > 0 ? date('Y-m-d G:i:s', $row['crdate']) : '');
+                        $excelCols[$field] = ($row['crdate'] > 0 ? date('Y-m-d G:i:s', $row['crdate']) : '');
                         break;
                     case 'order_company_name':
-                        $excelCols[] = $row['billing_company'];
+                        $excelCols[$field] = $row['billing_company'];
                         break;
                     case 'order_vat_id':
-                        $excelCols[] = $row['billing_vat_id'];
+                        $excelCols[$field] = $row['billing_vat_id'];
                         break;
                     case 'order_customer_currency':
-                        $excelCols[] = $row['customer_currency'];
+                        $excelCols[$field] = $row['customer_currency'];
                         break;
                     case 'order_customer_currency_rate':
-                        $excelCols[] = $row['currency_rate'];
+                        $excelCols[$field] = $row['currency_rate'];
                         break;
                     case 'order_customer_language_id':
-                        $excelCols[] = $row['language_id'];
+                        $excelCols[$field] = $row['language_id'];
                         break;
                     case 'order_track_and_trace_code':
-                        $excelCols[] = $row['track_and_trace_code'];
+                        $excelCols[$field] = $row['track_and_trace_code'];
                         break;
                     case 'http_host':
-                        $excelCols[] = $row['http_host'];
+                        $excelCols[$field] = $row['http_host'];
                         break;
                     case 'order_orders_paid_timestamp':
-                        $excelCols[] = strftime('%x', $row['orders_paid_timestamp']);
+                        $excelCols[$field] = strftime('%x', $row['orders_paid_timestamp']);
                         break;
                     case 'order_status_last_modified':
-                        $excelCols[] = strftime('%x', $row['status_last_modified']);
+                        $excelCols[$field] = strftime('%x', $row['status_last_modified']);
                         break;
                     case 'order_orders_last_modified':
-                        $excelCols[] = strftime('%x', $row['orders_last_modified']);
+                        $excelCols[$field] = strftime('%x', $row['orders_last_modified']);
                         break;
                     case 'order_expected_delivery_date':
                         if ($this->ms['MODULES']['ADD_HOURS_TO_EDIT_ORDER_EXPECTED_DELIVERY_DATE'] == '1') {
                             $array2[] = strftime("%x %T", $order['expected_delivery_date']);
                         } else {
-                            $excelCols[] = strftime('%x', $row['expected_delivery_date']);
+                            $excelCols[$field] = strftime('%x', $row['expected_delivery_date']);
                         }
                         break;
                     case 'order_by_phone':
-                        $excelCols[] = ($row['by_phone'] > 0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));
+                        $excelCols[$field] = ($row['by_phone'] > 0 ? $this->pi_getLL('yes') : $this->pi_getLL('no'));
                         break;
                     case 'turnover_per_category_incl_vat':
                         $order_products = $order_tmp['products'];
@@ -656,9 +676,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($categories_data_incl_vat as $categories_index_main => $categories_id) {
                             if (isset($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[] = number_format($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format($categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[] = number_format(0, 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -686,9 +706,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($categories_data_excl_vat as $categories_index_main => $categories_id) {
                             if (isset($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[] = number_format($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format($categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[] = number_format(0, 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -717,9 +737,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_incl_vat as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[] = number_format($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format($main_categories_data_amount_incl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[] = number_format(0, 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -747,9 +767,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_excl_vat as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[] = number_format($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format($main_categories_data_amount_excl_vat[$order_tmp['orders_id']][$categories_index_main], 2, ',', '.');
                             } else {
-                                $excelCols[] = number_format(0, 2, ',', '.');
+                                $excelCols[$field . $categories_index_main] = number_format(0, 2, ',', '.');
                             }
                         }
                         break;
@@ -767,9 +787,9 @@ if ($this->get['orders_export_hash']) {
                         }
                         foreach ($main_categories_data_bought_products as $categories_index_main => $categories_id) {
                             if (isset($main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main])) {
-                                $excelCols[] = $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main];
+                                $excelCols[$field . $categories_index_main] = $main_categories_data_bought_products_amount[$order_tmp['orders_id']][$categories_index_main];
                             } else {
-                                $excelCols[] = '0';
+                                $excelCols[$field . $categories_index_main] = '0';
                             }
                         }
                         break;
@@ -777,35 +797,35 @@ if ($this->get['orders_export_hash']) {
                         if ($row['cruser_id']) {
                             $user = mslib_fe::getUser($row['cruser_id']);
                             if ($user['username']) {
-                                $excelCols[] = $user['username'];
+                                $excelCols[$field] = $user['username'];
                             } else {
-                                $excelCols[] = '';
+                                $excelCols[$field] = '';
                             }
                         } else {
-                            $excelCols[] = '';
+                            $excelCols[$field] = '';
                         }
                         break;
                     case 'discount':
                         if ($row['discount']) {
-                            $excelCols[] = number_format($row['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '');
+                            $excelCols[$field] = number_format($row['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '');
                         } else {
-                            $excelCols[] = '';
+                            $excelCols[$field] = '';
                         }
                         break;
                     case 'order_memo':
                         if ($row['order_memo']) {
                             $memo = str_replace('<p>', '', $row['order_memo']);
                             $memo = str_replace('</p>', " ", $memo);
-                            $excelCols[] = strip_tags($memo);
+                            $excelCols[$field] = strip_tags($memo);
                         } else {
-                            $excelCols[] = '';
+                            $excelCols[$field] = '';
                         }
                         break;
                     case 'customer_comments':
                         if ($row['customer_comments']) {
-                            $excelCols[] = $row['customer_comments'];
+                            $excelCols[$field] = $row['customer_comments'];
                         } else {
-                            $excelCols[] = '';
+                            $excelCols[$field] = '';
                         }
                         break;
                     default:
@@ -813,20 +833,21 @@ if ($this->get['orders_export_hash']) {
                             $tmp_tax_str = explode('_', $field);
                             $tax_rate = str_replace('%', '', $tmp_tax_str[4]);
                             if (isset($order_tax_data['tax_separation'][$tax_rate])) {
-                                $excelCols[] = number_format($order_tax_data['tax_separation'][$tax_rate]['products_total_tax'] + $order_tax_data['tax_separation'][$tax_rate]['shipping_tax'], 2, ',', '.');
+                                $excelCols[$field] = number_format($order_tax_data['tax_separation'][$tax_rate]['products_total_tax'] + $order_tax_data['tax_separation'][$tax_rate]['shipping_tax'], 2, ',', '.');
                             } else {
-                                $excelCols[] = '';
+                                $excelCols[$field] = '';
                             }
                         }
                         break;
                 }
-                //hook to let other plugins further manipulate the replacers
+                // hook to let other plugins further manipulate the replacers
                 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'])) {
                     $params = array(
                             'field' => &$field,
                             'excelCols' => &$excelCols,
                             'row' => &$row,
-                            'counter' => $counter
+                            'counter' => $counter,
+                            'post_data' => $post_data
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrderExportFieldIteratorPostProc'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

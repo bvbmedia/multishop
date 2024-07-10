@@ -171,7 +171,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         if (!$this->post['name']) {
             $erno[] = $this->pi_getLL('feed_exporter_label_error_name_is_required');
         } else {
-            if (!is_array($this->post['fields']) || !count($this->post['fields'])) {
+            if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
                 $erno[] = $this->pi_getLL('feed_exporter_label_error_no_fields_defined');
             }
         }
@@ -305,6 +305,36 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<option value="all"' . ($post_data['order_type'] == 'desc' ? ' selected="selected"' : '') . '>' . $this->pi_getLL('all') . '</option>
 			<option value="by_phone"' . ($post_data['order_type'] == 'by_phone' ? ' selected="selected"' : '') . '>' . ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_manual_order'))) . '</option>
 		</select>';
+        $feed_types = array();
+        // custom page hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_orders.php']['adminExportOrderFeedTypesPreHook'])) {
+            $params = array(
+                'feed_types' => &$feed_types
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_orders.php']['adminExportOrderFeedTypesPreHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
+        $feed_type_sb = '';
+        // custom page hook that can be controlled by third-party plugin eof
+        if (count($feed_types)) {
+            $feed_type_sb .= '
+				<div class="form-group">
+						<label class="control-label col-md-2">Feed Type</label>
+						<div class="col-md-10">
+						<select name="feed_type" id="feed_type" class="form-control">
+						<option value="">' . htmlspecialchars('Custom') . '</option>
+				';
+            natsort($feed_types);
+            foreach ($feed_types as $key => $label) {
+                $feed_type_sb .= '<option value="' . $key . '"' . (($post_data['feed_type'] == $key) ? ' selected' : '') . '>' . htmlspecialchars($label) . '</option>' . "\n";
+            }
+            $feed_type_sb .= '
+				</select>
+				</div>
+				</div>
+				';
+        }
         // delimeter type selectbox
         $delimeter_type_sb = '<select name="delimeter_type" class="form-control">
 			<option value=";"' . ($post_data['delimeter_type'] == ';' ? ' selected="selected"' : '') . '>semicolon (;)</option>
@@ -396,7 +426,11 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
         }
         $tmpcontent_con .= '/<select>';
         $tmpcontent_con_delivery .= '/<select>';
-
+        // Hide fields selection
+        $hide_pf_field = false;
+        if ($post_data['feed_type'] != '') {
+            $hide_pf_field = true;
+        }
         $content .= '<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('feed_exporter_fields_label_customer_billing_country')) . '</label>
 			<div class="col-md-10">
@@ -448,6 +482,7 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			' . $sort_direction_sb . '
 			</div>
 		</div>
+		' . $feed_type_sb . '
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('delimited_by')) . '</label>
 			<div class="col-md-10">
@@ -477,8 +512,8 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				</div>
 			</div>
 		</div>
-		<hr class="hide_pf">
-		<div class="form-group hide_pf">
+		<hr class="hide_pf"' . ($hide_pf_field ? ' style="display:none"' : '') . '>
+		<div class="form-group hide_pf"' . ($hide_pf_field ? ' style="display:none"' : '') . '>
 				<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('fields')) . '</label>
 				<div class="col-md-10">
 					<input id="add_field" name="add_field" type="button" value="' . htmlspecialchars($this->pi_getLL('add_field')) . '" class="btn btn-success" />
