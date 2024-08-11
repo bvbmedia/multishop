@@ -5625,7 +5625,17 @@ class mslib_befe {
             if (isset($settings['inlineStyles']['table']) && is_array($settings['inlineStyles']['table'])) {
                 $inlineStyle .= implode(' ', $settings['inlineStyles']['table']);
             }
-            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="table table-striped table-bordered tablesorter"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
+            $tblClasses=[];
+            $tblClasses[]='table';
+            $tblClasses[]='table-striped';
+            $tblClasses[]='table-bordered';
+            $tblClasses[]='tablesorter';
+            if (isset($settings['tableClasses']) && is_array($settings['tableClasses'])) {
+                foreach ($settings['tableClasses'] as $tableClasses) {
+                    $tblClasses[]=$tableClasses;
+                }
+            }
+            $content .= '<table' . ($idName ? ' id="' . $idName . '"' : '') . ' class="'.implode(' ', $tblClasses).'"' . ($inlineStyle ? ' ' . $inlineStyle : '') . '>';
             // If we do not want to parse a th then set skipCellHeading to 1
             if (!$settings['skipTableHeadings']) {
 	            if (isset($settings['emptyTfootAfterThead'])) {
