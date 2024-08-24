@@ -601,6 +601,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                                 $row[$col] = '';
                             }
                             break;
+                        case 'human_friendly_duration':
+                            if (is_numeric($row[$col]) && $row[$col] > 0) {
+                                $row[$col] = mslib_befe::humanFriendlyDuration($row[$col]);
+                            } else {
+                                $row[$col] = '';
+                            }
+                            break;
                         case 'form':
                             $content = '<form method="';
                             switch ($valArray['formAction']) {

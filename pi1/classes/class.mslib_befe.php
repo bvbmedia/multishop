@@ -5864,6 +5864,34 @@ class mslib_befe {
             }
         }
     }
+    // Convert duration to human friendly string
+    function humanFriendlyDuration($seconds) {
+        // Define time units
+        $units = array(
+                "year"   => 365*24*3600,
+                "month"  => 30*24*3600,
+                "week"   => 7*24*3600,
+                "day"    => 24*3600,
+                "hour"   => 3600,
+                "minute" => 60,
+                "second" => 1,
+        );
+
+        // Create an empty array to hold the result
+        $result = array();
+
+        // Calculate the number of each unit in the duration
+        foreach ($units as $name => $divisor) {
+            $quotient = floor($seconds / $divisor);
+            if ($quotient) {
+                $result[] = $quotient . ' ' . $name . ($quotient > 1 ? 's' : '');
+                $seconds -= $quotient * $divisor;
+            }
+        }
+
+        // Combine the result array into a string
+        return implode(', ', $result);
+    }
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
     include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
