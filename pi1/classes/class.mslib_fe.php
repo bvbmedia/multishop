@@ -5293,56 +5293,60 @@ class mslib_fe {
         if (!empty($categories_id)) {
             $categories_id = (int) $categories_id;
         }
-	    if (!$categories_id) {
-		    // Initialize an empty array to store filter conditions for products to categories records
-		    $filterP2CRecord = array();
-		    // Add a filter condition to match the specific product ID
-		    $filterP2CRecord[] = 'p2c.products_id = ' . $products_id;
-		    // Add a filter condition to select only the deepest category level
-		    $filterP2CRecord[] = 'p2c.is_deepest = 1';
-		    // If a specific category ID is provided, add a filter condition for the category ID
-		    // Add a condition to match the category ID in both product and category tables
-		    $filterP2CRecord[] = 'p2c.categories_id=c.categories_id';
-		    // Initialize an array for selecting specific columns from the query
-		    $selectP2CRecord = array();
-		    // Select all columns from 'p2c' and the 'status' field from the 'categories' table
-		    $selectP2CRecord[] = 'p2c.*, c.status as category_status';
-		    // Query to retrieve products to categories records based on filters and selected columns
-		    $p2cRecords = mslib_befe::getRecords('', 'tx_multishop_products_to_categories p2c, tx_multishop_categories c', '', $filterP2CRecord, '', '', '', $selectP2CRecord);
-		    // Count the number of records returned by the query
-		    $countRecord = count($p2cRecords);
-		    // If records are returned and it's an array
-		    if (is_array($p2cRecords) && $countRecord) {
-			    // If exactly one record is returned, assign the category ID
-			    if ($countRecord == '1') {
-				    $categories_id = (int)$p2cRecords[0]['categories_id'];
-			    } else {
-				    // Loop through multiple records to find an active category (where status is '1')
-				    foreach ($p2cRecords as $p2cRecord) {
-					    $cats = mslib_fe::Crumbar($p2cRecord['categories_id']);
-						// Check if one of the category lines have disabled category
-					    $skipIterate = false;
-					    if (count($cats) > 0) {
-						    foreach ($cats as $cat) {
-							    if ($cat['status'] == 0) {
-								    $skipIterate = true;
-									break;
-							    }
+	    // Initialize an empty array to store filter conditions for products to categories records
+	    $filterP2CRecord = array();
+	    // Add a filter condition to match the specific product ID
+	    $filterP2CRecord[] = 'p2c.products_id = ' . $products_id;
+	    // Add a filter condition to select only the deepest category level
+	    $filterP2CRecord[] = 'p2c.is_deepest = 1';
+	    // If a specific category ID is provided, add a filter condition for the category ID
+	    // Add a condition to match the category ID in both product and category tables
+	    $filterP2CRecord[] = 'p2c.categories_id=c.categories_id';
+	    // Initialize an array for selecting specific columns from the query
+	    $selectP2CRecord = array();
+	    // Select all columns from 'p2c' and the 'status' field from the 'categories' table
+	    $selectP2CRecord[] = 'p2c.*, c.status as category_status';
+	    // Query to retrieve products to categories records based on filters and selected columns
+	    $p2cRecords = mslib_befe::getRecords('', 'tx_multishop_products_to_categories p2c, tx_multishop_categories c', '', $filterP2CRecord, '', '', '', $selectP2CRecord);
+	    // Count the number of records returned by the query
+	    $countRecord = count($p2cRecords);
+	    // If records are returned and it's an array
+	    $activeCategoriesId = array();
+	    if (is_array($p2cRecords) && $countRecord) {
+		    // If exactly one record is returned, assign the category ID
+		    if ($countRecord == '1') {
+			    $activeCategoriesId[] = (int) $p2cRecords[0]['categories_id'];
+		    } else {
+			    // Loop through multiple records to find an active category (where status is '1')
+			    foreach ($p2cRecords as $p2cRecord) {
+				    $cats = mslib_fe::Crumbar($p2cRecord['categories_id']);
+					// Check if one of the category lines have disabled category
+				    $skipIterate = false;
+				    if (count($cats) > 0) {
+					    foreach ($cats as $cat) {
+						    if ($cat['status'] == 0) {
+							    $skipIterate = true;
+								break;
 						    }
 					    }
-						// Skip if found in one of the category lines have disabled category
-						if ($skipIterate) {
-							continue;
-						}
-					    if ($p2cRecord['category_status'] == '1') {
-						    // Assign the category ID of the active category and break the loop
-						    $categories_id = (int) $p2cRecord['categories_id'];
-						    break;
-					    }
+				    }
+					// Skip if found in one of the category lines have disabled category
+					if ($skipIterate) {
+						continue;
+					}
+				    if ($p2cRecord['category_status'] == '1') {
+					    // Assign the category ID of the active category
+					    $activeCategoriesId[] = (int) $p2cRecord['categories_id'];
 				    }
 			    }
 		    }
 	    }
+		if (count($activeCategoriesId)) {
+			// Assign from active category list only when $categories_id is not supplied or it's supplied but the category is disabled
+			if (!$categories_id || ($categories_id && !in_array($categories_id, $activeCategoriesId))) {
+				$categories_id = $activeCategoriesId[0];
+			}
+		}
 	    $params = array(
                 'products_id' => &$products_id,
                 'categories_id' => &$categories_id,
