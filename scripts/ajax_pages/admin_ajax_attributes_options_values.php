@@ -292,6 +292,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 );
                 $qry4 = $GLOBALS['TYPO3_DB']->sql_query($str4);
                 $row4 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry4);
+                // custom hook that can be controlled by third-party plugin
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesGetOptionValuesDataPostProc'])) {
+                    $paramsInt = array(
+                        'row4' => &$row4,
+                        'return_data' => &$return_data,
+                        'key' => $key,
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesGetOptionValuesDataPostProc'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+                    }
+                }
                 $description = '';
                 if ($row4['description']) {
                     $description = htmlspecialchars($row4['description']);

@@ -512,10 +512,13 @@ $GLOBALS['TSFE']->additionalHeaderData['js_admin_product_attributes'] = '<script
 				    dialog_body+=\'<label for="option_values_dropdown_title_\' + s.options_values_id + \'_\' + i + \'">' . $this->pi_getLL('dropdown_title', 'Dropdown title') . ' : </label>\';
 				    dialog_body+=\'<input type="text" class="form-control text edit_option_values_inputs" id="option_values_dropdown_title_\' + s.options_values_id + \'_\' + i + \'" name="option_values_dropdown_title[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_dropdown_label + \'"/>\';
 				    dialog_body+=\'</div>\';
+                    
                     dialog_body+=\'<div class="form-group">\';
 					dialog_body+=\'<label for="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'" class="option_description_label">' . addslashes($this->pi_getLL('description')) . '</label>\';
 					dialog_body+=\'<textarea class="redactor_values edit_option_values_inputs form-control" rows="5" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']" id="ov_desc_\' + v.lang_description_pov2po_id + \'_\' + i + \'">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
+					
+					
 					dialog_body+=\'</div>\'; // .panel-body
 					dialog_body+=\'</div>\'; // .panel
 				});
