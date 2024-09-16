@@ -5488,7 +5488,7 @@ class mslib_befe {
             }
         }
     }
-    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array()) {
+    public function getRecords($value = '', $table, $field = '', $additional_where = array(), $groupBy = '', $orderBy = '', $limit = '', $select = array(), $havingClause = '') {
         if ($select && !is_array($select)) {
             $select = array($select);
         }
@@ -5515,6 +5515,9 @@ class mslib_befe {
                 $orderBy, // ORDER BY...
                 $limit // LIMIT ...
         );
+        if ($havingClause) {
+            $query = str_replace('ORDER BY', $havingClause . ' ORDER BY', $query);
+        }
         if ($this->msDebug) {
             return $query;
         }
