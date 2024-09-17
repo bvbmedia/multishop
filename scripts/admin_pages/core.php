@@ -280,7 +280,17 @@ switch ($this->ms['page']) {
         break;
     case 'admin_product_attributes':
         if ($this->ADMIN_USER) {
-            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_product_attributes.php');
+	        if (strstr($this->ms['MODULES']['ADMIN_PRODUCT_ATTRIBUTES_TYPE'], "..")) {
+		        die('error in ADMIN_PRODUCT_ATTRIBUTES_TYPE value');
+	        } else {
+		        if (strstr($this->ms['MODULES']['ADMIN_PRODUCT_ATTRIBUTES_TYPE'], "/")) {
+			        // relative mode
+			        require($this->DOCUMENT_ROOT . $this->ms['MODULES']['ADMIN_PRODUCT_ATTRIBUTES_TYPE'] . '.php');
+		        } else {
+			        require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop') . 'scripts/admin_pages/admin_product_attributes.php');
+		        }
+	        }
+
         }
         break;
     case 'admin_attributes_options_groups':

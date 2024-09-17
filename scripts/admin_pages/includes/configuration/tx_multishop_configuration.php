@@ -2980,6 +2980,17 @@ $records[] = array(
     'depend_on_configuration_key' => '',
     'use_function' => ''
 );
+$records[] = array(
+    'configuration_title' => 'Admin Product Attributes Type',
+    'configuration_key' => 'ADMIN_PRODUCT_ATTRIBUTES_TYPE',
+    'configuration_value' => '',
+    'description' => 'Optional field (leave empty to use the default). Use this for customizing the admin product attributes page. Example value: fileadmin/scripts/admin_product_attributes',
+    'group_id' => '11',
+    'use_function' => '',
+    'set_function' => '',
+    'depend_on_configuration_key' => '',
+    'use_function' => ''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
     $params = array(
