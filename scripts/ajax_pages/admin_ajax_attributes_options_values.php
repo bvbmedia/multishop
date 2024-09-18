@@ -405,6 +405,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                             '' // LIMIT ...
                     );
                     $qry2 = $GLOBALS['TYPO3_DB']->sql_query($str2);
+                    // custom hook that can be controlled by third-party plugin
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionsValuesDataIteratorPostProc'])) {
+                        $paramsInt = array(
+                            'updateArray' => &$updateArray,
+                            'pov2po_id' => $pov2po_id,
+                            'lang_id' => $lang_id
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionsValuesDataIteratorPostProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+                        }
+                    }
                     if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
                         $updateArray['description'] = $pov2po_desc;
                         $query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options_desc', 'products_options_values_to_products_options_id=\'' . $pov2po_id . '\' and language_id = ' . $lang_id, $updateArray);
@@ -418,6 +429,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                     }
                 }
             }
+
         }
         break;
     case 'get_attributes_values':
