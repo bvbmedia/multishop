@@ -392,7 +392,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                 }
             }
         }
-        // save/update values descriptio
+        // save/update values description
         if (is_array($this->post['ov_desc']) and count($this->post['ov_desc'])) {
             foreach ($this->post['ov_desc'] as $pov2po_id => $langs_id) {
                 foreach ($langs_id as $lang_id => $pov2po_desc) {

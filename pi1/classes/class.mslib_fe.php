@@ -2534,6 +2534,16 @@ class mslib_fe {
                     $total_values = $GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
                     if ($total_values) {
                         while ($products_options_values = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
+	                        // hook to let other plugins further manipulate the option values display
+	                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesResultsIteratorPreProcPostProc'])) {
+		                        $params = array(
+			                        'products_options_values' => &$products_options_values
+		                        );
+		                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesResultsIteratorPreProcPostProc'] as $funcRef) {
+			                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		                        }
+	                        }
+	                        // hook
                             if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
                                 $products_options_values['attribute_image'] = '';
                                 if (!empty($products_options_values['attribute_local_image'])) {
