@@ -141,14 +141,24 @@ if ($this->ADMIN_USER) {
                     'id' => $customer['uid'],
                     'text' => $htmlTitle,
                     'company' => $itemArray['company']['value'],
-                    'name' => $itemArray['name']['value']
+                    'name' => $itemArray['name']['value'],
+                    'email' => $itemArray['email']['value']
             );
         }
     }
     if (is_numeric($this->get['preselected_id']) && $this->get['preselected_id'] > 0 && count($customers) === 1) {
         $tmp_return_data = $return_data[0];
         $return_data = $tmp_return_data;
-    } else {
+    } else if (strpos($this->get['preselected_id'], '@') !== false) {
+	    $return_data[0] = array(
+		    'id' => $this->get['preselected_id'],
+		    'text' => $this->get['preselected_id'],
+		    'company' => $this->get['preselected_id'],
+		    'name' => $this->get['preselected_id'],
+		    'email' => $this->get['preselected_id']
+	    );
+		$return_data = $return_data[0];
+	} else {
         if ((!isset($this->get['preselected_id']) || !$this->get['preselected_id']) && empty($this->get['q'])) {
             $array_select_none = array(
                     'id' => '',
