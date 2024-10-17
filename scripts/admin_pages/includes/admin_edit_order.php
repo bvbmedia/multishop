@@ -3898,14 +3898,24 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
             </div>';
             $discount_content = '';
+            $haveDiscountValue = false;
+            // Check for discount amount for signed/unsigned value
+            if ($orders['discount'] > 0) {
+                $haveDiscountValue = true;
+            } else {
+                $discountAmount = str_replace('-', '', $orders['discount']);
+                if ($discountAmount > 0) {
+                    $haveDiscountValue = true;
+                }
+            }
             if ($this->ms['MODULES']['ORDER_EDIT'] and $settings['enable_edit_orders_details']) {
-                $discount_content = '<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;' . ($orders['discount'] > 0 ? '' : ' display:none;') . '">';
+                $discount_content = '<div class="input-group pull-right" id="discount_amount_wrapper" style="width:140px;' . ($haveDiscountValue ? '' : ' display:none;') . '">';
                 $discount_content .= '<span class="input-group-addon">' . mslib_fe::currency() . '</span><input name="edit_discount_value" id="edit_discount_value" class="form-control text-right priceInputDisplay" type="text" value="' . number_format($orders['discount'], 2, $this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_decimal_point'], '') . '">';
                 $discount_content .= '</div>';
                 /*
                  * discount percentage
                  */
-                $discount_percentage_value_selectbox = '<select name="edit_discount_percentage" id="edit_discount_percentage"'.($orders['discount'] > 0 ? ' disabled="disabled"' : '').'><option value="">' . $this->pi_getLL('select_percentage') . '</option>';
+                $discount_percentage_value_selectbox = '<select name="edit_discount_percentage" id="edit_discount_percentage"'.($haveDiscountValue ? ' disabled="disabled"' : '').'><option value="">' . $this->pi_getLL('select_percentage') . '</option>';
                 for ($i = 1; $i <= 100; $i++) {
                     if ($orders['discount_percentage'] == $i) {
                         $discount_percentage_value_selectbox .= '<option value="' . $i . '" selected="selected">' . $i . '%</option>';
@@ -3914,14 +3924,14 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 }
                 $discount_percentage_value_selectbox .= '</select>';
-                $discount_content .= '<div class="input-group pull-right" id="discount_percentage_wrapper" style="' . ($orders['discount'] > 0 ? 'display:none; ' : '') . 'width:140px;">';
+                $discount_content .= '<div class="input-group pull-right" id="discount_percentage_wrapper" style="' . ($haveDiscountValue ? 'display:none; ' : '') . 'width:140px;">';
                 $discount_content .= $discount_percentage_value_selectbox;
                 $discount_content .= '</div>';
                 $discount_content .= '<div class="input-group pull-right">';
-                $discount_content .= '<a href="#" id="switch_to_discount_amount"' . ($orders['discount'] > 0 ? ' style="display:none;"' : '') . '>' . $this->pi_getLL('switch_to_discount_amount') . '</a><a href="#" id="switch_to_discount_percentage"' . ($orders['discount'] > 0 ? '' : ' style="display:none;"') . '>' . $this->pi_getLL('switch_to_discount_percentage') . '</a>';
+                $discount_content .= '<a href="#" id="switch_to_discount_amount"' . ($haveDiscountValue ? ' style="display:none;"' : '') . '>' . $this->pi_getLL('switch_to_discount_amount') . '</a><a href="#" id="switch_to_discount_percentage"' . ($haveDiscountValue ? '' : ' style="display:none;"') . '>' . $this->pi_getLL('switch_to_discount_percentage') . '</a>';
                 $discount_content .= '</div>';
             } else {
-                if ($orders['discount'] > 0) {
+                if ($haveDiscountValue) {
                     $discount_content = mslib_fe::amount2Cents($orders['discount'], 0);
                 }
             }
