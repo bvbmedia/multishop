@@ -2892,6 +2892,15 @@ class mslib_befe {
 	        $product_arr_new['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
 	        $product_arr_new['products_date_added'] = time();
 	        $product_arr_new['products_last_modified'] = time();
+	        //hook to let other plugins further manipulate
+	        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['duplicateProductPreProc'])) {
+		        $params = array(
+			        'product_arr_new' => &$product_arr_new
+		        );
+		        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['duplicateProductPreProc'] as $funcRef) {
+			        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		        }
+	        }
             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $product_arr_new);
             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
             $id_product_new = $GLOBALS['TYPO3_DB']->sql_insert_id();
