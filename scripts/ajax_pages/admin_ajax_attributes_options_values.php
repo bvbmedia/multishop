@@ -160,6 +160,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
         if (is_array($this->post['option_names']) and count($this->post['option_names'])) {
             foreach ($this->post['option_names'] as $products_options_id => $array) {
                 foreach ($array as $language_id => $value) {
+                    // custom hook that can be controlled by third-party plugin
+                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionDataIteratorPreProc'])) {
+                        $paramsInt = array(
+                            'value' => $value,
+                            'language_id' => $language_id,
+                            'products_options_id' => $products_options_id
+                        );
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionDataIteratorPreProc'] as $funcRef) {
+                            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
+                        }
+                    }
                     $updateArray = array();
                     $updateArray['language_id'] = $language_id;
                     $updateArray['products_options_id'] = $products_options_id;
@@ -227,6 +238,17 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
                     $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                 }
+            }
+        }
+        // custom hook that can be controlled by third-party plugin
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionDataPostProc'])) {
+            $paramsInt = array(
+                'value' => $value,
+                'language_id' => $language_id,
+                'products_options_id' => $products_options_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_attributes.php']['adminProductAttributesUpdateOptionDataPostProc'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $paramsInt, $this);
             }
         }
         break;
