@@ -282,7 +282,8 @@ if (count($shipping_methods) > 0) {
                             'row' => &$row,
                             'row3' => &$row3,
                             'zone' => &$zone,
-                            'content' => &$content
+                            'content' => &$content,
+                            'key_counter' => $i
                     );
                     foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['extraOptionalInputShippingCostTypeFlat'] as $funcRef) {
                         \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
