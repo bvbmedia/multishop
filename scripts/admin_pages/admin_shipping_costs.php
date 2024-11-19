@@ -99,8 +99,21 @@ if ($this->post) {
                             $free_shippingcosts_notation = $this->post['freeshippingcostsabove_value'][$key] . ':0';
                         }
                         //checking row
+	                    $insertArray = array();
+	                    // hook to add shipping cost type
+	                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateFlatShippingCostIteratorPreProc'])) {
+		                    $params = array(
+			                    'shipping_method_id' => $shipping_zones[0],
+			                    'zone_id' => $shipping_zones[1],
+			                    'shipping_id' => $shipping_id,
+			                    'key' => $key,
+			                    'insertArray' => &$insertArray,
+		                    );
+		                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['updateFlatShippingCostIteratorPreProc'] as $funcRef) {
+			                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		                    }
+	                    }
                         if ($row_checking['countrow'] == 0) {
-                            $insertArray = array();
                             $insertArray['shipping_method_id'] = $shipping_zones[0];
                             $insertArray['zone_id'] = $shipping_zones[1];
                             $insertArray['price'] = $weight_and_price;
@@ -108,7 +121,6 @@ if ($this->post) {
                             $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_costs', $insertArray);
                             $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         } else {
-                            $insertArray = array();
                             $insertArray['price'] = $weight_and_price;
                             $insertArray['override_shippingcosts'] = $free_shippingcosts_notation;
                             $query_update = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_costs', $where_del, $insertArray);
