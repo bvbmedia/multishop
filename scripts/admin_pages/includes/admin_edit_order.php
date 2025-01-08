@@ -3956,6 +3956,23 @@ if (is_numeric($this->get['orders_id'])) {
                 <p class="form-control-static order_total_value grand_total">' . mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0) . '</p>
                 </div>
             </div>';
+            // hook for adding new fieldsets into edit_order
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsPostProc'])) {
+                // hook
+                $params = array(
+                    'content_shipping_costs' => &$content_shipping_costs,
+                    'shipping_costs' => &$shipping_costs,
+                    'content_payment_costs' => &$content_payment_costs,
+                    'content_discount' => &$content_discount,
+                    'content_total' => &$content_total,
+                    'content_subtotal_tax' => &$content_subtotal_tax,
+                    'orders' => &$orders
+                );
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsPostProc'] as $funcRef) {
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                }
+                // hook oef
+            }
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                 $tmpcontent .= $content_shipping_costs;
                 $tmpcontent .= $content_payment_costs;
