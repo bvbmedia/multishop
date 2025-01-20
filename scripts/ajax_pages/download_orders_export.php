@@ -147,6 +147,14 @@ if ($this->get['orders_export_hash']) {
         if (isset($post_data['order_table_type']) && $post_data['order_table_type']) {
             $order_table_type = $post_data['order_table_type'];
         }
+	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportQueryPostProc'])) {
+		    $params = array(
+			    'filter' => &$filter,
+		    );
+		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_orders_export.php']['downloadOrdersExportQueryPostProc'] as $funcRef) {
+			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		    }
+	    }
         $pageset = mslib_fe::getOrdersPageSet($filter, $offset, $ox_limit, $orderby, $having, $select, $where, $from, '', $order_table_type);
         //print_r($pageset);
         //die();
