@@ -844,7 +844,7 @@ class mslib_fe {
                             \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                         }
                     }
-                    if ($disable_product && !$include_disabled_products) {
+                    if ($disable_product && !$includeDisabled) {
                         continue;
                     }
                 }
