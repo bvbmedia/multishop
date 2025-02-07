@@ -1193,12 +1193,13 @@ class tx_mslib_catalog {
         }
         return $branch;
     }
-    public function getCategoryTree() {
+    public function getCategoryTree($loadAllCategory = false) {
         $select=array();
         $select[]='c.categories_image';
         $select[]='c.categories_id';
         $select[]='cd.categories_name';
         $select[]='c.status';
+        $select[]='c.page_uid';
         $select[]='c.parent_id';
         $select[]='cd.content as description';
         $select[]='cd.content_footer as description_bottom';
@@ -1209,7 +1210,9 @@ class tx_mslib_catalog {
         $from[]='tx_multishop_categories c';
         $from[]='tx_multishop_categories_description cd';
         $filter = array();
-        $filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
+		if (!$loadAllCategory) {
+			$filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
+		}
         $filter[] = 'c.hide_in_menu=0';
         $filter[] = 'c.status=1';
         $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
