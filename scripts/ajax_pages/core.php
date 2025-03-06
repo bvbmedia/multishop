@@ -1515,6 +1515,17 @@ switch ($this->ms['page']) {
                         break;
                     }
                 }
+                // hook
+                if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatusPreHook'])) {
+                    $params = array(
+                        'orders_id' => &$this->post['tx_multishop_pi1']['orders_id'],
+                        'orders_status_id' => $this->post['tx_multishop_pi1']['orders_status_id'],
+                        'returnOutput' => &$returnOutput
+                    );
+                    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatusPreHook'] as $funcRef) {
+                        \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+                    }
+                }
             }
             echo json_encode($returnOutput);
             exit();
