@@ -1193,7 +1193,7 @@ class tx_mslib_catalog {
         }
         return $branch;
     }
-    public function getCategoryTree($loadAllCategory = false) {
+    public function getCategoryTree($loadAllCategory = false, $loadDisabledCategory = false) {
         $select=array();
         $select[]='c.categories_image';
         $select[]='c.categories_id';
@@ -1214,7 +1214,9 @@ class tx_mslib_catalog {
 			$filter[] = 'c.page_uid=\'' . $this->showCatalogFromPage . '\'';
 		}
         $filter[] = 'c.hide_in_menu=0';
-        $filter[] = 'c.status=1';
+		if (!$loadDisabledCategory) {
+			$filter[] = 'c.status=1';
+		}
         $filter[] = 'cd.language_id=\'' . $this->sys_language_uid . '\'';
         $filter[] = 'c.categories_id=cd.categories_id';
         $orderBy = 'c.sort_order asc';
