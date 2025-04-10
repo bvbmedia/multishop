@@ -2603,7 +2603,61 @@ switch ($this->ms['page']) {
                         // send back the updated data
                         switch ($details_type) {
                             case "delivery_details":
+                                $select = array();
+                                $select[] = 'orders_id';
+                                $keys[] = 'gender';
+                                $keys[] = 'vat_id';
+                                $keys[] = 'coc_id';
+                                $keys[] = 'address';
+                                foreach ($keys as $key) {
+                                    $select[] = 'delivery_' . $key;
+                                }
+                                $str = "SELECT " . implode(', ', $select) . " from tx_multishop_orders o where o.orders_id='" . $orders_id . "'";
+                                $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+                                $orders = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+                                $settings = array();
+                                $settings['enable_edit_customer_details'] = 1;
+                                $settings['enable_edit_orders_details'] = 1;
+                                if ($orders['is_locked']) {
+                                    $settings['enable_edit_customer_details'] = 0;
+                                    $settings['enable_edit_orders_details'] = 0;
+                                }
+                                $address_data = array();
+                                $address_data = $orders;
+                                $address_data['building'] = $orders['delivery_building'];
+                                $address_data['address'] = $orders['delivery_address'];
+                                $address_data['zip'] = $orders['delivery_zip'];
+                                $address_data['city'] = $orders['delivery_city'];
+                                $address_data['country'] = $orders['delivery_country'];
+                                $settings['delivery_address_value'] = mslib_befe::customerAddressFormat($address_data);
+                                $settings['customer_edit_link'] = mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]=' . $orders['customer_id'] . '&action=edit_customer', 1);
                                 $tmpcontent = '';
+                                if ($orders['delivery_company']) {
+                                    $tmpcontent .= '<strong>' . $orders['delivery_company'] . '</strong><br />';
+                                }
+                                if ($orders['delivery_department']) {
+                                    $tmpcontent .= '<strong>' . $orders['delivery_department'] . '</strong><br />';
+                                }
+                                $tmpcontent .= '<a href="' . $settings['customer_edit_link'] . '">' . $orders['delivery_name'] . '</a><br />
+                                ' . $settings['delivery_address_value'] . '<br /><br />';
+                                if ($orders['delivery_email']) {
+                                    $tmpcontent .= $this->pi_getLL('email') . ': <a href="mailto:' . $orders['delivery_email'] . '">' . $orders['delivery_email'] . '</a><br />';
+                                }
+                                if ($orders['delivery_telephone']) {
+                                    $tmpcontent .= $this->pi_getLL('telephone') . ': ' . $orders['delivery_telephone'] . '<br />';
+                                }
+                                if ($orders['delivery_mobile']) {
+                                    $tmpcontent .= $this->pi_getLL('mobile') . ': ' . $orders['delivery_mobile'] . '<br />';
+                                }
+                                if ($orders['delivery_fax']) {
+                                    $tmpcontent .= $this->pi_getLL('fax') . ': ' . $orders['delivery_fax'] . '<br />';
+                                }
+                                if ($orders['delivery_vat_id']) {
+                                    $tmpcontent .= '<strong>' . $this->pi_getLL('vat_id') . ' ' . $orders['delivery_vat_id'] . '</strong><br />';
+                                }
+                                if ($orders['delivery_coc_id']) {
+                                    $tmpcontent .= '<strong>' . $this->pi_getLL('coc_id') . ': ' . $orders['delivery_coc_id'] . '</strong><br />';
+                                }
                                 break;
                             case "billing_details":
                                 $select = array();

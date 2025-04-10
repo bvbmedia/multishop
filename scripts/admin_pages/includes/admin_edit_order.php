@@ -1749,26 +1749,31 @@ if (is_numeric($this->get['orders_id'])) {
         function updateCustomerOrderDetails(type, data_serial) {
             href = "' . mslib_fe::typolink($this->shop_pid . ',2002', 'tx_multishop_pi1[page_section]=update_customer_order_details', 1) . '&details_type=" + type + "&orders_id=' . $this->get['orders_id'] . '";
             jQuery.ajax({
-                    type:   "POST",
-                    url:    href,
-                    data:   data_serial,
-                    dataType: "json",
-                    success: function(r) {
-                         var details_container_id="#" + type + "_container";
-                         var edit_details_container_id="#edit_" + type + "_container";
-                         var erno_wrapper_id="#" + type + "_erno_wrapper";
-                         if (r.status=="OK") {
-                            if (r.customer_details!=\'\') {
-                                $(details_container_id).empty();
-                                $(details_container_id).html(r.customer_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
+                type:   "POST",
+                url:    href,
+                data:   data_serial,
+                dataType: "json",
+                success: function(r) {
+                     var details_container_id="#" + type + "_container";
+                     var edit_details_container_id="#edit_" + type + "_container";
+                     var erno_wrapper_id="#" + type + "_erno_wrapper";
+                     if (r.status=="OK") {
+                        if (r.customer_details!=\'\') {
+                            $(details_container_id).empty();
+                            if (type == "billing_details") {
+                                var editedInfo = r.customer_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>";    
+                            } else if (type == "delivery_details") {
+                                var editedInfo = r.customer_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>";
                             }
-                            $(details_container_id).show();
-                            $(edit_details_container_id).hide();
-                         } else if (r.status=="NOTOK") {
-                            $(erno_wrapper_id).empty();
-                            $(erno_wrapper_id).append(r.reason);
-                         }
-                    }
+                            $(details_container_id).html(editedInfo);
+                        }
+                        $(details_container_id).show();
+                        $(edit_details_container_id).hide();
+                     } else if (r.status=="NOTOK") {
+                        $(erno_wrapper_id).empty();
+                        $(erno_wrapper_id).append(r.reason);
+                     }
+                }
             });
         }
         jQuery(document).ready(function($) {
@@ -1909,87 +1914,7 @@ if (is_numeric($this->get['orders_id'])) {
             });
             $("#close_edit_delivery_info").click(function(e) {
                 e.preventDefault();
-                var delivery_details 	= "";
-                var building 		= "";
-                var address_data 		= "";
-                var name="";
-                $("[id^=edit_delivery]").each(function() {
-                    if ($(this).attr("id") == "edit_delivery_company") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    
-                    ' . ($this->ms['MODULES']['SHOW_DEPARTMENT_INPUT_FIELD_IN_ADMIN_EDIT_CUSTOMER'] ? '
-                    if ($(this).attr("id") == "edit_delivery_department") {
-                        if ($(this).val() != "") {
-                            name += "<strong>" + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                    ' : '') . '
-                    
-                    if ($(this).attr("id") == "edit_delivery_first_name") {
-                        name += $(this).val();
-                    }
-                    if ($(this).attr("id") == "edit_delivery_middle_name") {
-                        name += " " + $(this).val();
-                    }
-					if ($(this).attr("id") == "edit_delivery_last_name") {
-                        name += " " + $(this).val();
-                    }
-                    //
-                    if ($(this).attr("id") == "edit_delivery_building") {
-                        if ($(this).val() != "") {
-                            building += $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_street_name") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_delivery_address_number") {
-                        address_data += $(this).val() + " ";
-                    } else if ($(this).attr("id") == "edit_delivery_address_ext") {
-                        address_data += $(this).val();
-                        address_data_replace = address_data.replace(/\s\s+/g, " ");
-                        delivery_details += address_data_replace + "<br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_zip") {
-                        $("#edit_delivery_zip").val($("#edit_delivery_zip").val().toUpperCase());
-                        delivery_details += $(this).val().toUpperCase() + " ";
-                    } else if ($(this).attr("id") == "edit_delivery_city") {
-                        delivery_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_region") {
-                        delivery_details += $(this).val() + "<br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_country") {
-                        delivery_details += $(this).find(\':selected\').text() + "<br/><br/>";
-                    } else if ($(this).attr("id") == "edit_delivery_email") {
-                        if ($(this).val() != "") {
-                            delivery_details += "' . $this->pi_getLL('email') . ': <a href=\"mailto:" + $(this).val() + "\">" + $(this).val() + "</a><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_telephone") {
-                        if ($(this).val() != "") {
-                            delivery_details += "' . $this->pi_getLL('telephone') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_mobile") {
-                        if ($(this).val() != "") {
-                            delivery_details += "' . $this->pi_getLL('mobile') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_fax") {
-                        if ($(this).val() != "") {
-                            delivery_details += "' . $this->pi_getLL('fax') . ': " + $(this).val() + "<br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_vat_id") {
-                        if ($(this).val() != "") {
-                            delivery_details += "<strong>' . $this->pi_getLL('vat_id') . ': " + $(this).val() + "</strong><br/>";
-                        }
-                    } else if ($(this).attr("id") == "edit_delivery_coc_id") {
-                        if ($(this).val() != "") {
-                            delivery_details += "<strong>' . $this->pi_getLL('coc_id') . ': " + $(this).val() + "</strong><br/>";
-                        }
-                    }
-                });
-                if (name!="") {
-                	name+="<br/>";
-                }
-                $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(name + building + delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> ' . $this->pi_getLL('edit') . '</a></div></div>");
+                $("#edit_delivery_zip").val($("#edit_delivery_zip").val().toUpperCase());
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize() + "&tx_multishop_pi1[delivery_gender]=" + $(".account-delivery-gender-radio:checked").val());
             });
         });
