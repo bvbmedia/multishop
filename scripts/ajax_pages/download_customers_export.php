@@ -68,11 +68,14 @@ if ($this->get['customers_export_hash']) {
                 $filter[] = "f.tx_multishop_discount > 0";
                 break;
         }
-        if (isset($post_data['status'])) {
-            if (!$post_data['status']) {
-                $filter[] = "(f.disable='1')";
-            } else {
-                $filter[] = "(f.disable='0')";
+        if (isset($post_data['customer_status'])) {
+            switch ($post_data['customer_status']) {
+                case '0':
+                    $filter[] = "(f.disable='1')";
+                    break;
+                case '1':
+                   $filter[] = "(f.disable='0')";
+                   break;
             }
         }
         if (!$this->masterShop) {

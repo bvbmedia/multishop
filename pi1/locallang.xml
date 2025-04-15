@@ -1480,6 +1480,7 @@
             <label index="feed_exporter_fields_label_customer_delivery_street_name">Customer delivery street name</label>
             <label index="feed_exporter_fields_label_customer_delivery_address_number">Customer delivery address number</label>
             <label index="feed_exporter_fields_label_customer_delivery_address_ext">Customer delivery address number ext</label>
+            <label index="customers_status">Customer status</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2926,6 +2927,7 @@
             <label index="admin_choose_foreign_source_name">Kies een buitenlandse bronnaam</label>
             <label index="label_product_image">Met afbeelding</label>
             <label index="admin_sort_categories">Categorieën sorteren</label>
+            <label index="customers_status">Klantstatus</label>
         </languageKey>
     </data>
 </T3locallang>

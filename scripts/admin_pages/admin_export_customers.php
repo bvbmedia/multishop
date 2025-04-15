@@ -227,18 +227,30 @@ if ($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('export_customer_with_discount')) . '</label>
-			<div class="col-md-10">
-                <div class="col-md-10">
-                    <div class="radio radio-success radio-inline">
-                        <input name="customer_with_discount" type="radio" id="valueAll" value="all"' . ((!isset($post_data['customer_with_discount']) or $post_data['customer_with_discount'] == 'all') ? ' checked' : '') . ' /><label for="valueAll">' . htmlspecialchars($this->pi_getLL('all')) . '</label>
-                    </div>
-                    <div class="radio radio-success radio-inline">
-                        <input name="customer_with_discount" type="radio" id="valueNo" value="0"' . ((isset($post_data['customer_with_discount']) and $post_data['customer_with_discount'] == '0') ? ' checked' : '') . ' /><label for="valueNo">' . htmlspecialchars($this->pi_getLL('no')) . '</label>
-                    </div>
-                    <div class="radio radio-success radio-inline">
-                        <input name="customer_with_discount" type="radio" id="valueYes" value="1"' . ((isset($post_data['customer_with_discount']) and $post_data['customer_with_discount'] == '1') ? ' checked' : '') . ' /><label for="valueYes">' . htmlspecialchars($this->pi_getLL('yes')) . '</label>
-                    </div>
+            <div class="col-md-10">
+                <div class="radio radio-success radio-inline">
+                    <input name="customer_with_discount" type="radio" id="valueAll" value="all"' . ((!isset($post_data['customer_with_discount']) or $post_data['customer_with_discount'] == 'all') ? ' checked' : '') . ' /><label for="valueAll">' . htmlspecialchars($this->pi_getLL('all')) . '</label>
                 </div>
+                <div class="radio radio-success radio-inline">
+                    <input name="customer_with_discount" type="radio" id="valueNo" value="0"' . ((isset($post_data['customer_with_discount']) and $post_data['customer_with_discount'] == '0') ? ' checked' : '') . ' /><label for="valueNo">' . htmlspecialchars($this->pi_getLL('no')) . '</label>
+                </div>
+                <div class="radio radio-success radio-inline">
+                    <input name="customer_with_discount" type="radio" id="valueYes" value="1"' . ((isset($post_data['customer_with_discount']) and $post_data['customer_with_discount'] == '1') ? ' checked' : '') . ' /><label for="valueYes">' . htmlspecialchars($this->pi_getLL('yes')) . '</label>
+                </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-md-2">' . htmlspecialchars($this->pi_getLL('customers_status')) . '</label>
+			<div class="col-md-10">
+				<div class="radio radio-success radio-inline">
+					<input name="customer_status" type="radio" id="value2" value="2"' . (!isset($post_data['customer_status']) || $post_data['customer_status'] == '2' ? ' checked' : '') . ' /><label for="value2">' . htmlspecialchars($this->pi_getLL('all')) . '</label>
+				</div>
+				<div class="radio radio-success radio-inline">
+					<input name="customer_status" type="radio" id="value0" value="0"' . ($post_data['customer_status'] == '0' ? ' checked' : '') . ' /><label for="value0">' . htmlspecialchars($this->pi_getLL('disabled')) . '</label>
+				</div>
+				<div class="radio radio-success radio-inline">
+					<input name="customer_status" type="radio" id="value1" value="1"' . ($post_data['customer_status'] == '1' ? ' checked' : '') . ' /><label for="value1">' . htmlspecialchars($this->pi_getLL('enabled')) . '</label>
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
