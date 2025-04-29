@@ -534,6 +534,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $summarize[$col] += $row[$col];
                             break;
                         case 'number_format_thousands_seperator_without_decimals':
+                        case 'number_format_thousands_seperator_without_decimals_no_sum':
                             $value=number_format((float)$row[$col], 0, '.', '');
                             $row[$col] = number_format($value, 0, '', '.');
                             $summarize[$col] += $value;
