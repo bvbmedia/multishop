@@ -533,9 +533,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                             $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
                             $summarize[$col] += $row[$col];
                             break;
-                        case 'number_format_thousand_seperator':
-                            $row[$col] = round(number_format((float)$row[$col], 2, '.', ''), 2);
-                            $summarize[$col] += $row[$col];
+                        case 'number_format_thousands_seperator_without_decimals':
+                            $value=number_format((float)$row[$col], 0, '.', '');
+                            $row[$col] = number_format($value, 0, '', '.');
+                            $summarize[$col] += $value;
                             break;
                         case 'recordCounter':
                             $row[$col] = $recordCounter;
@@ -824,6 +825,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                         case 'number_format_2_decimals':
                         case 'number_format_thousand_seperator':
                             $row[$col] = round(number_format($summarize[$col], 2, '.', ''), 2);
+                            break;
+                        case 'number_format_thousands_seperator_without_decimals':
+                            $row[$col] = number_format($summarize[$col], 0, '', '.');
                             break;
                         case 'number_format_8_decimals':
                             $row[$col] = rtrim(sprintf('%.8F', $summarize[$col]), '0');
