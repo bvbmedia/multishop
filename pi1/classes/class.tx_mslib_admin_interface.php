@@ -863,7 +863,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                 $actions = $params['settings']['tableSelectionActions'];
                 if (count($actions)) {
                     // custom page hook that can be controlled by third-party plugin eof
-                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction' . $tableId . '" class="form-control"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
+                    $classes=[];
+                    $classes[]='form-control';
+                    if (is_array($params['settings']['tableSelectionActionsClassArray'])) {
+                        // Override classes
+                        $classes=$params['settings']['tableSelectionActionsClassArray'];
+                    }
+                    $action_selectbox .= '<select name="tx_multishop_pi1[action]" id="msAdminTableAction' . $tableId . '" class="'.implode(' ',$classes).'"><option value="">' . htmlspecialchars($this->pi_getLL('choose_action')) . '</option>';
                     foreach ($actions as $key => $value) {
                         $action_selectbox .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
                     }
