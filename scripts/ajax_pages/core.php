@@ -3088,6 +3088,7 @@ switch ($this->ms['page']) {
                         if ($this->ms['MODULES']['FLAT_DATABASE']) {
                             // if the flat database module is enabled we have to sync the changes to the flat table
                             tx_multishop_flat_catalog::convertProductToFlat($prod_id);
+
                         }
                         if ($sort_type == 'desc') {
                             $no--;
