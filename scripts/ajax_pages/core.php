@@ -3087,7 +3087,7 @@ switch ($this->ms['page']) {
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         if ($this->ms['MODULES']['FLAT_DATABASE']) {
                             // if the flat database module is enabled we have to sync the changes to the flat table
-                            mslib_befe::convertProductToFlat($prod_id);
+                            tx_multishop_flat_catalog::convertProductToFlat($prod_id);
                         }
                         if ($sort_type == 'desc') {
                             $no--;
