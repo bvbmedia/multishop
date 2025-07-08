@@ -4092,11 +4092,11 @@ if ($this->post) {
                 }
             }
             // end optional predefined attributes menu
-            $sql_pa = $GLOBALS ['TYPO3_DB']->SELECTquery('popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.*', // SELECT ...
+            $sql_pa = $GLOBALS ['TYPO3_DB']->SELECTquery('patrib.sort_order_option_name, patrib.sort_order_option_value,popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.*', // SELECT ...
                     'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
                     "patrib.products_id='" . $product['products_id'] . "' and popt.language_id = '" . $this->sys_language_uid . "' and patrib.page_uid='" . $this->showCatalogFromPage . "' and patrib.options_id = popt.products_options_id", // WHERE.
                     '', // GROUP BY...
-                    'patrib.sort_order_option_name, patrib.sort_order_option_value', // ORDER BY...
+                    'patrib.sort_order_option_name asc, patrib.sort_order_option_value asc', // ORDER BY...
                     '' // LIMIT ...
             );
             $qry_pa = $GLOBALS ['TYPO3_DB']->sql_query($sql_pa);
@@ -4117,6 +4117,7 @@ if ($this->post) {
                     $attributes_data = array();
                     $options_hide_data = array();
                     $attribute_values_class_id = array();
+                    $attribute_options_sort_data = array();
                     while (($row = $GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa)) != false) {
                         $add_to_list = true;
                         // custom hook that can be controlled by third-party plugin
@@ -4141,6 +4142,7 @@ if ($this->post) {
                         $options_hide_data[$row['products_options_id']] = $add_to_list;
                         $options_data[$row['products_options_id']] = $row['products_options_name'];
                         $attributes_data[$row['products_options_id']][] = $row;
+                        $attribute_options_sort_data[$row['products_options_id']] = $row['sort_order_option_name'];
                     }
                     $collapsed = ' collapsed';
                     $aria_expanded = 'false';
