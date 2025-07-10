@@ -3258,6 +3258,7 @@ if ($this->post['action'] == 'category-insert') {
                             foreach ($item['attribute_option_value'] as $indexOption => $option_row) {
                                 $tx_multishop_products_attributes_sort_order_option_value++;
                                 $option_price = '';
+                                $option_price_prefix = '+';
                                 if (isset($option_row[2])) {
                                     $option_price = $option_row[2];
                                 }
@@ -3277,10 +3278,14 @@ if ($this->post['action'] == 'category-insert') {
                                         $products_options_id_sort_order = $rs_chk['sort_order'];
                                         $products_options_id = $rs_chk['products_options_id'];
 
-	                                    $strPaSortOrder = "SELECT patrib.sort_order_option_name FROM tx_multishop_products_attributes patrib where patrib.options_id = ".$rs_chk['products_options_id']." order by patrib.sort_order_option_name asc";
+	                                    $strPaSortOrder = "SELECT patrib.sort_order_option_name, patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.options_id = ".$rs_chk['products_options_id']." order by patrib.sort_order_option_name asc";
 	                                    $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
 										$rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
 										$paSortOrder = $rsPaSortOrder['sort_order_option_name'];
+										if (!$option_price) {
+											$option_price = $rsPaSortOrder['options_values_price'];
+											$option_price_prefix = $rsPaSortOrder['price_prefix'];
+										}
                                     } else {
                                         // add the option
                                         $insertArray = array();
@@ -3398,6 +3403,14 @@ if ($this->post['action'] == 'category-insert') {
                                         }
                                         // LANGUAGE OVERLAYS for products options values EOL
                                         if ($products_options_id and $option_value_id) {
+	                                        $strPaSortOrder = "SELECT patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.products_id = ".$products_id." and patrib.options_id = ".$products_options_id." and patrib.options_values_id = " . $option_value_id . " and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "')";
+	                                        $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
+	                                        $rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
+											$optionPriceTest = (float) $option_price;
+											if (!$optionPriceTest && $rsPaSortOrder['options_values_price']) {
+		                                        $option_price = $rsPaSortOrder['options_values_price'];
+		                                        $option_price_prefix = $rsPaSortOrder['price_prefix'];
+	                                        }
                                             if ($this->post['incremental_update'] and $products_id) {
                                                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=' . $products_id . ' and options_id=\'' . $products_options_id . '\' and options_values_id=\'' . $option_value_id . '\' and (page_uid=0 or page_uid=\'' . $this->showCatalogFromPage . '\')');
                                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -3428,7 +3441,7 @@ if ($this->post['action'] == 'category-insert') {
                                                 $insertArray['options_id'] = $products_options_id;
                                                 $insertArray['options_values_id'] = $option_value_id;
                                                 $insertArray['options_values_price'] = $option_price;
-                                                $insertArray['price_prefix'] = '+';
+                                                $insertArray['price_prefix'] = $option_price_prefix;
                                                 $insertArray['page_uid'] = $this->showCatalogFromPage;
 	                                            $insertArray['sort_order_option_name'] = $paSortOrder;
                                                 $insertArray['sort_order_option_value'] = $tx_multishop_products_attributes_sort_order_option_value;
@@ -3500,6 +3513,14 @@ if ($this->post['action'] == 'category-insert') {
                                             $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
                                         }
                                     }
+	                                $strPaSortOrder = "SELECT patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.products_id = ".$products_id." and patrib.options_id = ".$products_options_id." and patrib.options_values_id = " . $option_value_id . " and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "')";
+	                                $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
+	                                $rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
+	                                $optionPriceTest = (float) $option_price;
+	                                if (!$optionPriceTest && $rsPaSortOrder['options_values_price']) {
+		                                $option_price = $rsPaSortOrder['options_values_price'];
+		                                $option_price_prefix = $rsPaSortOrder['price_prefix'];
+	                                }
                                     // added 2013-07-31 due to double records when re-importing the same partial feed
                                     if ($this->post['incremental_update'] and $products_id) {
                                         $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=' . $products_id . ' and options_id=\'' . $products_options_id . '\' and options_values_id=\'' . $option_value_id . '\' and (page_uid=0 or page_uid=\'' . $this->showCatalogFromPage . '\')');
@@ -3510,7 +3531,7 @@ if ($this->post['action'] == 'category-insert') {
                                     $insertArray['options_id'] = $products_options_id;
                                     $insertArray['options_values_id'] = $option_value_id;
                                     $insertArray['options_values_price'] = $option_price;
-                                    $insertArray['price_prefix'] = '+';
+                                    $insertArray['price_prefix'] = $option_price_prefix;
                                     $insertArray['page_uid'] = $this->showCatalogFromPage;
 	                                $insertArray['sort_order_option_name'] = $optionCtr;
 									$insertArray['sort_order_option_value'] = microtime(true);
