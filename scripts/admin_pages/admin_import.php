@@ -43,7 +43,7 @@ if ($this->get['run_as_cron']) {
             die('lock ' . $this->msLockFile . ' is file enabled, meaning importer is already running.');
         }
     }
-    $this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
+	$this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
     @unlink($this->msLogFile);
     file_put_contents($this->msLogFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
     file_put_contents($this->msLogFile, 'Importer: Enabling lock file.'."\n", FILE_APPEND);
@@ -1222,23 +1222,49 @@ if ($this->post['action'] == 'category-insert') {
                         }
                     }
                     $phpexcel = PHPExcel_IOFactory::load($file);
-                    foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
-                        $counter = 0;
-                        foreach ($worksheet->getRowIterator() as $row) {
-                            $cellIterator = $row->getCellIterator();
-                            $cellIterator->setIterateOnlyExistingCells(false);
-                            foreach ($cellIterator as $cell) {
-                                $clean_products_data = ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
-                                $clean_products_data = trim($clean_products_data);
-                                if ($row->getRowIndex() > 1) {
-                                    $rows[$counter - 1][] = $clean_products_data;
-                                } else {
-                                    $table_cols[] = mslib_befe::strtolower($clean_products_data);
-                                }
-                            }
-                            $counter++;
-                        }
-                    }
+	                $worksheet = $phpexcel->getActiveSheet();
+					// Row counter
+	                $counter = 0;
+	                foreach ($worksheet->getRowIterator() as $rowIndex => $row) {
+		                $cellIterator = $row->getCellIterator();
+		                $cellIterator->setIterateOnlyExistingCells(false);
+
+		                $isEmpty = true;
+		                $rowData = array();
+
+		                foreach ($cellIterator as $cellIndex => $cell) {
+			                $clean_products_data = $cell->getCalculatedValue();
+			                $clean_products_data = ltrim(rtrim($clean_products_data, " ,"), " ,");
+			                $clean_products_data = trim($clean_products_data);
+			                $rowData[] = $clean_products_data;
+			                if (!empty($clean_products_data)) {
+				                $isEmpty = false;
+			                }
+		                }
+		                // Skip empty rows
+		                if ($isEmpty) {
+			                continue;
+		                }
+						if ($rowIndex == '1') {
+							// Set the header
+							$headerCols = array();
+							foreach ($rowData as $colIndex => $colValue) {
+								if (!empty($colValue)) {
+									$headerCols[] = $colValue;
+								}
+							}
+							$table_cols[] = $headerCols;
+						} else {
+							// Set the body rows
+							// Only follow the header cols count
+							foreach ($rowData as $colIndex => $colValue) {
+								if (isset($headerCols[$colIndex])) {
+									$rows[$counter - 1][$colIndex] = $colValue;
+								}
+							}
+						}
+		                $counter++;
+	                }
                     // excel eof
                 } elseif ($this->post['format'] == 'xml') {
                     $arrOutput = mslib_fe::xml2array($str);
@@ -1329,7 +1355,7 @@ if ($this->post['action'] == 'category-insert') {
                 $default_tax_rate = mslib_fe::taxRuleSet($this->post['tx_multishop_pi1']['default_vat_rate'], 0, $default_iso_customer['cn_iso_nr'], 0);
             }
             // custom hook that can be controlled by third-party plugin
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
+            /*if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
                 $params = array(
                         'rows' => &$rows,
                         'prefix_source_name' => $this->post['prefix_source_name']
@@ -1337,7 +1363,7 @@ if ($this->post['action'] == 'category-insert') {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
-            }
+            }*/
             // custom hook that can be controlled by third-party plugin eof
             foreach ($rows as $row) {
                 $skipRow = 0;
@@ -3049,7 +3075,7 @@ if ($this->post['action'] == 'category-insert') {
                             $item['added_products_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
                             $stats['products_added']++;
                             $products_id = $item['added_products_id'];
-                            if ($products_id == 0 and $this->get['run_as_cron']) {
+                            if ($products_id == 0 and $this->msLogFile) {
                                 // error. lets print the error
                                 $message = 'ERROR QUERY FAILED: ' . $query . "\n";
                                 if ($this->msLogFile) {
@@ -3654,9 +3680,13 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                         // add/update eof
-                        if ($this->get['run_as_cron']) {
+                        if ($this->msLogFile) {
                             $subtel++;
-                            $message = ($item['updated_products_id'] ? 'Updated: ' : 'Added: ') . $item['products_name'] . " (products_id: " . $products_id . ", hashed id: " . $item['extid'] . ")\n";
+							if ($item['updated_products_id']) {
+								$message = 'Updated: ' . $item['products_name'] . " (products_id: " . $products_id . ", updated_products_id: " . $item['updated_products_id'] . ", hashed id: " . $item['extid'] . ")\n";
+							} else if ($item['added_products_id']) {
+								$message = 'Added: ' . $item['products_name'] . " (products_id: " . $products_id . ", added_products_id: " . $item['added_products_id'] . ", hashed id: " . $item['extid'] . ")\n";
+							}
                             if ($subtel == 50) {
                                 if ($start_time) {
                                     $end_time = microtime(true);
