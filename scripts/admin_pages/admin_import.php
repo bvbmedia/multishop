@@ -3769,8 +3769,21 @@ if ($this->post['action'] == 'category-insert') {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-        // custom hook that can be controlled by third-party plugin eof
+		$contentWarning = '';
+	    // custom hook that can be controlled by third-party plugin
+	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportFinalPostProcHook'])) {
+		    $params = array(
+			    'import_data_collector' => $import_data_collector,
+			    'prefix_source_name' => $this->post['prefix_source_name'],
+			    'stats' => &$stats,
+			    'contentWarning' => &$contentWarning
+		    );
+		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportFinalPostProcHook'] as $funcRef) {
+			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		    }
+	    }
         if ($this->msLogFile) {
+	        $contentWarning = '';
             $end_time = microtime(true);
             $global_ms_string = number_format(($end_time - $global_start_time), 3, '.', '');
             $running_seconds = round($global_ms_string);
@@ -3784,12 +3797,17 @@ if ($this->post['action'] == 'category-insert') {
     }
 }
 if ($this->post['action'] != 'product-import-preview' && $this->get['action'] != 'edit_job') {
-    $this->ms['show_default_form'] = 1;
-    $tmptab = '';
+	$this->ms['show_default_form'] = 1;
+	$tmptab = '';
+	if ($contentWarning) {
+		$tmptab .= mslib_befe::bootstrapPanel('Info', $contentWarning, 'warning');
+		$contentWarning = '';
+	}
     if ($content) {
         $tmptab .= mslib_befe::bootstrapPanel('Result', $content, 'success');
         $content = '';
     }
+
     $tmptab .= '
 	<form action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_import') . '" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal blockSubmitForm">
 	' . $this->ms['upload_productfeed_form'] . '
