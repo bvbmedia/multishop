@@ -43,7 +43,7 @@ if ($this->get['run_as_cron']) {
             die('lock ' . $this->msLockFile . ' is file enabled, meaning importer is already running.');
         }
     }
-	$this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
+    $this->msLogFile = $this->DOCUMENT_ROOT . 'uploads/tx_multishop/log/import_' . $this->HTTP_HOST . '_log.txt';
     @unlink($this->msLogFile);
     file_put_contents($this->msLogFile, $this->HTTP_HOST . ' - importer started. (job ' . $this->get['job_id'] . ') (' . date("Y-m-d G:i:s") . ")\n", FILE_APPEND);
     file_put_contents($this->msLogFile, 'Importer: Enabling lock file.'."\n", FILE_APPEND);
@@ -1355,7 +1355,7 @@ if ($this->post['action'] == 'category-insert') {
                 $default_tax_rate = mslib_fe::taxRuleSet($this->post['tx_multishop_pi1']['default_vat_rate'], 0, $default_iso_customer['cn_iso_nr'], 0);
             }
             // custom hook that can be controlled by third-party plugin
-            /*if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
                 $params = array(
                         'rows' => &$rows,
                         'prefix_source_name' => $this->post['prefix_source_name']
@@ -1363,7 +1363,7 @@ if ($this->post['action'] == 'category-insert') {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
                     \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
                 }
-            }*/
+            }
             // custom hook that can be controlled by third-party plugin eof
             foreach ($rows as $row) {
                 $skipRow = 0;
@@ -3075,7 +3075,7 @@ if ($this->post['action'] == 'category-insert') {
                             $item['added_products_id'] = $GLOBALS['TYPO3_DB']->sql_insert_id();
                             $stats['products_added']++;
                             $products_id = $item['added_products_id'];
-                            if ($products_id == 0 and $this->msLogFile) {
+                            if ($products_id == 0 and $this->get['run_as_cron']) {
                                 // error. lets print the error
                                 $message = 'ERROR QUERY FAILED: ' . $query . "\n";
                                 if ($this->msLogFile) {
@@ -3284,7 +3284,6 @@ if ($this->post['action'] == 'category-insert') {
                             foreach ($item['attribute_option_value'] as $indexOption => $option_row) {
                                 $tx_multishop_products_attributes_sort_order_option_value++;
                                 $option_price = '';
-                                $option_price_prefix = '+';
                                 if (isset($option_row[2])) {
                                     $option_price = $option_row[2];
                                 }
@@ -3303,15 +3302,6 @@ if ($this->post['action'] == 'category-insert') {
                                     if ($rs_chk['products_options_id']) {
                                         $products_options_id_sort_order = $rs_chk['sort_order'];
                                         $products_options_id = $rs_chk['products_options_id'];
-
-	                                    $strPaSortOrder = "SELECT patrib.sort_order_option_name, patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.options_id = ".$rs_chk['products_options_id']." order by patrib.sort_order_option_name asc";
-	                                    $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
-										$rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
-										$paSortOrder = $rsPaSortOrder['sort_order_option_name'];
-										if (!$option_price) {
-											$option_price = $rsPaSortOrder['options_values_price'];
-											$option_price_prefix = $rsPaSortOrder['price_prefix'];
-										}
                                     } else {
                                         // add the option
                                         $insertArray = array();
@@ -3332,7 +3322,6 @@ if ($this->post['action'] == 'category-insert') {
                                         }
                                         $products_options_id_sort_order = $insertArray['sort_order'];
                                         $products_options_id = $GLOBALS['TYPO3_DB']->sql_insert_id();
-	                                    $paSortOrder = microtime();
                                     }
                                     // LANGUAGE OVERLAYS for products options
                                     foreach ($this->languages as $langKey => $langTitle) {
@@ -3429,14 +3418,6 @@ if ($this->post['action'] == 'category-insert') {
                                         }
                                         // LANGUAGE OVERLAYS for products options values EOL
                                         if ($products_options_id and $option_value_id) {
-	                                        $strPaSortOrder = "SELECT patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.products_id = ".$products_id." and patrib.options_id = ".$products_options_id." and patrib.options_values_id = " . $option_value_id . " and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "')";
-	                                        $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
-	                                        $rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
-											$optionPriceTest = (float) $option_price;
-											if (!$optionPriceTest && $rsPaSortOrder['options_values_price']) {
-		                                        $option_price = $rsPaSortOrder['options_values_price'];
-		                                        $option_price_prefix = $rsPaSortOrder['price_prefix'];
-	                                        }
                                             if ($this->post['incremental_update'] and $products_id) {
                                                 $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=' . $products_id . ' and options_id=\'' . $products_options_id . '\' and options_values_id=\'' . $option_value_id . '\' and (page_uid=0 or page_uid=\'' . $this->showCatalogFromPage . '\')');
                                                 $res = $GLOBALS['TYPO3_DB']->sql_query($query);
@@ -3467,9 +3448,8 @@ if ($this->post['action'] == 'category-insert') {
                                                 $insertArray['options_id'] = $products_options_id;
                                                 $insertArray['options_values_id'] = $option_value_id;
                                                 $insertArray['options_values_price'] = $option_price;
-                                                $insertArray['price_prefix'] = $option_price_prefix;
+                                                $insertArray['price_prefix'] = '+';
                                                 $insertArray['page_uid'] = $this->showCatalogFromPage;
-	                                            $insertArray['sort_order_option_name'] = $paSortOrder;
                                                 $insertArray['sort_order_option_value'] = $tx_multishop_products_attributes_sort_order_option_value;
                                                 $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                                                 $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $insertArray);
@@ -3485,12 +3465,11 @@ if ($this->post['action'] == 'category-insert') {
                         }
                         // new attribute eof
                         // predefined attribute option mappings
-                        $str = "SELECT po.*, patrib.sort_order_option_name FROM `tx_multishop_products_options` po, tx_multishop_products_attributes patrib where po.language_id='" . $language_id . "' and patrib.options_id = po.products_options_id order by patrib.sort_order_option_name asc";
+                        $str = "SELECT * FROM `tx_multishop_products_options` where language_id='" . $language_id . "' order by products_options_id asc";
                         $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
                         while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
                             $s = 'attribute_option_name_' . $row['products_options_id'];
                             if ($item[$s]) {
-								$optionCtr = $row['sort_order_option_name'];
                                 $products_options_id = $row['products_options_id'];
                                 $option_value = $item[$s];
                                 $str2 = "SELECT pov.products_options_values_id from tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_options_values pov where povp.products_options_id='" . $products_options_id . "' and pov.products_options_values_name='" . addslashes($option_value) . "' and povp.products_options_values_id=pov.products_options_values_id";
@@ -3539,14 +3518,6 @@ if ($this->post['action'] == 'category-insert') {
                                             $erno[] = $query . '<br/>' . $GLOBALS['TYPO3_DB']->sql_error();
                                         }
                                     }
-	                                $strPaSortOrder = "SELECT patrib.options_values_price, patrib.price_prefix FROM tx_multishop_products_attributes patrib where patrib.products_id = ".$products_id." and patrib.options_id = ".$products_options_id." and patrib.options_values_id = " . $option_value_id . " and (page_uid=0 or page_uid='" . $this->showCatalogFromPage . "')";
-	                                $qryPaSortOrder = $GLOBALS['TYPO3_DB']->sql_query($strPaSortOrder);
-	                                $rsPaSortOrder = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryPaSortOrder);
-	                                $optionPriceTest = (float) $option_price;
-	                                if (!$optionPriceTest && $rsPaSortOrder['options_values_price']) {
-		                                $option_price = $rsPaSortOrder['options_values_price'];
-		                                $option_price_prefix = $rsPaSortOrder['price_prefix'];
-	                                }
                                     // added 2013-07-31 due to double records when re-importing the same partial feed
                                     if ($this->post['incremental_update'] and $products_id) {
                                         $query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=' . $products_id . ' and options_id=\'' . $products_options_id . '\' and options_values_id=\'' . $option_value_id . '\' and (page_uid=0 or page_uid=\'' . $this->showCatalogFromPage . '\')');
@@ -3557,10 +3528,9 @@ if ($this->post['action'] == 'category-insert') {
                                     $insertArray['options_id'] = $products_options_id;
                                     $insertArray['options_values_id'] = $option_value_id;
                                     $insertArray['options_values_price'] = $option_price;
-                                    $insertArray['price_prefix'] = $option_price_prefix;
+                                    $insertArray['price_prefix'] = '+';
                                     $insertArray['page_uid'] = $this->showCatalogFromPage;
-	                                $insertArray['sort_order_option_name'] = $optionCtr;
-									$insertArray['sort_order_option_value'] = microtime(true);
+                                    $insertArray['sort_order_option_value'] = time();
                                     $insertArray = mslib_befe::rmNullValuedKeys($insertArray);
                                     $query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $insertArray);
                                     if (!$GLOBALS['TYPO3_DB']->sql_query($query)) {
@@ -3680,13 +3650,9 @@ if ($this->post['action'] == 'category-insert') {
                             }
                         }
                         // add/update eof
-                        if ($this->msLogFile) {
+                        if ($this->get['run_as_cron']) {
                             $subtel++;
-							if ($item['updated_products_id']) {
-								$message = 'Updated: ' . $item['products_name'] . " (products_id: " . $products_id . ", updated_products_id: " . $item['updated_products_id'] . ", hashed id: " . $item['extid'] . ")\n";
-							} else if ($item['added_products_id']) {
-								$message = 'Added: ' . $item['products_name'] . " (products_id: " . $products_id . ", added_products_id: " . $item['added_products_id'] . ", hashed id: " . $item['extid'] . ")\n";
-							}
+                            $message = ($item['updated_products_id'] ? 'Updated: ' : 'Added: ') . $item['products_name'] . " (products_id: " . $products_id . ", hashed id: " . $item['extid'] . ")\n";
                             if ($subtel == 50) {
                                 if ($start_time) {
                                     $end_time = microtime(true);
@@ -3769,21 +3735,8 @@ if ($this->post['action'] == 'category-insert') {
                 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
             }
         }
-		$contentWarning = '';
-	    // custom hook that can be controlled by third-party plugin
-	    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportFinalPostProcHook'])) {
-		    $params = array(
-			    'import_data_collector' => $import_data_collector,
-			    'prefix_source_name' => $this->post['prefix_source_name'],
-			    'stats' => &$stats,
-			    'contentWarning' => &$contentWarning
-		    );
-		    foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportFinalPostProcHook'] as $funcRef) {
-			    \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-		    }
-	    }
+        // custom hook that can be controlled by third-party plugin eof
         if ($this->msLogFile) {
-	        $contentWarning = '';
             $end_time = microtime(true);
             $global_ms_string = number_format(($end_time - $global_start_time), 3, '.', '');
             $running_seconds = round($global_ms_string);
@@ -3797,17 +3750,12 @@ if ($this->post['action'] == 'category-insert') {
     }
 }
 if ($this->post['action'] != 'product-import-preview' && $this->get['action'] != 'edit_job') {
-	$this->ms['show_default_form'] = 1;
-	$tmptab = '';
-	if ($contentWarning) {
-		$tmptab .= mslib_befe::bootstrapPanel('Info', $contentWarning, 'warning');
-		$contentWarning = '';
-	}
+    $this->ms['show_default_form'] = 1;
+    $tmptab = '';
     if ($content) {
         $tmptab .= mslib_befe::bootstrapPanel('Result', $content, 'success');
         $content = '';
     }
-
     $tmptab .= '
 	<form action="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=admin_import') . '" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal blockSubmitForm">
 	' . $this->ms['upload_productfeed_form'] . '
