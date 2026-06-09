@@ -104,32 +104,34 @@ if (is_array($this->get['attributes'])) {
                     unset($attr['attributes'][$key]);
                 }
                 foreach ($array as $item) {
-                    $str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . $products_id . "' and a.options_id='" . $key . "' and a.options_values_id='" . $item . "' and a.page_uid='" . $this->showCatalogFromPage . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . $this->sys_language_uid . "' and ov.language_id='" . $this->sys_language_uid . "' and a.options_values_id=ov.products_options_values_id";
-                    $qry = $GLOBALS['TYPO3_DB']->sql_query($str);
-                    if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-                        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-                        $original_row = $row;
-                        // hook to let other plugins further manipulate the option values display
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'])) {
-                            $params = array(
-                                    'product_id' => $products_id,
-                                    'options_id' => &$key,
-                                    'row' => &$row,
-                                    'original_row' => &$original_row
-                            );
-                            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'] as $funcRef) {
-                                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-                            }
-                        }
-                        // hook
-                        //if ($multiple) {
-                        $attr['attributes'][$key][] = $row;
-                        $original_attr['attributes'][$key][] = $original_row;
-                        //} else {
-                        //$attr['attributes'][$key]=$row;
-                        //$original_attr['attributes'][$key]=$original_row;
-                        //}
-                    }
+					if (is_numeric($item)) {
+						$str = "SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='" . addslashes($products_id) . "' and a.options_id='" . addslashes($key) . "' and a.options_values_id='" . addslashes($item) . "' and a.page_uid='" . addslashes($this->showCatalogFromPage) . "' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='" . addslashes($this->sys_language_uid) . "' and ov.language_id='" . addslashes($this->sys_language_uid) . "' and a.options_values_id=ov.products_options_values_id";
+						$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
+						if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+							$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+							$original_row = $row;
+							// hook to let other plugins further manipulate the option values display
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'])) {
+								$params = array(
+									'product_id' => $products_id,
+									'options_id' => &$key,
+									'row' => &$row,
+									'original_row' => &$original_row
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// hook
+							//if ($multiple) {
+							$attr['attributes'][$key][] = $row;
+							$original_attr['attributes'][$key][] = $original_row;
+							//} else {
+							//$attr['attributes'][$key]=$row;
+							//$original_attr['attributes'][$key]=$original_row;
+							//}
+						}
+					}
                 }
             }
         }
