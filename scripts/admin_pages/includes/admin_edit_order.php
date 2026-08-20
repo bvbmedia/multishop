@@ -912,6 +912,10 @@ if (is_numeric($this->get['orders_id'])) {
                     if (isset($this->post['track_and_trace_code'])) {
                         $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
                     }
+                    $updateArray['track_and_trace_link'] = '';
+                    if (isset($this->post['track_and_trace_link'])) {
+                        $updateArray['track_and_trace_link'] = $this->post['track_and_trace_link'];
+                    }
                     if (count($updateArray)) {
                         $close_window = 1;
                         $updateArray['orders_last_modified'] = time();
@@ -930,6 +934,7 @@ if (is_numeric($this->get['orders_id'])) {
                         $res = $GLOBALS['TYPO3_DB']->sql_query($query);
                         $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                         $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
+                        $orders['track_and_trace_link'] = $this->post['track_and_trace_link'];
                         $order_memo = $this->post['order_memo'];
                         if ($order_memo == '<p></p>' || $order_memo == "<p><br></p>\r\n") {
                             $order_memo = '';
@@ -1045,6 +1050,9 @@ if (is_numeric($this->get['orders_id'])) {
             if (isset($this->post['track_and_trace_code'])) {
                 $updateArray['track_and_trace_code'] = $this->post['track_and_trace_code'];
             }
+            if (isset($this->post['track_and_trace_link'])) {
+                $updateArray['track_and_trace_link'] = $this->post['track_and_trace_link'];
+            }
             $order_memo = $this->post['order_memo'];
             if ($order_memo == '<p></p>') {
                 $order_memo = '';
@@ -1084,6 +1092,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $orders['expected_delivery_date'] = $this->post['expected_delivery_date'];
                 }
                 $orders['track_and_trace_code'] = $this->post['track_and_trace_code'];
+                $orders['track_and_trace_link'] = $this->post['track_and_trace_link'];
                 $orders['order_memo'] = '';
                 if (!empty($order_memo)) {
                     $orders['order_memo'] = $this->post['order_memo'];
@@ -4691,14 +4700,14 @@ if (is_numeric($this->get['orders_id'])) {
             	<input class="form-control" name="track_and_trace_code" type="text" value="' . mslib_fe::RemoveXSS($orders['track_and_trace_code']) . '" />
             </div>
         </div>';
-        if (!empty($orders['track_and_trace_link'])) {
+        //if (!empty($orders['track_and_trace_link'])) {
             $order_status_tab_content['track_and_trace_code'] .= '<div class="form-group">
-                <label for="track_and_trace_code" class="control-label col-md-2">' . $this->pi_getLL('track_and_trace_link') . '</label>
+                <label for="track_and_trace_link" class="control-label col-md-2">' . $this->pi_getLL('track_and_trace_link') . '</label>
                 <div class="col-md-10">
-                    <p class="form-control-static"><a href="' . $orders['track_and_trace_link'] . '" target="_blank">' . $orders['track_and_trace_link'] . '</a></p>
+            	    <input class="form-control" name="track_and_trace_link" type="text" value="' . mslib_fe::RemoveXSS($orders['track_and_trace_link']) . '" />
                 </div>
             </div>';
-        }
+        //}
         $order_status_tab_content['order_memo'] = '<div class="form-group">
             <label for="order_memo" class="control-label col-md-2">' . $this->pi_getLL('order_memo') . '</label>
             <div class="col-md-10">
